@@ -1,0 +1,22 @@
+{
+  "timezone": "America/Boa_Vista",
+  "schedule": "0 11 * * *",
+  "sources": {
+    "maptec": {
+      "enabled": false,
+      "endpointEnv": "REGUA_MAPTEC_API_URL",
+      "tokenEnv": "REGUA_MAPTEC_API_TOKEN",
+      "description": "Catálogo de locais do MapTec"
+    },
+    "patrimonio": {
+      "enabled": false,
+      "endpointEnv": "REGUA_PATRIMONIO_API_URL",
+      "tokenEnv": "REGUA_PATRIMONIO_API_TOKEN",
+      "description": "Catálogo autorizado de equipamentos e tombamentos"
+    }
+  },
+  "request": {
+    "timeoutMs": 15000,
+    "maxResponseBytes": 5000000
+  }
+}
