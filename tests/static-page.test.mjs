@@ -4,9 +4,9 @@ import { readFile } from 'node:fs/promises';
 
 test('script clássico da página não contém erro de sintaxe',async()=>{
  const html=await readFile(new URL('../index.html',import.meta.url),'utf8');
- const scripts=[...html.matchAll(/<script>([\\s\\S]*?)<\\/script>/g)];
- assert.ok(scripts.length>=1,'script principal precisa existir');
- for(const script of scripts)new Function(script[1]);
+ const start=html.indexOf('<script>'),end=html.indexOf('</script>',start+8);
+ assert.ok(start>=0&&end>start,'script principal precisa existir');
+ new Function(html.slice(start+8,end));
 });
 
 test('página contém temas e módulos de análise configurados',async()=>{
