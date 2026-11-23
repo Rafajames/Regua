@@ -21,7 +21,9 @@ function parseJson(raw){const clean=String(raw||'').replace(/^\`\`\`(?:json)?\s*
 async function geminiModels(key){
  const r=await fetch('https://generativelanguage.googleapis.com/v1beta/models?pageSize=100',{headers:{'x-goog-api-key':key}});
  const b=await r.json().catch(()=>({}));if(!r.ok)throw new Error(b?.error?.message||'Não foi possível listar modelos Gemini.');
- return (b.models||[]).filter(x=>(x.supportedGenerationMethods||[]).includes('generateContent')).map(x=>x.name.replace(/^models\//,''));
+ const models=(b.models||[]).filter(x=>(x.supportedGenerationMethods||[]).includes('generateContent')).map(x=>x.name.replace(/^models\//,''));
+ const priority=id=>id==='gemini-3.8-flash'?0:(/^gemini-2\.5-/i.test(id)?2:1);
+ return models.sort((a,b)=>priority(a)-priority(b));
 }
 async function openAiModels(key,base='https://api.openai.com/v1'){
  const r=await fetch(base.replace(/\/$/,'')+'/models',{headers:{Authorization:'Bearer '+key}});
