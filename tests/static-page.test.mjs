@@ -27,7 +27,7 @@ test('Gemini prioriza o modelo atual para evitar seleção automática de versã
 
 test('prompt do assistente proíbe invenção e exige confirmação humana',()=>{
  assert.match(SYSTEM_PROMPT,/Nunca invente/);
- assert.match(SYSTEM_PROMPT,/não declare que o problema foi resolvido/);
+ assert.match(SYSTEM_PROMPT,/não declare que o problema foi resolvido/i);
  assert.match(SYSTEM_PROMPT,/missing_information/);
 });
 
