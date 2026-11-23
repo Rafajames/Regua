@@ -33,3 +33,14 @@ test('não inventa: texto sem ação, causa ou teste fica vazio', () => {
   assert.equal(classifySentence('Substituído o cabo danificado'), 'action', 'ação no início prevalece sobre adjetivo de causa');
   assert.equal(classifySentence('Não foi possível concluir o atendimento'), 'pending');
 });
+
+test('comentário real do nobreak: teste sem sucesso é teste; "será necessário" é pendência; nada se perde', () => {
+  const r = extractFromComments('Realizada a visita técnica na Coordenação da Vara da Justiça Itinerante. Removido o nobreak da estação do servidor. Conectados os equipamentos do servidor, monitores e computador a uma extensão da unidade. Recolhido o nobreak para envio ao Laboratório de TIC do TJRR. Verificado que o nobreak da estação do servidor não apresenta sinal, não acende e não liga, mesmo conectado à tomada. Testado o nobreak em outras tomadas, sem sucesso. Será necessário enviar o nobreak ao Laboratório de TIC do TJRR; após a análise, será avaliada a possibilidade de manutenção ou substituição do equipamento.');
+  assert.equal(r.action.split('\n').length, 4);
+  assert.match(r.action, /Recolhido o nobreak/);
+  assert.match(r.cause, /^Verificado que o nobreak/);
+  assert.equal(r.test, 'Testado o nobreak em outras tomadas, sem sucesso.');
+  assert.match(r.pending, /^Será necessário enviar o nobreak/);
+  assert.match(r.pending, /Após a análise, será avaliada/);
+  assert.deepEqual(r.unclassified, []);
+});

@@ -71,3 +71,8 @@ test('pesos marcados como provisórios e faixas de nota', () => {
   assert.equal(scoreBand(54), 'low');
   assert.equal(scoreBand(null), 'none');
 });
+
+test('pendência com "será necessário" é reconhecida (critério 0.3)', () => {
+  const r = evaluateQuality({ comments: 'Será necessário enviar o nobreak ao laboratório.', notes: 'Será necessário enviar o nobreak ao laboratório.' });
+  assert.equal(r.criteria.find(c => c.id === 'pending').status, 'met');
+});

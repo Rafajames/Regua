@@ -2,7 +2,7 @@
 // Os pesos são EXPERIMENTAIS e provisórios até aprovação institucional.
 // A IA nunca altera a nota calculada aqui.
 
-export const CRITERIA_VERSION = '0.2-experimental';
+export const CRITERIA_VERSION = '0.3-experimental';
 export const WEIGHTS_ARE_PROVISIONAL = true;
 
 export const DEFAULT_CRITERIA = [
@@ -75,7 +75,7 @@ function inspect(id, data) {
       return { status, evidence: status === 'met' ? 'Há registro de teste ou confirmação.' : status === 'needs_review' ? 'Validação registrada de forma muito resumida.' : 'Não há registro de teste ou confirmação.', recommendation: 'Registre teste realizado ou confirmação de funcionamento.' };
     }
     case 'pending': {
-      const hasPending = /(aguardando|pendente|terceiro|depend[eê]ncia)/i.test(text(data.notes) + ' ' + text(data.comments));
+      const hasPending = /(aguardando|pendente|terceiro|depend[eê]ncia|ser[aá] necess[aá]ri|em andamento|agendad|retorno)/i.test(text(data.notes) + ' ' + text(data.comments));
       if (!hasPending) return { status: 'not_applicable', evidence: 'Nenhuma pendência explícita identificada; critério não aplicável.', recommendation: 'Explique motivo da espera e próximo passo.' };
       const status = byLength(data.notes, 10);
       return { status, evidence: status === 'met' ? 'Pendência possui contextualização.' : status === 'needs_review' ? 'Pendência registrada sem contexto suficiente.' : 'Há indicação de pendência sem contexto ou próximo passo.', recommendation: 'Explique motivo da espera e próximo passo.' };

@@ -6,7 +6,7 @@ import { extractFromComments } from './comment-parser.js';
 import { buildStandardDraft, checkClosureClaims, DEFAULT_SIGNATURE } from './draft-template.js';
 import * as store from './storage.js';
 
-export const APP_VERSION = '2026.11.23.7';
+export const APP_VERSION = '2026.11.23.8';
 
 const $ = id => document.getElementById(id);
 const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));

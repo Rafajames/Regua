@@ -6,10 +6,10 @@
 const fold = s => [...s].map(c => c.normalize('NFD')[0]).join('').toLowerCase();
 
 const PATTERNS = {
-  pending: /\b(aguardand|aguarda |pendent|pendencia|sera necessari|e necessari|necessario (realizar|trocar|substituir|adquirir|solicitar|agendar|retornar)|precisa(ra|mos)? (ser|de|realizar|trocar)|sera (realizad|feit|agendad|enviad|substituid|trocad|verificad)|retornar|retorno (do|da|ao)|agendad|depende d|dependencia|ainda nao|nao foi possivel|sem sucesso|em andamento|solicitad[oa]s? (a |o )?(compra|peca|troca|reposicao))/,
+  pending: /\b(aguardand|aguarda |pendent|pendencia|sera necessari|e necessari|necessario (realizar|trocar|substituir|adquirir|solicitar|agendar|retornar)|precisa(ra|mos)? (ser|de|realizar|trocar)|sera (realizad|feit|agendad|enviad|substituid|trocad|verificad)|retornar|retorno (do|da|ao)|agendad|depende d|dependencia|ainda nao|nao foi possivel|em andamento|sera [a-z]+d[oa]s? |solicitad[oa]s? (a |o )?(compra|peca|troca|reposicao))/,
   test: /\b(testad|teste[s]? (realizad|de|feito|com)|realizad[oa]s? (o |os )?testes?|funcionando|funcionamento|funciona normal|voltou a funcionar|voltaram a funcionar|operando|operacional|normalizad|validad|confirmou|confirmaram|confirmad[oa] (o|a|pelo|pela) )/,
   cause: /\b(verificad[oa]s? que|constatad|identificad[oa]s? (que|o problema|a causa|defeito|falha)|o problema (era|estava|foi|e )|a causa|causad[oa]|devido|por conta d|em razao d|motivo|defeit|danificad|queimad|mau contato|mal conectad|desconectad|travad|corrompid|com falha|apresentava|apresentando|estava com|estavam com|sem (sinal|conexao|energia|toner|papel|rede))/,
-  action: /\b(foi realizad|foram realizad|realizad[oa]s?|feit[oa]s?|efetuad|executad|substituid|trocad|instalad|reinstalad|configurad|reconfigurad|ajustad|limp[oa]|higienizad|atualizad|reiniciad|conectad|reconectad|removid|formatad|mapead|cadastrad|liberad|desbloquead|redefinid|resetad|aplicad|verificad|analisad|visita|fiz|realizei|troquei|instalei|configurei|ajustei|reiniciei|conectei|atualizei|limpei|substitui|removi|verifiquei)/
+  action: /\b(foi realizad|foram realizad|realizad[oa]s?|feit[oa]s?|efetuad|executad|substituid|trocad|instalad|reinstalad|configurad|reconfigurad|ajustad|limp[oa]|higienizad|atualizad|reiniciad|conectad|reconectad|removid|formatad|mapead|cadastrad|liberad|desbloquead|redefinid|resetad|aplicad|recolhid|retirad|levad|enviad|entregu|desligad|religad|posicionad|organizad|desmontad|montad|verificad|analisad|visita|fiz|realizei|troquei|instalei|configurei|ajustei|reiniciei|conectei|atualizei|limpei|substitui|removi|verifiquei)/
 };
 
 // Pontos de quebra: pontuação, quebras de linha e " e " / ", " antes de um novo verbo ou conector.
@@ -62,10 +62,16 @@ const join = (list, sep) => list.map(s => s.replace(/[.\s]+$/, '') + '.').join(s
 export function extractFromComments(text) {
   const groups = { action: [], cause: [], test: [], pending: [] };
   const unclassified = [];
-  for (const s of sentences(text)) {
+  let carry = '';
+  for (const raw of sentences(text)) {
+    const s = carry ? carry + ', ' + raw.charAt(0).toLowerCase() + raw.slice(1) : raw;
+    carry = '';
     const kind = classifySentence(s);
-    if (kind) groups[kind].push(s); else unclassified.push(s);
+    if (kind) groups[kind].push(s);
+    else if (s.length < 30) carry = s;
+    else unclassified.push(s);
   }
+  if (carry) unclassified.push(carry);
   return {
     action: join(groups.action, '\n'),
     cause: join(groups.cause, ' '),
