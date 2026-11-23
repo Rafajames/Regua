@@ -1,39 +1,51 @@
-# Régua — Inteligência operacional
+# Régua — Inteligência Operacional
 
-A Régua é uma plataforma de **pré-auditoria e análise da qualidade dos serviços de TI** em prédios e unidades.
+A Régua apoia a pré-auditoria e a mensuração da qualidade dos atendimentos de TI. **Não é um sistema de chamados**: não cria, distribui, encaminha, atualiza nem encerra registros no Aranda.
 
-> A Régua não é um sistema de chamados. Ela não abre, distribui, encaminha, atualiza nem encerra chamados no sistema oficial.
+## Dois fluxos de auditoria
+- **Técnico:** mensura e revisa os próprios atendimentos.
+- **Gestor/supervisor:** realiza auditoria independente, obtendo o conjunto diretamente do Aranda por integração ou exportação autorizada. Não depende de receber chamados encaminhados pelos técnicos.
 
-## O que faz
-- Pré-auditoria de abertura, comentários, causa, ação realizada e validação.
-- Indicadores de volume, encerramentos, backlog, tempos e distribuição por local/categoria.
-- Comparação de períodos e relatórios com indicação da cobertura dos dados.
-- Preparação para consultar exclusivamente MapTec e a plataforma patrimonial indicada pelo administrador.
+Aranda é a fonte dos chamados. MapTec e a plataforma patrimonial são fontes de referência de local e equipamento, condicionadas às APIs e autorizações correspondentes.
 
-## Arquitetura
-- Frontend estático HTML/CSS/JavaScript preparado para GitHub Pages.
-- Histórico legado em IndexedDB local por navegador.
-- Snapshot local do catálogo MapTec; ainda não está conectado em tempo real.
-- Módulos de lógica em `src/quality-engine.js` e `src/reporting.js`.
-- Sincronização diária preparada no GitHub Actions às 07:00 de Boa Vista (11:00 UTC), além de execução manual.
-- Conectores dependem de URLs, autenticação e contrato de resposta fornecidos pelos responsáveis.
+## Funcionalidades presentes nesta versão
+- Pré-auditoria manual e interpretação inicial de mensagens do WhatsApp.
+- Snapshot do catálogo MapTec para apoiar identificação de local.
+- Histórico individual no IndexedDB do navegador e exportação JSON.
+- Critérios determinísticos de qualidade por abertura, acompanhamento e encerramento.
+- Tema claro, escuro e automático, com identidade azul derivada dos tokens CSS do MapTec.
+- Importação gerencial de JSON normalizado apenas em memória/sessão local.
+- Relatórios locais, sem alegação de indicadores institucionais consolidados.
+- Configuração individual do Gemini, teste de conexão e análise assistida com prompt restritivo.
 
-## Integrações
-Consulte [arquitetura de integrações](docs/arquitetura-integracoes.md), [fases 2 e 3](docs/fases-2-e-3.md) e [exemplo de configuração](config/integrations.example.json).
+## Limitações importantes
+- A importação gerencial não é integração direta com Aranda; depende de JSON no contrato intermediário em docs/contrato-importacao-aranda.md.
+- A chave Gemini é mantida na memória da aba e enviada do navegador diretamente ao Google. É apenas um modo de teste individual; não usar com dados pessoais/sigilosos ou em ambiente institucional sem autorização.
+- Não há backend multiusuário nem histórico centralizado.
+- As integrações reais de Aranda, MapTec API e patrimônio dependem de URLs, contratos, credenciais e autorização.
+- O workflow de sincronização atual valida endpoints e gera relatório; não publica dados sincronizados no frontend.
 
-GitHub Actions Secrets esperados:
-- `REGUA_MAPTEC_API_URL`
-- `REGUA_MAPTEC_API_TOKEN` (se exigido)
-- `REGUA_PATRIMONIO_API_URL`
-- `REGUA_PATRIMONIO_API_TOKEN` (se exigido)
+## Documentação
+- Estado atual e roadmap: docs/roadmap.md
+- Especificação funcional: docs/especificacao-funcional.md
+- Arquitetura de integrações: docs/arquitetura-integracoes.md
+- Fases 2 e 3: docs/fases-2-e-3.md
+- Contrato intermediário Aranda: docs/contrato-importacao-aranda.md
+- Módulo de IA e critérios: docs/modulo-ia-e-criterios.md
+- Prompt de auditoria: config/prompts/quality-review.md
+- Identidade visual: docs/identidade-visual.md
 
-O workflow valida as APIs e guarda relatório técnico da execução por 30 dias. Nesta etapa ele **não publica payloads das APIs no site nem grava dados brutos no repositório**.
+## Integrações e segredos
+GitHub Actions Secrets esperados para os catálogos:
+- REGUA_MAPTEC_API_URL
+- REGUA_MAPTEC_API_TOKEN
+- REGUA_PATRIMONIO_API_URL
+- REGUA_PATRIMONIO_API_TOKEN
 
-## Privacidade
-Nunca coloque tokens no JavaScript público. Não publique nomes de solicitantes, comentários de chamados ou inventário restrito em repositório público. As integrações são somente leitura. Para compartilhar dados de chamados entre técnicos ou armazenar dados restritos, será necessário backend privado, autenticação e autorização. GitHub Pages/IndexedDB não oferecem uma base central privada.
+Não coloque chaves no frontend ou no repositório. Para uso institucional, IA e dados de chamados devem passar por backend privado com autenticação, autorização, limites de uso e retenção definida.
 
-## Desenvolvimento local
-```bash
+## Execução local
+```
 python -m http.server 8000
 ```
-Acesse http://localhost:8000.
+Abra http://localhost:8000.
