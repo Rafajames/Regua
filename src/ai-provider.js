@@ -46,7 +46,7 @@ async function generate(provider,key,model,prompt,customBase='',systemPrompt=SYS
  let response,body;
  if(provider==='gemini'){
   const id=(model||'').replace(/^models\//,'');if(!id)throw new Error('Nenhum modelo Gemini compatível foi identificado.');
-  response=await fetch('https://generativelanguage.googleapis.com/v1beta/models/'+encodeURIComponent(id)+':generateContent',{method:'POST',headers:{'Content-Type':'application/json','x-goog-api-key':key.trim()},body:JSON.stringify({contents:[{role:'user',parts:[{text:systemPrompt+'\\n\\n'+prompt}]}],generationConfig:{temperature:0.2,responseMimeType:'application/json'}})});
+  response=await fetch('https://generativelanguage.googleapis.com/v1beta/models/'+encodeURIComponent(id)+':generateContent',{method:'POST',headers:{'Content-Type':'application/json','x-goog-api-key':key.trim()},body:JSON.stringify({contents:[{role:'user',parts:[{text:systemPrompt+'\n\n'+prompt}]}],generationConfig:{temperature:0.2,responseMimeType:'application/json'}})});
   body=await response.json().catch(()=>({}));if(!response.ok)throw new Error(body?.error?.message||'Gemini retornou HTTP '+response.status);
   return parseJson(body?.candidates?.[0]?.content?.parts?.map(p=>p.text||'').join('\n'));
  }
@@ -74,7 +74,7 @@ export async function generateResolutionDraft({provider='gemini',apiKey,model,cu
 }
 export async function reviewTicketWithProvider({provider='gemini',apiKey,model,customBase='',data={}}){
  const allowed={subject:data.subject||'',building:data.building||'',location:data.location||'',description:data.description||'',comments:data.comments||'',cause:data.cause||'',action:data.action||'',test:data.test||'',notes:data.notes||'',assetType:data.assetType||''};
- return generate(provider,apiKey,model,SYSTEM_PROMPT+'\n\nAnalise também a qualidade documental deste chamado. Dados técnicos minimizados:\n'+JSON.stringify(allowed),customBase);
+ const reviewPrompt='Você é um auditor documental de chamados de suporte de TI. Não invente fatos nem atribua culpa. Diferencie ausência de registro de falha técnica e não presuma resolução. Retorne somente JSON com overall, confidence, findings (criterion, status, evidence, explanation), missing_information, recommendations e human_review.';\n return generate(provider,apiKey,model,'Analise a qualidade documental do chamado. Dados técnicos minimizados:\n'+JSON.stringify(allowed),customBase,reviewPrompt);
 }
 export async function proposeCriteriaConfiguration(apiKey,model,context='',provider='gemini',customBase=''){
  const current=[{id:'location',label:'Local identificável',weight:2,dimension:'opening'},{id:'subject',label:'Assunto específico',weight:1,dimension:'opening'},{id:'symptom',label:'Sintoma descrito',weight:2,dimension:'opening'},{id:'asset',label:'Equipamento ou sistema identificado',weight:1,dimension:'opening'},{id:'updates',label:'Comentários úteis',weight:2,dimension:'updates'},{id:'cause',label:'Causa registrada',weight:1,dimension:'closure'},{id:'action',label:'Ação realizada descrita',weight:2,dimension:'closure'},{id:'validation',label:'Teste ou confirmação',weight:2,dimension:'closure'},{id:'pending',label:'Pendências contextualizadas',weight:1,dimension:'closure'}];
