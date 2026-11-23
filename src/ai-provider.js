@@ -41,24 +41,24 @@ export async function discoverModels(provider,key,customBase=''){
  if(!base)throw new Error('Informe a URL base da API compatível.');
  return openAiModels(key.trim(),base);
 }
-async function generate(provider,key,model,prompt,customBase=''){
+async function generate(provider,key,model,prompt,customBase='',systemPrompt=SYSTEM_PROMPT){
  if(!key?.trim())throw new Error('Informe uma chave de API.');
  let response,body;
  if(provider==='gemini'){
   const id=(model||'').replace(/^models\//,'');if(!id)throw new Error('Nenhum modelo Gemini compatível foi identificado.');
-  response=await fetch('https://generativelanguage.googleapis.com/v1beta/models/'+encodeURIComponent(id)+':generateContent',{method:'POST',headers:{'Content-Type':'application/json','x-goog-api-key':key.trim()},body:JSON.stringify({contents:[{role:'user',parts:[{text:prompt}]}],generationConfig:{temperature:0.2,responseMimeType:'application/json'}})});
+  response=await fetch('https://generativelanguage.googleapis.com/v1beta/models/'+encodeURIComponent(id)+':generateContent',{method:'POST',headers:{'Content-Type':'application/json','x-goog-api-key':key.trim()},body:JSON.stringify({contents:[{role:'user',parts:[{text:systemPrompt+'\\n\\n'+prompt}]}],generationConfig:{temperature:0.2,responseMimeType:'application/json'}})});
   body=await response.json().catch(()=>({}));if(!response.ok)throw new Error(body?.error?.message||'Gemini retornou HTTP '+response.status);
   return parseJson(body?.candidates?.[0]?.content?.parts?.map(p=>p.text||'').join('\n'));
  }
  if(provider==='claude'){
   if(!model)throw new Error('Nenhum modelo Claude foi identificado.');
-  response=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':key.trim(),'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model,max_tokens:3000,system:SYSTEM_PROMPT,messages:[{role:'user',content:prompt}]})});
+  response=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':key.trim(),'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model,max_tokens:3000,system:systemPrompt,messages:[{role:'user',content:prompt}]})});
   body=await response.json().catch(()=>({}));if(!response.ok)throw new Error(body?.error?.message||'Claude retornou HTTP '+response.status);
   return parseJson((body.content||[]).map(x=>x.text||'').join('\n'));
  }
  const base=provider==='grok'?'https://api.x.ai/v1':provider==='custom'?customBase:'https://api.openai.com/v1';
  if(!model)throw new Error('Nenhum modelo foi identificado para este provedor.');
- response=await fetch(base.replace(/\/$/,'')+'/chat/completions',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+key.trim()},body:JSON.stringify({model,temperature:0.2,response_format:{type:'json_object'},messages:[{role:'system',content:SYSTEM_PROMPT},{role:'user',content:prompt}]})});
+ response=await fetch(base.replace(/\/$/,'')+'/chat/completions',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+key.trim()},body:JSON.stringify({model,temperature:0.2,response_format:{type:'json_object'},messages:[{role:'system',content:systemPrompt},{role:'user',content:prompt}]})});
  body=await response.json().catch(()=>({}));if(!response.ok)throw new Error(body?.error?.message||'A API retornou HTTP '+response.status);
  return parseJson(body?.choices?.[0]?.message?.content);
 }
@@ -79,6 +79,6 @@ export async function reviewTicketWithProvider({provider='gemini',apiKey,model,c
 export async function proposeCriteriaConfiguration(apiKey,model,context='',provider='gemini',customBase=''){
  const current=[{id:'location',label:'Local identificável',weight:2,dimension:'opening'},{id:'subject',label:'Assunto específico',weight:1,dimension:'opening'},{id:'symptom',label:'Sintoma descrito',weight:2,dimension:'opening'},{id:'asset',label:'Equipamento ou sistema identificado',weight:1,dimension:'opening'},{id:'updates',label:'Comentários úteis',weight:2,dimension:'updates'},{id:'cause',label:'Causa registrada',weight:1,dimension:'closure'},{id:'action',label:'Ação realizada descrita',weight:2,dimension:'closure'},{id:'validation',label:'Teste ou confirmação',weight:2,dimension:'closure'},{id:'pending',label:'Pendências contextualizadas',weight:1,dimension:'closure'}];
  const prompt='Proponha critérios objetivos e auditáveis para a Régua. Não crie normas institucionais. Preserve IDs, sugira pesos de 1 a 5 e justifique. Retorne JSON com rationale, criteria, proposed_additions, governance_warnings, human_approval_required=true. Contexto: '+context+' Critérios: '+JSON.stringify(current);
- return generate(provider,apiKey,model,prompt,customBase);
+ const criteriaSystem='Você é consultor de desenho de critérios de qualidade para suporte de TI. Retorne somente JSON válido com rationale, criteria, proposed_additions, governance_warnings e human_approval_required=true. Não invente normas institucionais.';\n return generate(provider,apiKey,model,prompt,customBase,criteriaSystem);
 }
 export {PROVIDERS,SYSTEM_PROMPT};
