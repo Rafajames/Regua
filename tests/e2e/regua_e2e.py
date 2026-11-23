@@ -234,6 +234,10 @@ with sync_playwright() as p:
         page.wait_for_function("t => document.getElementById('managerFeedback').textContent.startsWith(t)", arg=fmt, timeout=20000)
         ok(f'conjunto gerencial lê {fmt}', page.text_content('#managerTotal') == n and page.locator('#managerCategories .band-row').count() >= 2, page.text_content('#managerFeedback'))
     ok('padrões descritos', page.locator('#managerInsights li').count() >= 3)
+    page.set_input_files('#managerFile', f'{SITE}/tests/fixtures/aranda-ficticio.csv'); page.click('#importManager')
+    page.wait_for_function("() => document.getElementById('managerTotal').textContent === '40'", timeout=10000)
+    txt = page.text_content('#managerInsights')
+    ok('formato completo do Aranda: prazo, lote, canais e classificação', 'registro em lote' in txt and 'Canais' in txt and 'prazo previsto' in txt and 'categorias diferentes' in txt, txt[:200])
     page.screenshot(path=f'{OUT}/12-conjunto-gerencial.png', full_page=True)
 
     # --- Atualização: publica nova versão do SW
@@ -260,7 +264,7 @@ with sync_playwright() as p:
         ok('com dados não salvos, pergunta antes de atualizar (uma única vez)', asked and not native, native)
         page.wait_for_load_state('networkidle'); page.wait_for_timeout(800)
         keys = page.evaluate('() => caches.keys()')
-        ok('após atualizar, só o cache novo permanece', keys == ['regua-shell-teste-2026.11.23.9'], keys)
+        ok('após atualizar, só o cache novo permanece', keys == ['regua-shell-teste-2026.11.23.10'], keys)
     except Exception as e:
         ok('aviso discreto de nova versão', False, f'{e} | navegações: {nav_log}')
     open(swp, 'w', encoding='utf-8').write(src)

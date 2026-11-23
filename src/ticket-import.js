@@ -176,11 +176,18 @@ export async function parsePdf(buffer) {
 const FIELDS = [
   ['number', ['chamado', 'numero', 'ticket', 'requisicao', 'protocolo', 'codigo', 'id', 'n', 'no']],
   ['status', ['estado', 'status', 'situacao']],
-  ['openedAt', ['dataabertura', 'datasolicitacao', 'abertura', 'aberto', 'criado', 'datacriacao', 'criacao', 'registro']],
-  ['closedAt', ['dataencerramento', 'encerramento', 'encerrado', 'datafechamento', 'fechamento', 'datasolucao', 'resolvido', 'conclusao']],
-  ['progress', ['progresso', 'temposolucao', 'tempo', 'duracao', 'horas', 'sla']],
+  ['channel', ['tiporegistro', 'canal', 'origem', 'meioabertura']],
+  ['ticketType', ['tipochamado', 'tiposolicitacao', 'natureza']],
+  ['dueAt', ['dataatendimentoprevista', 'atendimentoprevisto', 'atendimentoprevista', 'prevista', 'prazo', 'vencimento']],
+  ['attendedAt', ['datarealatendimento', 'realatendimento', 'dataatendimento', 'atendidoem']],
+  ['openedAt', ['dataregistro', 'dataabertura', 'datasolicitacao', 'abertura', 'aberto', 'criado', 'datacriacao', 'criacao', 'registro']],
+  ['closedAt', ['datafechamento', 'dataencerramento', 'encerramento', 'encerrado', 'fechamento', 'datasolucao', 'resolvido', 'conclusao']],
+  ['progress', ['progresso']],
+  ['duration', ['tempo', 'temposolucao', 'duracao', 'horas', 'tempogasto']],
+  ['sla', ['sla', 'acordo', 'nivelservico']],
+  ['impact', ['impacto']],
   ['priority', ['prioridade', 'urgencia']],
-  ['category', ['categoria', 'servico', 'classificacao', 'tipo']],
+  ['category', ['categoria', 'servico', 'classificacao']],
   ['subject', ['assunto', 'titulo', 'resumo']],
   ['requester', ['solicitante', 'requerente', 'usuario', 'cliente']],
   ['tech', ['tecnico', 'responsavel', 'atendente', 'analista', 'executor']],
@@ -198,7 +205,8 @@ const FIELDS = [
 export function matchField(header) {
   const h = key(header);
   if (!h) return null;
-  for (const [field, aliases] of FIELDS) if (aliases.some(a => h === a || (a.length >= 4 && h.includes(a)))) return field;
+  for (const [field, aliases] of FIELDS) if (aliases.includes(h)) return field;
+  for (const [field, aliases] of FIELDS) if (aliases.some(a => a.length >= 4 && h.includes(a))) return field;
   return null;
 }
 
@@ -207,12 +215,32 @@ const excelDate = v => {
   if (!Number.isFinite(n) || n < 20000 || n > 80000) return v;
   return new Date(Math.round((n - 25569) * 86400000)).toISOString();
 };
-const brDate = v => {
-  const m = String(v).trim().match(/^(\d{1,2})\/(\d{1,2})\/(\d{2,4})(?:\s+(\d{1,2}):(\d{2})(?::(\d{2}))?)?$/);
+// Datas "M/D/AAAA h:mm:ss AM/PM" (exportação em inglês, como a do Aranda) ou "DD/MM/AAAA HH:MM".
+export function parseDateText(v) {
+  const m = String(v).trim().match(/^(\d{1,2})\/(\d{1,2})\/(\d{2,4})(?:,?\s+(\d{1,2}):(\d{2})(?::(\d{2}))?\s*([AaPp][Mm])?)?$/);
   if (!m) return v;
   const y = m[3].length === 2 ? 2000 + +m[3] : +m[3];
-  return new Date(y, +m[2] - 1, +m[1], +(m[4] || 0), +(m[5] || 0), +(m[6] || 0)).toISOString();
-};
+  let h = +(m[4] || 0);
+  const ampm = m[7]?.toUpperCase();
+  if (ampm === 'PM' && h < 12) h += 12;
+  if (ampm === 'AM' && h === 12) h = 0;
+  const us = !!ampm || +m[2] > 12;
+  const month = us ? +m[1] : +m[2], day = us ? +m[2] : +m[1];
+  return new Date(y, month - 1, day, h, +(m[5] || 0), +(m[6] || 0)).toISOString();
+}
+const brDate = parseDateText;
+
+// "0d:0h:4min", "1h 30min", "1:30" ou número → minutos
+export function parseDuration(v) {
+  const s = String(v ?? '').trim().toLowerCase();
+  if (!s) return null;
+  const m = s.match(/^(?:(\d+)\s*d)?[:\s]*(?:(\d+)\s*h)?[:\s]*(?:(\d+)\s*min)?$/);
+  if (m && (m[1] || m[2] || m[3])) return (+(m[1] || 0)) * 1440 + (+(m[2] || 0)) * 60 + (+(m[3] || 0));
+  const hm = s.match(/^(\d+):(\d{2})$/);
+  if (hm) return +hm[1] * 60 + +hm[2];
+  const n = Number(s.replace(',', '.'));
+  return Number.isFinite(n) ? n : null;
+}
 
 /** Converte linhas (primeira = cabeçalho) em registros com os nomes de campo da Régua. */
 export function rowsToRecords(rows) {
@@ -230,7 +258,7 @@ export function rowsToRecords(rows) {
     const rec = {};
     fields.forEach((f, i) => { if (f) rec[f] = String(row[i] ?? '').trim(); });
     if (!Object.values(rec).some(Boolean)) continue;
-    for (const d of ['openedAt', 'closedAt']) if (rec[d]) rec[d] = brDate(excelDate(rec[d]));
+    for (const d of ['openedAt', 'closedAt', 'dueAt', 'attendedAt']) if (rec[d]) rec[d] = brDate(excelDate(rec[d]));
     records.push(rec);
   }
   return { records, mapping, ignored };
@@ -285,8 +313,33 @@ export function summarizeTickets(records, { progressLabel = 'Progresso' } = {}) 
   const recurring = reqCounts.filter(n => n >= 2);
   const withText = records.filter(r => TEXT_FIELDS.some(f => String(r[f] || '').trim()));
   const scores = withText.map(r => evaluateQuality(r).score).filter(s => typeof s === 'number');
+  const date = v => { const d = v ? new Date(v) : null; return d && !Number.isNaN(d.getTime()) ? d : null; };
+  const minutes = records.map(r => parseDuration(r.duration)).filter(n => n !== null);
+  const sla = records.filter(r => date(r.dueAt) && date(r.attendedAt));
+  const onTime = sla.filter(r => date(r.attendedAt) <= date(r.dueAt)).length;
+  const days = (a, b) => (b - a) / 86400000;
+  const toAttend = records.map(r => date(r.openedAt) && date(r.attendedAt) ? days(date(r.openedAt), date(r.attendedAt)) : null).filter(n => n !== null && n >= 0);
+  const toClose = records.map(r => date(r.attendedAt) && date(r.closedAt) ? days(date(r.attendedAt), date(r.closedAt)) : null).filter(n => n !== null && n >= 0);
+  const countBy = (f, list = records) => { const o = {}; for (const r of list) { const v = String(r[f] || '').trim(); if (v) o[v] = (o[v] || 0) + 1; } return Object.entries(o).sort((a, b) => b[1] - a[1]); };
+  const batch = countBy('_d', sla.map(r => ({ _d: date(r.attendedAt).toLocaleDateString('pt-BR') })))[0];
+  const subjects = countBy('_s', records.filter(r => r.subject).map(r => ({ _s: fold(r.subject).replace(/\s+/g, ' ').trim() })));
+  const generic = records.filter(r => /criado via chatbot|^\s*(suporte|chamado|solicitacao)\s*$/i.test(fold(r.subject || ''))).length;
+  const spread = [];
+  for (const [label, re] of [['impressora', /impress/], ['computador', /computador|\bpc\b/], ['sistemas', /projudi|\bsei\b|e-?mail|malote|serp|sistema|login|scriba/]]) {
+    const hit = records.filter(r => r.category && re.test(fold(r.subject || '')));
+    const cats = new Set(hit.map(r => r.category));
+    if (hit.length >= 3 && cats.size >= 2) spread.push({ label, count: hit.length, categories: cats.size });
+  }
   return {
     total, closed, open: total - closed, hasStatus,
+    duration: minutes.length ? { count: minutes.length, mean: round(minutes.reduce((a, b) => a + b, 0) / minutes.length), median: round(median(minutes)), p90: round(pct(minutes, 0.9)), max: Math.max(...minutes), total: minutes.reduce((a, b) => a + b, 0) } : null,
+    sla: sla.length ? { evaluated: sla.length, onTime, late: sla.length - onTime } : null,
+    daysToAttend: toAttend.length ? { median: round(median(toAttend)), max: round(Math.max(...toAttend)) } : null,
+    daysToClose: toClose.length ? { median: round(median(toClose)), min: round(Math.min(...toClose)), max: round(Math.max(...toClose)) } : null,
+    attendedBatch: batch && sla.length ? { day: batch[0], count: batch[1], share: batch[1] / sla.length } : null,
+    channels: countBy('channel'), slaLevels: countBy('sla'), priorities: countBy('priority'),
+    subjects: subjects.length ? { distinct: subjects.length, generic } : null,
+    categorySpread: spread,
     progress: progress.length ? { label: progressLabel, count: progress.length, mean: round(progress.reduce((a, b) => a + b, 0) / progress.length), median: round(median(progress)), p90: round(p90), max: round(Math.max(...progress)), outliers: progress.filter(n => n > p90).length } : null,
     categories,
     requesters: reqCounts.length ? { distinct: reqCounts.length, recurring: recurring.length, recurringTickets: recurring.reduce((a, b) => a + b, 0), top: Math.max(...reqCounts) } : null,

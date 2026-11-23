@@ -42,3 +42,9 @@ Referências: formulários de uma coluna e divulgação progressiva (Nielsen Nor
 - Indicadores: total, encerrados/em aberto (pela coluna Estado), qualidade média (somente quando há colunas de texto), distribuição por categoria com mediana de progresso, padrões descritos (concentração por categoria, tempo/progresso típico e limite de 90%, categoria mais lenta, recorrência de solicitantes) e pesquisa na lista. Testado com 20 mil registros.
 - Limitações: .xls antigo não é lido (salvar como .xlsx/CSV); PDF escaneado (imagem) não tem texto; tabelas em PDF são reconstruídas pela posição do texto e podem precisar de conferência.
 - Testes: 64 unitários; 66 verificações em navegador (inclui CSV, Excel e PDF de exemplo com dados fictícios).
+
+## 2026.11.23.10 — Formato completo da exportação do Aranda
+- Novas colunas reconhecidas: Tipo de chamado, Tipo de registro (canal), Data de registro, Data de atendimento prevista, Data real de atendimento, Data de fechamento, Tempo ("0d:0h:4min"), SLA, Impacto. Nomes exatos têm prioridade sobre nomes parecidos (ex.: "Tipo de chamado" não ocupa mais o lugar de "Categoria").
+- Datas no formato americano com AM/PM (como o Aranda exporta) e no formato brasileiro.
+- Novos padrões: tempo registrado, cumprimento do prazo previsto, registro em lote (mesmo dia concentrando as datas reais de atendimento), dias até atendimento e até fechamento, canais, SLA × prioridade, assuntos genéricos e assuntos iguais em categorias diferentes.
+- "Progresso" é exibido como "% do prazo do SLA" quando o arquivo traz a coluna SLA: nos dados analisados, Progresso ≈ Tempo ÷ prazo do SLA × 100 (ex.: 45 min em prazo de 130 min = 34,6%; o arquivo mostra 34,67).

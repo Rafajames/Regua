@@ -6,7 +6,7 @@ import { readTicketFile, summarizeTickets } from './ticket-import.js';
 import { buildStandardDraft, checkClosureClaims, DEFAULT_SIGNATURE } from './draft-template.js';
 import * as store from './storage.js';
 
-export const APP_VERSION = '2026.11.23.9';
+export const APP_VERSION = '2026.11.23.10';
 
 const $ = id => document.getElementById(id);
 const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -725,6 +725,15 @@ function renderManager() {
       if (slow) ins.push('Maior ' + esc(p.label.toLowerCase()) + ' mediano: <b>' + esc(slow.name) + '</b> (' + fmtNum(slow.median) + ').');
       if (p.outliers) ins.push(p.outliers + ' chamado(s) acima do limite de 90% — vale revisar o registro deles.');
     }
+    if (sum.duration) ins.push('Tempo registrado por chamado: mediana ' + fmtNum(sum.duration.median) + ' min, 90% até ' + fmtNum(sum.duration.p90) + ' min (máximo ' + sum.duration.max + ' min; total ' + Math.round(sum.duration.total / 60 * 10) / 10 + ' h).');
+    if (sum.sla) ins.push('Pela data real de atendimento, <b>' + sum.sla.onTime + ' de ' + sum.sla.evaluated + '</b> ficaram dentro do prazo previsto.');
+    if (sum.attendedBatch && sum.attendedBatch.share >= 0.3) ins.push('<b>' + Math.round(sum.attendedBatch.share * 100) + '%</b> das datas reais de atendimento caem no mesmo dia (' + esc(sum.attendedBatch.day) + '): indício de registro em lote no sistema, o que faz o prazo parecer estourado.');
+    if (sum.daysToAttend) ins.push('Do registro ao atendimento registrado: mediana de ' + fmtNum(sum.daysToAttend.median) + ' dias (máximo ' + fmtNum(sum.daysToAttend.max) + ').');
+    if (sum.daysToClose) ins.push('Do atendimento ao fechamento: mediana de ' + fmtNum(sum.daysToClose.median) + ' dias (entre ' + fmtNum(sum.daysToClose.min) + ' e ' + fmtNum(sum.daysToClose.max) + ').');
+    if (sum.channels.length) ins.push('Canais: ' + sum.channels.map(([k, n]) => esc(k) + ' ' + Math.round(n / sum.total * 100) + '%').join(', ') + '.');
+    if (sum.priorities.length === 1 && sum.slaLevels.length > 1) ins.push('A prioridade é a mesma em todos (' + esc(sum.priorities[0][0]) + '), mas o SLA varia (' + sum.slaLevels.map(([k, n]) => esc(k.replace(/^TJRR - /, '')) + ' ' + n).join(', ') + '): o prazo é definido pela categoria, não pela prioridade.');
+    if (sum.subjects) ins.push(sum.subjects.distinct + ' assuntos diferentes em ' + sum.total + ' chamados' + (sum.subjects.generic ? '; ' + sum.subjects.generic + ' com assunto genérico (ex.: "Criado via Chatbot")' : '') + '.');
+    for (const sp of sum.categorySpread) ins.push('Assuntos de <b>' + esc(sp.label) + '</b> (' + sp.count + ') estão espalhados em ' + sp.categories + ' categorias diferentes: classificação inconsistente.');
     if (sum.requesters) ins.push(sum.requesters.recurring + ' de ' + sum.requesters.distinct + ' solicitantes abriram 2 ou mais chamados (' + sum.requesters.recurringTickets + ' chamados, ' + Math.round(sum.requesters.recurringTickets / sum.total * 100) + '% do total); o mais recorrente abriu ' + sum.requesters.top + '.');
     if (!sum.quality) ins.push('O arquivo não traz descrição, comentários ou solução: a qualidade do registro não pode ser avaliada. Inclua essas colunas na exportação.');
     else ins.push(sum.quality.below80 + ' de ' + sum.quality.evaluated + ' registros com texto ficaram abaixo de 80% na avaliação por critérios.');
@@ -734,11 +743,11 @@ function renderManager() {
   const list = q ? rows.filter(r => norm(Object.values(r).join(' ')).includes(q)) : rows;
   $('managerList').innerHTML = list.length ? list.slice(0, 200).map(r => {
     const score = TEXT_KEYS.some(k => r[k]) ? evaluateQuality(r).score : null;
-    return '<div class="item"><span><b>' + esc(r.number || r.subject || 'Sem número') + '</b><small>' + esc([r.category || r.subject, r.status, r.progress && (state.managerProgressLabel || 'Progresso') + ' ' + r.progress].filter(Boolean).join(' · ')) + '</small></span>' + (score !== null ? '<span class="score-tag ' + scoreBand(score) + '">' + scoreText(score) + '</span>' : '') + '</div>';
+    return '<div class="item"><span><b>' + esc([r.number, r.subject].filter(Boolean).join(' — ') || 'Sem número') + '</b><small>' + esc([r.category, r.status, r.duration && 'tempo ' + r.duration, r.progress && (state.managerProgressLabel || 'Progresso') + ' ' + r.progress].filter(Boolean).join(' · ')) + '</small></span>' + (score !== null ? '<span class="score-tag ' + scoreBand(score) + '">' + scoreText(score) + '</span>' : '') + '</div>';
   }).join('') + (list.length > 200 ? '<p class="muted small">Exibindo 200 de ' + list.length + '. Use a pesquisa para encontrar outros.</p>' : '') : rows.length ? emptyState('Nada encontrado', '') : '';
 }
 const TEXT_KEYS = ['description', 'comments', 'action', 'cause', 'test'];
-const FIELD_NAMES = { number: 'número', status: 'estado', openedAt: 'abertura', closedAt: 'encerramento', progress: 'progresso/tempo', priority: 'prioridade', category: 'categoria', subject: 'assunto', requester: 'solicitante', tech: 'técnico', building: 'prédio', sector: 'setor', room: 'sala', description: 'descrição', comments: 'comentários', cause: 'causa', test: 'teste', notes: 'pendências', action: 'solução' };
+const FIELD_NAMES = { channel: 'canal', ticketType: 'tipo de chamado', dueAt: 'atendimento previsto', attendedAt: 'atendimento real', duration: 'tempo', sla: 'SLA', impact: 'impacto', number: 'número', status: 'estado', openedAt: 'abertura', closedAt: 'encerramento', progress: 'progresso', priority: 'prioridade', category: 'categoria', subject: 'assunto', requester: 'solicitante', tech: 'técnico', building: 'prédio', sector: 'setor', room: 'sala', description: 'descrição', comments: 'comentários', cause: 'causa', test: 'teste', notes: 'pendências', action: 'solução' };
 $('managerSearch').addEventListener('input', renderManager);
 $('importManager').addEventListener('click', async () => {
   const file = $('managerFile').files[0];
@@ -749,7 +758,8 @@ $('importManager').addEventListener('click', async () => {
   try {
     const r = await readTicketFile(file);
     state.managerRecords = r.records;
-    state.managerProgressLabel = r.mapping.find(m => m.field === 'progress')?.column || 'Progresso';
+    const has = f => r.mapping.some(m => m.field === f);
+    state.managerProgressLabel = has('progress') && has('sla') ? '% do prazo do SLA' : r.mapping.find(m => m.field === 'progress')?.column || 'Progresso';
     renderManager();
     $('managerFeedback').textContent = r.format + ': ' + r.records.length + ' chamados analisados nesta aba. Nada foi salvo ou enviado.';
     const map = $('managerMapping');

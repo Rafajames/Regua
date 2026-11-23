@@ -79,3 +79,28 @@ test('volume: 20 mil chamados analisados rapidamente', () => {
   assert.equal(s.total, 20000);
   assert.ok(Date.now() - t < 1500);
 });
+
+test('formato completo do Aranda: datas M/D/AAAA AM/PM, tempo "0d:0h:4min", prazo, SLA e lote', () => {
+  const rows = parseCsv('Chamado,Estado,Tipo de chamado,Data de registro,Assunto,Tipo de registro,Progresso,Tempo,SLA,Categoria,Data de atendimento prevista,Data real de atendimento,Data de fechamento,Prioridade\n'
+    + 'RF-1,Closed,Solicitação de Serviço,11/9/2026 9:38:13 AM,Impressora - suporte,Telephone,3.13,0d:0h:4min,TJRR - Prioridade Média,Suporte ao Usuário,11/9/2026 11:48:13 AM,11/9/2026 11:05:45 AM,11/14/2026 7:00:44 AM,4 MEDIUM-LOW\n'
+    + 'RF-2,Closed,Solicitação de Serviço,10/26/2026 1:13:21 PM,Suporte - impressora,E-Mail,18.41,0d:1h:12min,TJRR - Prioridade Alta,Computador e outros,10/26/2026 2:18:21 PM,10/27/2026 4:18:05 PM,11/3/2026 3:35:57 PM,4 MEDIUM-LOW\n'
+    + 'RF-3,Closed,Solicitação de Serviço,10/26/2026 9:08:23 AM,Chamado - Criado via Chatbot,Chamado Fácil,10.1,0d:0h:6min,TJRR - Prioridade Alta,Suporte ao uso dos sistemas e aplicativos,10/26/2026 10:13:23 AM,10/27/2026 4:22:42 PM,11/4/2026 7:00:40 AM,4 MEDIUM-LOW\n');
+  const { records, mapping } = rowsToRecords(rows);
+  const f = Object.fromEntries(mapping.map(m => [m.column, m.field]));
+  assert.equal(f['Tipo de chamado'], 'ticketType');
+  assert.equal(f['Categoria'], 'category', 'Categoria não pode ser tomada por "Tipo de chamado"');
+  assert.equal(f['Tipo de registro'], 'channel');
+  assert.equal(f['Data de registro'], 'openedAt');
+  assert.equal(f['Data de atendimento prevista'], 'dueAt');
+  assert.equal(f['Data real de atendimento'], 'attendedAt');
+  assert.equal(f['Tempo'], 'duration');
+  const d = new Date(records[1].openedAt);
+  assert.equal(d.getMonth(), 9); assert.equal(d.getDate(), 26); assert.equal(d.getHours(), 13);
+  const s = summarizeTickets(records);
+  assert.deepEqual([s.duration.median, s.duration.max], [6, 72]);
+  assert.deepEqual([s.sla.onTime, s.sla.late], [1, 2]);
+  assert.equal(s.attendedBatch.count, 2);
+  assert.equal(s.subjects.generic, 1);
+  assert.equal(s.channels.length, 3);
+  assert.equal(s.categorySpread[0]?.label, undefined, 'só 2 chamados de impressora: abaixo do mínimo para apontar inconsistência');
+});
