@@ -16,7 +16,7 @@ Aranda é a fonte dos chamados. MapTec e a plataforma patrimonial são fontes de
 - Tema claro, escuro e automático, com identidade azul derivada dos tokens CSS do MapTec.
 - Importação gerencial de JSON normalizado apenas em memória/sessão local.
 - Relatórios locais, sem alegação de indicadores institucionais consolidados.
-- Configuração individual do Gemini, teste de conexão e análise assistida com prompt restritivo.
+- Configuração individual do Gemini, teste de conexão, análise assistida e proposta de critérios/pesos com aprovação humana.
 
 ## Limitações importantes
 - A importação gerencial não é integração direta com Aranda; depende de JSON no contrato intermediário em docs/contrato-importacao-aranda.md.
@@ -43,6 +43,10 @@ GitHub Actions Secrets esperados para os catálogos:
 - REGUA_PATRIMONIO_API_TOKEN
 
 Não coloque chaves no frontend ou no repositório. Para uso institucional, IA e dados de chamados devem passar por backend privado com autenticação, autorização, limites de uso e retenção definida.
+
+## Testes automatizados
+
+Execute `npm test` com Node.js 22 ou superior.
 
 ## Execução local
 ```
