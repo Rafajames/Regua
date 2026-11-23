@@ -13,7 +13,8 @@ Aranda é a fonte dos chamados. MapTec e a plataforma patrimonial são fontes de
 - Snapshot do catálogo MapTec para apoiar identificação de local.
 - Histórico individual no IndexedDB do navegador e exportação JSON.
 - Critérios determinísticos de qualidade por abertura, acompanhamento e encerramento.
-- Tema claro, escuro e automático, com identidade azul derivada dos tokens CSS do MapTec.
+- Tema claro, escuro e automático, com identidade azul-petróleo, verde e branco, navegação responsiva e microinterações acessíveis.
+- Cache offline por Service Worker para abrir a aplicação após a primeira visita; formulários, avaliações e histórico continuam locais. Chamadas de IA exigem internet.
 - Importação gerencial de JSON normalizado apenas em memória/sessão local.
 - Relatórios locais, sem alegação de indicadores institucionais consolidados.
 - Assistente de resolução em duas etapas: esboço inicial e versão após atendimento, com revisão de fatos ausentes e contradições.
@@ -29,7 +30,11 @@ Aranda é a fonte dos chamados. MapTec e a plataforma patrimonial são fontes de
 - As integrações reais de Aranda, MapTec API e patrimônio dependem de URLs, contratos, credenciais e autorização.
 - O workflow de sincronização atual valida endpoints e gera relatório; não publica dados sincronizados no frontend.
 
+## Créditos
+Concepção e desenvolvimento: **Jamerson Rafael**.
+
 ## Documentação
+- Identidade visual e experiência: docs/identidade-visual-e-experiencia.md
 - Estado atual e roadmap: docs/roadmap.md
 - Especificação funcional: docs/especificacao-funcional.md
 - Arquitetura de integrações: docs/arquitetura-integracoes.md
