@@ -2,10 +2,11 @@
 import { evaluateQuality, DEFAULT_CRITERIA, DIMENSION_LABELS, STATUS_LABELS, scoreBand, CRITERIA_VERSION } from './quality-engine.js';
 import { PROVIDERS, AIError, testProviderConnection, generateResolutionDraft, reviewTicketWithProvider, proposeCriteriaConfiguration, normalizeModelId } from './ai-provider.js';
 import { buildOperationalSummary } from './reporting.js';
+import { extractFromComments } from './comment-parser.js';
 import { buildStandardDraft, checkClosureClaims, DEFAULT_SIGNATURE } from './draft-template.js';
 import * as store from './storage.js';
 
-export const APP_VERSION = '2026.11.23.5';
+export const APP_VERSION = '2026.11.23.6';
 
 const $ = id => document.getElementById(id);
 const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -246,6 +247,8 @@ function readForm() {
 
 function fillForm(record) {
   for (const k of FORM_FIELDS) $(k).value = record[k] || '';
+  for (const id of ['action', 'cause', 'test', 'notes']) markAuto($(id), false);
+  $('commentsFeedback').textContent = 'Ao sair do campo, a Régua identifica ação, causa, teste e pendências e preenche a etapa 3.';
   $('closureConfirmed').checked = !!record.closureConfirmed;
   $('draftOutput').value = record.draft || '';
   state.lastLocationMatch = record.locationMatch || null;
@@ -339,6 +342,44 @@ $('auditForm').addEventListener('submit', async e => {
     toast('Não foi possível salvar: ' + (err?.message || err) + '. Exporte um backup e tente novamente.', 'error');
   }
 });
+
+/* ================= Preenchimento a partir do comentário ================= */
+
+const AUTO_FIELDS = [['action', 'action', 'ação realizada'], ['cause', 'cause', 'causa'], ['test', 'test', 'teste/confirmação'], ['pending', 'notes', 'pendências']];
+
+function markAuto(el, on) {
+  el.classList.toggle('autofilled', on);
+  if (on) el.dataset.auto = el.value; else delete el.dataset.auto;
+  const label = document.querySelector('label[for="' + el.id + '"]');
+  label?.querySelector('.auto-hint')?.remove();
+  if (on && label) label.insertAdjacentHTML('beforeend', '<span class="auto-hint">preenchido do comentário</span>');
+}
+
+// Preenche a etapa 3 com as frases do comentário. Não sobrescreve o que o técnico digitou.
+function fillFromComments({ manual = false } = {}) {
+  const text = $('comments').value.trim();
+  if (!text) { if (manual) { toast('Escreva o comentário primeiro.'); $('comments').focus(); } return; }
+  const found = extractFromComments(text);
+  const filled = [], kept = [];
+  for (const [key, id, label] of AUTO_FIELDS) {
+    const el = $(id), value = found[key];
+    if (!value) continue;
+    const mine = el.value.trim() && el.dataset.auto !== el.value;
+    if (mine) { if (el.value.trim() !== value) kept.push(label); continue; }
+    el.value = value;
+    markAuto(el, true);
+    filled.push(label);
+  }
+  const fb = $('commentsFeedback');
+  if (filled.length) fb.textContent = 'Preenchido a partir do comentário: ' + filled.join(', ') + '. Confira na etapa 3.' + (kept.length ? ' Mantido o que você digitou em: ' + kept.join(', ') + '.' : '');
+  else if (kept.length) fb.textContent = 'Os campos da etapa 3 já foram preenchidos por você e foram mantidos (' + kept.join(', ') + ').';
+  else fb.textContent = 'Não identifiquei ação, causa, teste ou pendência no comentário. Use frases como “foi realizada…”, “foi verificado que…”, “o usuário confirmou…”.';
+  if (filled.length) { markDirty(); evaluateLive(); if (manual) toast('Etapa 3 preenchida a partir do comentário.'); }
+}
+$('fillFromComments').addEventListener('click', () => fillFromComments({ manual: true }));
+$('comments').addEventListener('change', () => fillFromComments());
+// Ao editar um campo preenchido automaticamente, ele passa a ser do técnico.
+for (const [, id] of AUTO_FIELDS) $(id).addEventListener('input', () => { if ($(id).dataset.auto !== undefined && $(id).dataset.auto !== $(id).value) markAuto($(id), false); });
 
 /* ================= Rascunho ================= */
 

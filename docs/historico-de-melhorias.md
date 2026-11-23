@@ -22,3 +22,6 @@ A pedido do autor, quando o modelo escolhido está sobrecarregado ou sem cota, a
 
 ## 2026.11.23.5 — Fila de reservas não para em modelo descontinuado
 Correção: ao chegar no gemini-2.5-flash (listado pela chave, mas "no longer available to new users"), a fila de reservas era interrompida. Agora qualquer falha do próprio modelo (indisponível, sem cota, sobrecarregado, sem permissão, tempo esgotado, resposta inválida ou bloqueada) pula para o próximo; só chave inválida, configuração ou falta de internet interrompem. Se nenhum modelo responder, a mensagem resume quantos falharam por motivo. Testes: 51.
+
+## 2026.11.23.6 — Etapa 3 preenchida a partir do comentário
+Novo `src/comment-parser.js` (sem IA, offline): separa o comentário do técnico em frases e classifica cada uma como ação realizada, causa, teste/confirmação ou pendência, preenchendo a etapa 3 automaticamente ao sair do campo de comentários (ou pelo botão "Preencher solução a partir do comentário"). Usa somente as frases do técnico; campos digitados manualmente não são sobrescritos; campos preenchidos automaticamente ficam destacados até serem editados. Testes: 55 unitários e 58 verificações em navegador.

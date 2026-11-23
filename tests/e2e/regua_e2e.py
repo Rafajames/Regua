@@ -197,6 +197,19 @@ with sync_playwright() as p:
     ok('IA offline explica a falta de internet', 'internet' in page.text_content('#aiStatus').lower(), page.text_content('#aiStatus'))
     ctx.set_offline(False)
 
+    # --- Preenchimento da etapa 3 a partir do comentário
+    page.click('nav [data-page="audit"]')
+    page.click('#newAudit')
+    if page.locator('#confirmDialog[open]').count(): page.click('#confirmOk')
+    page.fill('#cause', 'Causa digitada pelo técnico.')
+    page.fill('#comments', 'Foi realizada a visita técnica e foi verificado que o cabo HDMI estava danificado e foi feita a substituição do cabo. Após isso, o equipamento voltou a funcionar e o usuário confirmou. Aguardando reposição do cabo reserva.')
+    page.press('#comments', 'Tab'); page.wait_for_timeout(300)
+    ok('comentário preenche ação realizada', page.input_value('#action') == 'Foi realizada a visita técnica.\nFoi feita a substituição do cabo.', page.input_value('#action'))
+    ok('comentário preenche teste e pendência', 'usuário confirmou' in page.input_value('#test') and 'Aguardando' in page.input_value('#notes'))
+    ok('não sobrescreve causa digitada pelo técnico', page.input_value('#cause') == 'Causa digitada pelo técnico.' and 'Mantido' in page.text_content('#commentsFeedback'))
+    ok('nota atualizada após preenchimento', page.text_content('#scoreValue') != '—')
+    page.screenshot(path=f'{OUT}/11-preenchimento-comentario.png', full_page=True)
+
     # --- Atualização: publica nova versão do SW
     swp = f'{SITE}/sw.js'
     src = open(swp, encoding='utf-8').read()
@@ -219,7 +232,7 @@ with sync_playwright() as p:
         ok('com dados não salvos, pergunta antes de atualizar (uma única vez)', asked and not native, native)
         page.wait_for_load_state('networkidle'); page.wait_for_timeout(800)
         keys = page.evaluate('() => caches.keys()')
-        ok('após atualizar, só o cache novo permanece', keys == ['regua-shell-teste-2026.11.23.5'], keys)
+        ok('após atualizar, só o cache novo permanece', keys == ['regua-shell-teste-2026.11.23.6'], keys)
     except Exception as e:
         ok('aviso discreto de nova versão', False, f'{e} | navegações: {nav_log}')
     open(swp, 'w', encoding='utf-8').write(src)
