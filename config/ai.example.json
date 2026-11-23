@@ -1,0 +1,10 @@
+{
+  "enabled": false,
+  "provider": "gemini",
+  "model": "gemini-2.5-flash",
+  "apiKeyStorage": "memory-only",
+  "promptVersion": "1.0",
+  "sendPersonalData": false,
+  "requireHumanConfirmation": true,
+  "productionModeRequiresBackend": true
+}
