@@ -328,10 +328,13 @@ async function generate(provider, key, model, prompt, customBase, system, { fall
   const id = normalizeModelId(model);
   if (!k) throw new AIError('config', 'Informe uma chave de API e teste a conexão.');
   if (!id) throw new AIError('config', 'Selecione ou digite um modelo antes de gerar.');
-  const chain = [...new Set([id, ...fallbacks.map(normalizeModelId).filter(Boolean)])].slice(0, 3);
+  // Tenta o modelo escolhido e, se preciso, todos os demais modelos habilitados na chave.
+  const chain = [...new Set([id, ...fallbacks.map(normalizeModelId).filter(Boolean)])];
   let lastError, firstQuotaError;
   for (const [index, current] of chain.entries()) {
-    for (let attempt = 0; attempt <= RETRY_DELAYS.length; attempt++) {
+    // Só o modelo escolhido recebe novas tentativas; os reservas são tentados uma vez cada.
+    const retries = index === 0 ? RETRY_DELAYS.length : 0;
+    for (let attempt = 0; attempt <= retries; attempt++) {
       try {
         const result = await generateOnce(provider, k, current, prompt, customBase, system);
         return { result, modelUsed: current, fallbackUsed: index > 0 };
@@ -343,19 +346,19 @@ async function generate(provider, key, model, prompt, customBase, system, { fall
           break;
         }
         if (!isOverload(err)) throw err;
-        if (attempt < RETRY_DELAYS.length) {
+        if (attempt < retries) {
           onProgress?.(`${current} sobrecarregado; nova tentativa ${attempt + 2} de ${RETRY_DELAYS.length + 1}…`);
           await sleep(RETRY_DELAYS[attempt]);
         }
       }
     }
-    if (chain[index + 1]) onProgress?.(`${current} ${isQuota(lastError) ? 'sem cota disponível' : 'continua sobrecarregado'}; tentando ${chain[index + 1]}…`);
+    if (chain[index + 1]) onProgress?.(`${current} ${isQuota(lastError) ? 'sem cota disponível' : 'sobrecarregado'}; tentando ${chain[index + 1]} (modelo ${index + 2} de ${chain.length})…`);
   }
   if (firstQuotaError) {
-    if (chain.length > 1) firstQuotaError.message += ' Também foram tentados os modelos reserva (' + chain.slice(1).join(', ') + '), sem sucesso.';
+    if (chain.length > 1) firstQuotaError.message += ' Também foram tentados os outros ' + (chain.length - 1) + ' modelo(s) habilitados na chave, sem sucesso.';
     throw firstQuotaError;
   }
-  throw new AIError('server', ERROR_MESSAGES.server, lastError?.detail || '');
+  throw new AIError('server', ERROR_MESSAGES.server + (chain.length > 1 ? ' Foram tentados ' + chain.length + ' modelos.' : ''), lastError?.detail || '');
 }
 
 /* ---------- Tarefas ---------- */

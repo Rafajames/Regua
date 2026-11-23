@@ -249,3 +249,14 @@ test('cota por minuto e cota gratuita zero têm orientações próprias', async 
     await assert.rejects(generateResolutionDraft({ provider: 'gemini', apiKey: 'k', model: 'gemini-3.8-flash', request: 'x' }), e => /não tem cota gratuita/.test(e.message));
   });
 });
+
+test('percorre todos os modelos habilitados até um responder (reservas sem novas tentativas)', async () => {
+  const models = ['gemini-3.8-flash', 'gemini-3.7-flash', 'gemini-3.6-flash', 'gemini-3.5-flash', 'gemini-3.1-pro-preview', 'gemini-2.5-flash'];
+  await withFetch(url => url.includes('gemini-2.5-flash') ? json(OK_DRAFT) : json(HIGH_DEMAND, 503), async calls => {
+    const progress = [];
+    const r = await generateResolutionDraft({ provider: 'gemini', apiKey: 'k', model: models[0], fallbacks: models.slice(1), request: 'x', onProgress: m => progress.push(m) });
+    assert.equal(r.model_used, 'gemini-2.5-flash');
+    assert.equal(calls.length, 3 + 4 + 1, 'escolhido: 3 tentativas; 4 reservas: 1 cada; último responde');
+    assert.ok(progress.some(m => /modelo 6 de 6/.test(m)));
+  });
+});

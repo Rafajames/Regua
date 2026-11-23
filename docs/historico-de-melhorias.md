@@ -16,3 +16,6 @@ O Gemini 3.8 Flash passou a responder "high demand" (HTTP 503) em horários de p
 
 ## 2026.11.23.3 — Cota do provedor (HTTP 429)
 A Régua lê os detalhes de cota enviados pelo Google (modelo, limite diário ou por minuto, tempo de espera) e explica em linguagem simples. Como a cota do Gemini é por modelo, uma cota esgotada não gasta novas tentativas no mesmo modelo: passa direto para o modelo reserva. Testes: 3 novos (48 no total).
+
+## 2026.11.23.4 — Reserva com todos os modelos da chave
+A pedido do autor, quando o modelo escolhido está sobrecarregado ou sem cota, a Régua tenta todos os demais modelos de texto habilitados na chave (lista obtida no teste de conexão), na ordem recomendada. Só o modelo escolhido recebe novas tentativas; cada reserva é tentada uma vez, para limitar a espera. O status mostra "modelo N de M".

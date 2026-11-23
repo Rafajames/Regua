@@ -5,7 +5,7 @@ import { buildOperationalSummary } from './reporting.js';
 import { buildStandardDraft, checkClosureClaims, DEFAULT_SIGNATURE } from './draft-template.js';
 import * as store from './storage.js';
 
-export const APP_VERSION = '2026.11.23.3';
+export const APP_VERSION = '2026.11.23.4';
 
 const $ = id => document.getElementById(id);
 const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -363,8 +363,8 @@ $('standardDraft').addEventListener('click', async () => {
 });
 
 function effectiveModel() { return normalizeModelId(state.ai.manualModel || state.ai.model); }
-// Modelos reserva (da lista testada) usados só quando o escolhido estiver sobrecarregado.
-function fallbackModels() { return state.ai.models.filter(m => m !== effectiveModel()).slice(0, 2); }
+// Todos os modelos habilitados na chave (lista testada) servem de reserva, na ordem recomendada.
+function fallbackModels() { return state.ai.models.filter(m => m !== effectiveModel()); }
 
 async function makeAiDraft(stage) {
   if (!state.ai.key || !effectiveModel()) { toast('Configure a chave e o modelo da IA em Configurações.'); go('settings'); $('geminiKey').focus(); return; }
