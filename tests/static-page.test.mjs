@@ -1,11 +1,19 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
-import { testGeminiConnection, proposeCriteriaConfiguration } from '../src/ai-provider.js';
+import { testProviderConnection, generateResolutionDraft, discoverModels, PROVIDERS, SYSTEM_PROMPT } from '../src/ai-provider.js';
 
-test('módulo Gemini pode ser carregado sem executar chamadas externas',()=>{
- assert.equal(typeof testGeminiConnection,'function');
- assert.equal(typeof proposeCriteriaConfiguration,'function');
+test('provedores e funções de IA carregam sem chamadas externas',()=>{
+ assert.deepEqual(Object.keys(PROVIDERS),['gemini','openai','claude','grok','custom']);
+ assert.equal(typeof testProviderConnection,'function');
+ assert.equal(typeof generateResolutionDraft,'function');
+ assert.equal(typeof discoverModels,'function');
+});
+
+test('prompt do assistente proíbe invenção e exige confirmação humana',()=>{
+ assert.match(SYSTEM_PROMPT,/Nunca invente/);
+ assert.match(SYSTEM_PROMPT,/não declare que o problema foi resolvido/);
+ assert.match(SYSTEM_PROMPT,/missing_information/);
 });
 
 test('script clássico da página não contém erro de sintaxe',async()=>{
@@ -15,9 +23,10 @@ test('script clássico da página não contém erro de sintaxe',async()=>{
  new Function(html.slice(start+8,end));
 });
 
-test('página contém temas e módulos de análise configurados',async()=>{
+test('página contém rascunho, armazenamento local e provedores',async()=>{
  const html=await readFile(new URL('../index.html',import.meta.url),'utf8');
- for(const id of ['manager','reports','settings','themeToggle','geminiKey'])assert.ok(html.includes('id="'+id+'"'),id+' deve existir');
+ for(const id of ['manager','reports','settings','themeToggle','geminiKey','aiProvider','initialDraft','finalDraft','draftOutput','chooseFolder'])assert.ok(html.includes('id="'+id+'"'),id+' deve existir');
  assert.ok(html.includes('./src/ai-provider.js'));
- assert.ok(html.includes('./src/quality-engine.js'));
+ assert.ok(html.includes('showDirectoryPicker'));
+ assert.ok(html.includes('regua-meus-chamados.json'));
 });
