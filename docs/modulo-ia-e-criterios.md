@@ -33,6 +33,7 @@ Os pesos do motor em src/quality-engine.js são provisórios e editáveis no có
 - [x] Campo de chave Gemini em sessão e teste de conexão.
 - [x] Prompt restritivo e resposta JSON para análise assistida.
 - [x] Minimização de campos enviados pelo cliente.
+- [x] Proposta assistida de critérios/pesos com justificativa e aprovação humana obrigatória.
 - [ ] Backend seguro para uso institucional.
 - [ ] Gestão de múltiplos provedores (Gemini, OpenAI, Claude e outros).
 - [ ] Catálogo de critérios configurável por perfil autorizado e versionado.
