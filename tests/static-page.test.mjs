@@ -9,7 +9,7 @@ test('script clássico da página não contém erro de sintaxe',async()=>{
  new Function(html.slice(start+8,end));
 });
 
-test('página contém temas e módulos de análise configurados',async()=>{
+test('módulo Gemini pode ser carregado sem executar chamadas externas',async()=>{\n const ai=await import('../src/ai-provider.js');\n assert.equal(typeof ai.testGeminiConnection,'function');\n assert.equal(typeof ai.proposeCriteriaConfiguration,'function');\n});\n\ntest('página contém temas e módulos de análise configurados',async()=>{
  const html=await readFile(new URL('../index.html',import.meta.url),'utf8');
  for(const id of ['manager','reports','settings','themeToggle','geminiKey'])assert.ok(html.includes('id="'+id+'"'),id+' deve existir');
  assert.ok(html.includes('./src/ai-provider.js'));
