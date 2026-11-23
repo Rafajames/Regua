@@ -1,0 +1,19 @@
+{
+  "name": "Régua — Inteligência Operacional",
+  "short_name": "Régua",
+  "description": "Pré-auditoria e inteligência operacional dos serviços de TI.",
+  "lang": "pt-BR",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f4f8f6",
+  "theme_color": "#123b3a",
+  "icons": [
+    {
+      "src": "./assets/regua-icone.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
