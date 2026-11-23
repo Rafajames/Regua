@@ -49,11 +49,17 @@ with sync_playwright() as p:
         page.click(f'nav [data-page="{pid}"]')
         ok(f'navega para {pid}', page.locator(f'#{pid}.active').count() == 1 and page.locator(f'nav [data-page="{pid}"][aria-current="page"]').count() == 1)
 
+    def fields():
+        if page.locator('#fieldsPanel.hidden').count(): page.click('#toggleFields')
+    def menu():
+        if not page.locator('#history details.menu[open]').count(): page.click('#history details.menu summary')
+
     # --- Pré-auditoria
     page.click('nav [data-page="audit"]')
-    page.click('#importCard summary')
     page.fill('#whatsappText', 'Chamado: 2026-00999\nSolicitante: Servidor Fictício\nDescrição: PC da sala não liga após queda de energia no setor.\nSetor: SECRETARIA GERAL DA CORREGEDORIA\nSala: 01')
-    page.click('#parseWhatsapp')
+    page.dispatch_event('#whatsappText', 'change'); page.wait_for_timeout(300)
+    ok('resumo mostra o chamado sem abrir campos', '2026-00999' in page.text_content('#ticketSummary') and page.locator('#fieldsPanel.hidden').count() == 1)
+    fields()
     ok('WhatsApp preenche número', page.input_value('#number') == '2026-00999')
     ok('MapTec identifica o prédio', page.input_value('#building') == 'Sede Administrativa', page.input_value('#building'))
     page.fill('#comments', '10:00 - verificado cabo de energia; 10:15 - fonte sem resposta.')
@@ -66,28 +72,29 @@ with sync_playwright() as p:
     ok('avaliação ao vivo atualiza a nota', page.text_content('#scoreValue') == '100%', f'{partial} -> {page.text_content("#scoreValue")}')
     page.screenshot(path=f'{OUT}/02-pre-auditoria.png', full_page=True)
 
-    page.click('#standardDraft')
     draft = page.input_value('#draftOutput')
     ok('texto padrão sem confirmação não encerra', 'Prezado(a) Sr(a)' in draft and 'encerro o chamado' not in draft and '[CONFIRMAR' in draft)
     page.check('#closureConfirmed')
-    page.click('#standardDraft'); page.click('#confirmOk')
+    page.wait_for_timeout(300)
     draft = page.input_value('#draftOutput')
     ok('texto padrão confirmado encerra e assina', 'Sendo assim, encerro o chamado.' in draft and 'Jamerson Rafael' in draft)
 
     page.click('#saveAudit')
     page.wait_for_timeout(400)
     ok('salvar registra no histórico', page.text_content('#total') == '1')
-    ok('badge de edição após salvar', page.is_visible('#editingBadge'))
+    ok('botão vira Atualizar após salvar', page.text_content('#saveAudit') == 'Atualizar')
     page.fill('#notes', 'Sem pendências.')
     page.click('#saveAudit'); page.wait_for_timeout(400)
     ok('salvar de novo atualiza sem duplicar', page.text_content('#total') == '1')
 
     # segunda análise incompleta
     page.click('#newAudit')
+    if page.locator('#confirmDialog[open]').count(): page.click('#confirmOk')
+    fields()
     page.fill('#subject', 'Impressora'); page.fill('#building', 'Fórum Cível'); page.fill('#description', 'erro')
     page.wait_for_timeout(300)
     ok('registro incompleto mostra "Requer revisão"', page.locator('#criteriaList .tag-st.needs_review').count() >= 2)
-    page.click('#saveAudit'); page.click('#confirmOk'); page.wait_for_timeout(400)
+    page.click('#saveAudit'); page.wait_for_timeout(400)
     ok('segunda análise salva', page.text_content('#total') == '2')
 
     page.reload(wait_until='networkidle')
@@ -110,12 +117,12 @@ with sync_playwright() as p:
 
     page.click('nav [data-page="history"]')
     with page.expect_download() as dl:
-        page.click('#backup')
+        menu(); page.click('#backup')
     path = dl.value.path()
     backup = json.load(open(path, encoding='utf-8'))
     ok('backup exportado com 2 registros', backup.get('count') == 2 and len(backup['items']) == 2)
 
-    page.click('#clear'); page.click('#confirmOk'); page.wait_for_timeout(300)
+    menu(); page.click('#clear'); page.click('#confirmOk'); page.wait_for_timeout(300)
     ok('limpar histórico com confirmação', page.text_content('#total') == '0')
     page.set_input_files('#importBackupFile', path)
     page.wait_for_selector('#confirmDialog[open]')
@@ -151,8 +158,10 @@ with sync_playwright() as p:
 
     page.click('nav [data-page="audit"]')
     page.click('#newAudit')
+    if page.locator('#confirmDialog[open]').count(): page.click('#confirmOk')
+    fields()
     page.fill('#subject', 'PC sem vídeo'); page.fill('#description', 'Monitor sem imagem desde a manhã.'); page.fill('#action', 'Substituído o cabo HDMI.')
-    page.click('#finalDraft'); page.click('#confirmOk')
+    page.click('#draftPanel details.menu summary'); page.click('#finalDraft'); page.click('#confirmOk')
     page.wait_for_timeout(800)
     ok('geração usa o modelo selecionado', gen_calls and gen_calls[-1].endswith('/models/gemini-3.7-flash:generateContent'), gen_calls[-1:] )
     ok('rascunho de IA exibido com avisos', 'Prezado' in page.input_value('#draftOutput') and page.is_visible('#draftWarnings'))
@@ -186,12 +195,14 @@ with sync_playwright() as p:
     ok('histórico disponível offline', page.text_content('#total') == '1', page.text_content('#total'))
     ok('indicador offline', 'Offline' in page.text_content('#netPill'))
     page.click('nav [data-page="audit"]'); page.click('#newAudit')
+    if page.locator('#confirmDialog[open]').count(): page.click('#confirmOk')
+    fields()
     page.fill('#subject', 'Teste offline completo'); page.fill('#building', 'Sede'); page.fill('#description', 'Teclado não responde em nenhuma porta USB do computador.'); page.fill('#action', 'Substituído o teclado por outro do estoque.')
     page.click('#saveAudit'); page.wait_for_timeout(400)
     ok('salva offline', page.text_content('#total') == '2')
-    page.click('#standardDraft')
+    page.wait_for_timeout(300)
     ok('texto padrão funciona offline', 'Prezado' in page.input_value('#draftOutput'))
-    page.click('#finalDraft'); page.wait_for_timeout(300)
+    page.click('#draftPanel details.menu summary'); page.click('#finalDraft'); page.wait_for_timeout(300)
     ok('sem chave (após recarregar) a IA leva às Configurações', page.locator('#settings.active').count() == 1)
     page.fill('#geminiKey', 'chave-ficticia-teste'); page.click('#testGemini'); page.wait_for_timeout(600)
     ok('IA offline explica a falta de internet', 'internet' in page.text_content('#aiStatus').lower(), page.text_content('#aiStatus'))
@@ -201,9 +212,14 @@ with sync_playwright() as p:
     page.click('nav [data-page="audit"]')
     page.click('#newAudit')
     if page.locator('#confirmDialog[open]').count(): page.click('#confirmOk')
+    fields()
     page.fill('#cause', 'Causa digitada pelo técnico.')
     page.fill('#comments', 'Foi realizada a visita técnica e foi verificado que o cabo HDMI estava danificado e foi feita a substituição do cabo. Após isso, o equipamento voltou a funcionar e o usuário confirmou. Aguardando reposição do cabo reserva.')
-    page.press('#comments', 'Tab'); page.wait_for_timeout(300)
+    page.wait_for_timeout(900)
+    ok('indicadores mostram o que foi identificado', page.locator('#solutionIndicators .chip.on').count() == 4)
+    ok('texto para o Aranda gerado sozinho', 'Foi feita a substituição do cabo' in page.input_value('#draftOutput'))
+    page.click('#copyDraft'); page.wait_for_timeout(500)
+    ok('copiar também salva a análise', 'salva' in page.text_content('#toast'))
     ok('comentário preenche ação realizada', page.input_value('#action') == 'Foi realizada a visita técnica.\nFoi feita a substituição do cabo.', page.input_value('#action'))
     ok('comentário preenche teste e pendência', 'usuário confirmou' in page.input_value('#test') and 'Aguardando' in page.input_value('#notes'))
     ok('não sobrescreve causa digitada pelo técnico', page.input_value('#cause') == 'Causa digitada pelo técnico.' and 'Mantido' in page.text_content('#commentsFeedback'))
@@ -211,6 +227,7 @@ with sync_playwright() as p:
     page.screenshot(path=f'{OUT}/11-preenchimento-comentario.png', full_page=True)
 
     # --- Atualização: publica nova versão do SW
+    page.fill('#comments', page.input_value('#comments') + ' Observação ainda não salva.')
     swp = f'{SITE}/sw.js'
     src = open(swp, encoding='utf-8').read()
     open(swp, 'w', encoding='utf-8').write(src.replace("const VERSION = '", "const VERSION = 'teste-"))
@@ -232,7 +249,7 @@ with sync_playwright() as p:
         ok('com dados não salvos, pergunta antes de atualizar (uma única vez)', asked and not native, native)
         page.wait_for_load_state('networkidle'); page.wait_for_timeout(800)
         keys = page.evaluate('() => caches.keys()')
-        ok('após atualizar, só o cache novo permanece', keys == ['regua-shell-teste-2026.11.23.6'], keys)
+        ok('após atualizar, só o cache novo permanece', keys == ['regua-shell-teste-2026.11.23.7'], keys)
     except Exception as e:
         ok('aviso discreto de nova versão', False, f'{e} | navegações: {nav_log}')
     open(swp, 'w', encoding='utf-8').write(src)

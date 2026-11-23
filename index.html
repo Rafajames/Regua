@@ -56,14 +56,14 @@
       <button type="button" data-page="manager"><svg class="ico"><use href="#i-layers"/></svg>Conjunto gerencial</button>
       <button type="button" data-page="settings"><svg class="ico"><use href="#i-settings"/></svg>Configurações</button>
     </nav>
-    <div class="side-note">Modo experimental · use somente dados fictícios.<br>A Régua não altera chamados no sistema oficial.</div>
+    <div class="side-note">Experimental · dados fictícios</div>
   </aside>
 
   <main class="main">
     <header class="top">
       <strong id="crumb">Visão geral</strong>
       <div class="top-actions">
-        <span class="pill" id="netPill" role="status">Dados neste dispositivo</span>
+        <span class="pill" id="netPill" role="status">Neste dispositivo</span>
         <button class="icon-btn" id="themeToggle" type="button" aria-label="Alternar tema"><svg class="ico"><use href="#i-moon"/></svg></button>
       </div>
     </header>
@@ -78,267 +78,214 @@
 <!-- ================= VISÃO GERAL ================= -->
 <section class="page active" id="home" aria-labelledby="homeTitle">
   <div class="head">
-    <div><div class="eyebrow">Inteligência operacional</div><h1 id="homeTitle">Visão geral</h1><p>Pré-audite chamados já registrados no sistema oficial e acompanhe a qualidade das suas análises.</p></div>
+    <h1 id="homeTitle">Visão geral</h1>
     <button class="btn primary" type="button" data-go="audit"><svg class="ico"><use href="#i-plus"/></svg>Nova pré-auditoria</button>
   </div>
-  <div class="grid stats">
-    <article class="card stat"><small>Análises salvas</small><strong id="total">0</strong><span class="stat-foot" id="totalFoot">neste navegador</span></article>
-    <article class="card stat"><small>Média de qualidade</small><strong id="average">—</strong><span class="stat-foot">critérios atendidos (ponderado)</span></article>
-    <article class="card stat"><small>Precisam de revisão</small><strong id="review">0</strong><span class="stat-foot">abaixo de 80%</span></article>
-    <article class="card stat"><small>Última análise</small><strong id="lastDate" class="stat-text">—</strong><span class="stat-foot" id="lastSubject">&nbsp;</span></article>
+  <div class="grid stats three">
+    <article class="card stat"><small>Análises</small><strong id="total">0</strong></article>
+    <article class="card stat"><small>Média de qualidade</small><strong id="average">—</strong></article>
+    <article class="card stat"><small>Precisam de revisão</small><strong id="review">0</strong></article>
   </div>
-  <div class="grid two">
-    <article class="card">
-      <div class="card-head"><h2>Últimas análises</h2><button class="link-btn" type="button" data-go="history">Ver histórico</button></div>
-      <div id="recent" class="list"></div>
-    </article>
-    <div class="grid stack">
-      <article class="card">
-        <h2>Distribuição das notas</h2>
-        <div id="homeBands"></div>
-      </article>
-      <article class="card quick">
-        <h2>Como usar</h2>
-        <ol class="steps-list">
-          <li><b>Cole</b> a mensagem do chamado ou preencha os campos.</li>
-          <li><b>Confira</b> a avaliação por critérios, atualizada enquanto você digita.</li>
-          <li><b>Gere</b> o texto padrão (com ou sem IA), revise e copie para o Aranda.</li>
-        </ol>
-        <div class="ai-status-line"><span class="dot" id="homeAiDot"></span><span id="homeAiText">IA não configurada — opcional.</span><button class="link-btn" type="button" data-go="settings">Configurar</button></div>
-      </article>
-    </div>
-  </div>
+  <article class="card">
+    <div class="card-head"><h2>Últimas análises</h2><button class="link-btn" type="button" data-go="history">Ver todas</button></div>
+    <div id="recent" class="list"></div>
+  </article>
 </section>
 
 <!-- ================= PRÉ-AUDITORIA ================= -->
 <section class="page" id="audit" aria-labelledby="auditTitle">
   <div class="head">
-    <div><div class="eyebrow">Apoio ao técnico · antes do encerramento</div><h1 id="auditTitle">Pré-auditoria do chamado</h1><p>Informe os dados de um chamado que já existe. Nada é enviado ao Aranda.</p></div>
-    <div class="head-actions"><span class="badge hidden" id="editingBadge">Editando análise salva</span><button class="btn" type="button" id="newAudit"><svg class="ico"><use href="#i-plus"/></svg>Nova análise</button></div>
+    <h1 id="auditTitle">Pré-auditoria</h1>
+    <div class="head-actions">
+      <button type="button" class="score-pill" id="scorePill" data-band="none" aria-controls="criteriaDetails" title="Ver detalhes da avaliação">—</button>
+      <button class="btn ghost small" type="button" id="newAudit"><svg class="ico"><use href="#i-plus"/></svg>Nova</button>
+    </div>
   </div>
 
-  <div class="audit-layout">
-    <div class="audit-main">
-      <details class="card import-card" id="importCard">
-        <summary><svg class="ico"><use href="#i-message"/></svg><span><b>Importar mensagem do WhatsApp</b><small>Preenche os campos automaticamente e procura o local no catálogo do MapTec.</small></span></summary>
-        <div class="field"><label for="whatsappText">Mensagem recebida</label><textarea id="whatsappText" rows="6" placeholder="Cole aqui a mensagem completa, incluindo Chamado, Solicitante, Descrição, Setor e Sala…"></textarea></div>
-        <div class="footer-actions"><button class="btn primary" type="button" id="parseWhatsapp">Interpretar mensagem</button></div>
-        <p id="parseFeedback" class="muted" aria-live="polite"></p>
-      </details>
-
-      <form id="auditForm" class="card form-card" novalidate>
-        <fieldset>
-          <legend><span class="step">1</span>Abertura do chamado</legend>
+  <div class="flow">
+    <article class="card step-card">
+      <h2><span class="step">1</span>Mensagem do chamado</h2>
+      <div class="field"><label class="sr" for="whatsappText">Mensagem do chamado</label><textarea id="whatsappText" rows="3" placeholder="Cole aqui a mensagem do chamado (WhatsApp)"></textarea></div>
+      <div class="summary-line"><span id="ticketSummary" class="chips"></span><button class="link-btn" type="button" id="toggleFields" aria-expanded="false" aria-controls="fieldsPanel">Editar dados</button></div>
+      <p id="parseFeedback" class="muted small" aria-live="polite"></p>
+      <div id="fieldsPanel" class="fields-panel hidden">
+        <form id="auditForm" novalidate>
           <div class="form">
-            <div class="field"><label for="number">Número do chamado</label><input id="number" autocomplete="off" placeholder="Ex.: 2026-00123"></div>
-            <div class="field"><label for="requester">Solicitante</label><input id="requester" autocomplete="off" placeholder="Nome do solicitante"></div>
-            <div class="field"><label for="building">Prédio / unidade <span class="req">*</span></label><input id="building" list="buildingList" required placeholder="Ex.: Fórum Cível"><datalist id="buildingList"></datalist></div>
-            <div class="field"><label for="location">Andar, bloco, setor e sala</label><input id="location" placeholder="Bloco 1 · Sala 106 · Setor de Conciliação"></div>
-            <div class="field full"><label for="subject">Assunto <span class="req">*</span></label><input id="subject" required placeholder="Resumo objetivo do problema"></div>
-            <div class="field full"><label for="description">Solicitação original <span class="req">*</span></label><textarea id="description" required rows="3" placeholder="Qual o sintoma? Quando ocorre? Qual o impacto?"></textarea></div>
-            <div class="field"><label for="assetType">Tipo de equipamento ou sistema</label><input id="assetType" placeholder="Ex.: PC, impressora, monitor"></div>
-            <div class="field"><label for="asset">Tombamento / patrimônio</label><input id="asset" placeholder="Somente se informado no chamado"></div>
+            <div class="field"><label for="number">Número do chamado</label><input id="number" autocomplete="off"></div>
+            <div class="field"><label for="requester">Solicitante</label><input id="requester" autocomplete="off"></div>
+            <div class="field"><label for="building">Prédio</label><input id="building" list="buildingList"><datalist id="buildingList"></datalist></div>
+            <div class="field"><label for="location">Setor e sala</label><input id="location"></div>
+            <div class="field full"><label for="subject">Assunto</label><input id="subject"></div>
+            <div class="field full"><label for="description">Solicitação original</label><textarea id="description" rows="2"></textarea></div>
+            <div class="field"><label for="assetType">Equipamento</label><input id="assetType"></div>
+            <div class="field"><label for="asset">Patrimônio</label><input id="asset"></div>
+            <div class="field"><label for="tech">Técnico</label><input id="tech" autocomplete="off"></div>
+            <div class="field"><label for="solutionTime">Data de solução</label><input id="solutionTime"></div>
             <div class="field full hidden" id="maptecMatchWrap"><div id="maptecMatch" class="callout"></div></div>
+            <div class="field full"><label for="action">Ação realizada</label><textarea id="action" rows="2"></textarea></div>
+            <div class="field"><label for="cause">Causa</label><textarea id="cause" rows="2"></textarea></div>
+            <div class="field"><label for="test">Teste ou confirmação</label><textarea id="test" rows="2"></textarea></div>
+            <div class="field full"><label for="notes">Pendências</label><textarea id="notes" rows="2"></textarea></div>
           </div>
-        </fieldset>
-        <fieldset>
-          <legend><span class="step">2</span>Acompanhamento</legend>
-          <div class="form">
-            <div class="field"><label for="tech">Técnico responsável</label><input id="tech" autocomplete="off" placeholder="Nome do técnico"></div>
-            <div class="field"><label for="solutionTime">Data/hora de solução informada</label><input id="solutionTime" placeholder="DD/MM/AAAA HH:MM"></div>
-            <div class="field full"><label for="comments">Comentários anteriores e atualizações</label><textarea id="comments" rows="4" placeholder="Ex.: Foi realizada a visita técnica e foi verificado que o cabo estava danificado. Foi feita a substituição do cabo e o usuário confirmou o funcionamento."></textarea><div class="inline-actions"><button class="btn small" type="button" id="fillFromComments"><svg class="ico"><use href="#i-spark"/></svg>Preencher solução a partir do comentário</button><span class="muted small" id="commentsFeedback" aria-live="polite">Ao sair do campo, a Régua identifica ação, causa, teste e pendências e preenche a etapa 3.</span></div></div>
-          </div>
-        </fieldset>
-        <fieldset>
-          <legend><span class="step">3</span>Solução registrada pelo técnico atual</legend>
-          <div class="form">
-            <div class="field full"><label for="action">Ação realizada <span class="req">*</span></label><textarea id="action" required rows="3" placeholder="Descreva somente o que foi efetivamente realizado"></textarea></div>
-            <div class="field"><label for="cause">Causa identificada</label><textarea id="cause" rows="2" placeholder="Causa encontrada ou “em investigação”"></textarea></div>
-            <div class="field"><label for="test">Teste ou confirmação</label><textarea id="test" rows="2" placeholder="Como a solução foi validada?"></textarea></div>
-            <div class="field full"><label for="notes">Pendências e observações</label><textarea id="notes" rows="2" placeholder="Esperas, dependências e próximos passos"></textarea></div>
-          </div>
-        </fieldset>
-        <div class="footer-actions">
-          <button class="btn ghost" type="button" id="resetForm">Limpar campos</button>
-          <button class="btn primary" type="submit" id="saveAudit">Salvar análise</button>
-        </div>
-      </form>
+        </form>
+      </div>
+    </article>
 
-      <article class="card" id="draftPanel">
-        <div class="card-head"><div><div class="eyebrow">Texto para o Aranda</div><h2>Rascunho da resposta</h2></div></div>
-        <p class="muted">O texto segue o padrão de referência e usa apenas o que foi registrado. Onde faltar informação aparece <code>[CONFIRMAR: …]</code>. A Régua nunca envia este texto: revise e copie manualmente.</p>
-        <label class="check-line"><input type="checkbox" id="closureConfirmed"> <span>Confirmo que o chamado está <b>apto para encerramento</b> (sem pendências).</span></label>
-        <div class="footer-actions left">
-          <button class="btn primary" id="standardDraft" type="button"><svg class="ico"><use href="#i-file"/></svg>Montar texto padrão</button>
-          <button class="btn" id="initialDraft" type="button"><svg class="ico"><use href="#i-spark"/></svg>Esboço inicial com IA</button>
-          <button class="btn" id="finalDraft" type="button"><svg class="ico"><use href="#i-spark"/></svg>Versão final com IA</button>
-        </div>
-        <div id="draftStatus" class="status-line" data-state="idle" aria-live="polite">O texto padrão funciona sem internet. A IA é opcional.</div>
-        <div id="draftWarnings" class="callout warn hidden"></div>
-        <div class="field"><label for="draftOutput">Texto sugerido — revise antes de copiar</label><textarea id="draftOutput" rows="9" placeholder="O texto aparecerá aqui."></textarea></div>
-        <div class="footer-actions"><button class="btn primary" id="copyDraft" type="button"><svg class="ico"><use href="#i-copy"/></svg>Copiar texto</button></div>
-      </article>
-    </div>
+    <article class="card step-card">
+      <h2><span class="step">2</span>Seu comentário</h2>
+      <div class="field"><label class="sr" for="comments">Seu comentário</label><textarea id="comments" rows="4" placeholder="Ex.: Foi realizada a visita técnica e foi verificado que o cabo estava danificado. Foi feita a substituição do cabo e o usuário confirmou o funcionamento."></textarea></div>
+      <div class="chips" id="solutionIndicators" aria-live="polite"></div>
+      <p id="missingList" class="missing" aria-live="polite"></p>
+      <span class="sr" id="commentsFeedback" aria-live="polite"></span>
+    </article>
 
-    <aside class="audit-side" aria-label="Resultado da avaliação">
-      <article class="card result-card" id="result">
-        <div class="eyebrow">Avaliação por critérios</div>
-        <div class="score-row">
-          <div class="ring" id="scoreRing" data-band="none">
-            <svg viewBox="0 0 100 100" aria-hidden="true"><circle class="ring-bg" cx="50" cy="50" r="42"/><circle class="ring-fg" id="ringFg" cx="50" cy="50" r="42"/></svg>
-            <strong id="scoreValue">—</strong>
+    <article class="card step-card" id="draftPanel">
+      <h2><span class="step">3</span>Texto para o Aranda</h2>
+      <label class="check-line"><input type="checkbox" id="closureConfirmed"> <span>Apto para encerramento</span></label>
+      <div id="draftWarnings" class="callout warn hidden"></div>
+      <div class="field"><label class="sr" for="draftOutput">Texto para o Aranda</label><textarea id="draftOutput" rows="10" placeholder="O texto aparece aqui automaticamente."></textarea></div>
+      <div class="action-row">
+        <button class="btn primary" id="copyDraft" type="button"><svg class="ico"><use href="#i-copy"/></svg>Copiar e salvar</button>
+        <button class="btn ghost" id="saveAudit" type="button">Salvar</button>
+        <button class="link-btn hidden" id="regenDraft" type="button">Refazer texto padrão</button>
+        <span class="spacer"></span>
+        <details class="menu"><summary class="link-btn"><svg class="ico"><use href="#i-spark"/></svg>Melhorar com IA</summary>
+          <div class="menu-list">
+            <button type="button" id="finalDraft">Reescrever o texto com IA</button>
+            <button type="button" id="initialDraft">Esboço antes do atendimento</button>
+            <button type="button" id="aiReview">Analisar a qualidade com IA</button>
           </div>
-          <div><p class="score-title" id="scoreTitle">Preencha os campos</p><p class="muted small" id="scoreSub">A avaliação é atualizada enquanto você digita.</p></div>
+        </details>
+      </div>
+      <div id="draftStatus" class="status-line hidden" data-state="idle" aria-live="polite"></div>
+      <div id="aiResult" class="ai-result hidden" aria-live="polite"></div>
+    </article>
+
+    <details class="card details-card" id="criteriaDetails">
+      <summary>Detalhes da avaliação</summary>
+      <div class="score-row">
+        <div class="ring" id="scoreRing" data-band="none">
+          <svg viewBox="0 0 100 100" aria-hidden="true"><circle class="ring-bg" cx="50" cy="50" r="42"/><circle class="ring-fg" id="ringFg" cx="50" cy="50" r="42"/></svg>
+          <strong id="scoreValue">—</strong>
         </div>
-        <div id="dimensionBars" class="dims"></div>
-        <ul id="criteriaList" class="criteria"></ul>
-        <p class="muted small">Pesos provisórios, em validação. Resultado orientativo: não é certificação nem autorização para encerrar.</p>
-        <div class="footer-actions">
-          <button class="btn" id="aiReview" type="button"><svg class="ico"><use href="#i-spark"/></svg>Analisar com IA</button>
-        </div>
-        <div id="aiResult" class="ai-result hidden" aria-live="polite"></div>
-      </article>
-    </aside>
+        <div><p class="score-title" id="scoreTitle">—</p><p class="muted small" id="scoreSub">Pesos provisórios. Resultado orientativo.</p></div>
+      </div>
+      <div id="dimensionBars" class="dims"></div>
+      <ul id="criteriaList" class="criteria"></ul>
+    </details>
   </div>
 </section>
 
 <!-- ================= HISTÓRICO ================= -->
 <section class="page" id="history" aria-labelledby="historyTitle">
   <div class="head">
-    <div><div class="eyebrow">Armazenamento local</div><h1 id="historyTitle">Histórico de análises</h1><p>Os registros ficam neste navegador e não são compartilhados com outros técnicos.</p></div>
-    <div class="head-actions">
-      <button class="btn" id="backup" type="button"><svg class="ico"><use href="#i-download"/></svg>Exportar backup</button>
-      <button class="btn" id="importBackupBtn" type="button"><svg class="ico"><use href="#i-upload"/></svg>Importar backup</button>
-      <input id="importBackupFile" type="file" accept=".json,application/json" class="hidden">
-    </div>
+    <h1 id="historyTitle">Histórico</h1>
+    <details class="menu right"><summary class="btn">Mais</summary>
+      <div class="menu-list">
+        <button type="button" id="backup"><svg class="ico"><use href="#i-download"/></svg>Exportar backup</button>
+        <button type="button" id="importBackupBtn"><svg class="ico"><use href="#i-upload"/></svg>Importar backup</button>
+        <button type="button" id="chooseFolder"><svg class="ico"><use href="#i-folder"/></svg>Copiar para pasta do computador</button>
+        <button type="button" id="clear" class="danger-item"><svg class="ico"><use href="#i-trash"/></svg>Limpar histórico</button>
+      </div>
+    </details>
+    <input id="importBackupFile" type="file" accept=".json,application/json" class="hidden">
   </div>
   <div class="card">
     <div class="toolbar">
-      <label class="search"><svg class="ico"><use href="#i-search"/></svg><span class="sr">Pesquisar</span><input id="historySearch" type="search" placeholder="Pesquisar por número, assunto, prédio, técnico…"></label>
-      <label class="sr" for="historyFilter">Filtrar por nota</label>
-      <select id="historyFilter"><option value="all">Todas as notas</option><option value="good">80% ou mais</option><option value="fair">55% a 79%</option><option value="low">Abaixo de 55%</option></select>
-      <label class="sr" for="historySort">Ordenar</label>
-      <select id="historySort"><option value="new">Mais recentes</option><option value="old">Mais antigas</option><option value="high">Maior nota</option><option value="low">Menor nota</option></select>
+      <label class="search"><svg class="ico"><use href="#i-search"/></svg><span class="sr">Pesquisar</span><input id="historySearch" type="search" placeholder="Pesquisar"></label>
+      <label class="sr" for="historyFilter">Filtrar</label>
+      <select id="historyFilter"><option value="all">Todas</option><option value="good">80% ou mais</option><option value="fair">55% a 79%</option><option value="low">Abaixo de 55%</option></select>
     </div>
-    <p class="muted small" id="historyCount" aria-live="polite"></p>
     <div id="historyList" class="list"></div>
-  </div>
-  <div class="grid two compact" style="margin-top:14px">
-    <article class="card">
-      <h2>Cópia em pasta do computador</h2>
-      <p class="muted" id="folderStatus">Opcional. Mantém uma cópia JSON em uma pasta escolhida por você (Chrome e Edge).</p>
-      <button class="btn" id="chooseFolder" type="button"><svg class="ico"><use href="#i-folder"/></svg>Escolher pasta no computador</button>
-    </article>
-    <article class="card danger-zone">
-      <h2>Limpar histórico</h2>
-      <p class="muted">Apaga todas as análises deste navegador. Exporte um backup antes.</p>
-      <button class="btn danger" id="clear" type="button"><svg class="ico"><use href="#i-trash"/></svg>Limpar histórico</button>
-    </article>
+    <p class="muted small" id="historyCount" aria-live="polite"></p>
+    <p class="muted small hidden" id="folderStatus"></p>
   </div>
 </section>
 
 <!-- ================= RELATÓRIOS ================= -->
 <section class="page" id="reports" aria-labelledby="reportsTitle">
-  <div class="head"><div><div class="eyebrow">Indicadores locais</div><h1 id="reportsTitle">Relatórios</h1><p>Calculados somente com as análises salvas neste navegador. Não representam indicador institucional.</p></div></div>
-  <div class="grid stats three">
-    <article class="card stat"><small>Análises do técnico</small><strong id="reportAudits">0</strong></article>
+  <div class="head"><h1 id="reportsTitle">Relatórios</h1></div>
+  <div class="grid stats two-stats">
+    <article class="card stat"><small>Análises</small><strong id="reportAudits">0</strong></article>
     <article class="card stat"><small>Média de qualidade</small><strong id="reportAverage">—</strong></article>
-    <article class="card stat"><small>Chamados do conjunto gerencial</small><strong id="reportManager">0</strong></article>
   </div>
-  <div class="grid two">
-    <article class="card"><h2>Média por dimensão</h2><div id="reportDims"></div></article>
-    <article class="card"><h2>Critérios que mais faltam</h2><p class="muted small">Quantas análises não evidenciaram ou pediram revisão de cada critério.</p><div id="reportCriteria"></div></article>
+  <div class="grid two compact">
+    <article class="card"><h2>O que mais falta</h2><div id="reportCriteria"></div></article>
+    <article class="card"><h2>Por etapa</h2><div id="reportDims"></div><h2 class="mt">Notas</h2><div id="reportBars"></div></article>
   </div>
-  <article class="card" style="margin-top:14px"><h2>Distribuição das notas</h2><div id="reportBars"></div></article>
+  <p class="muted small">Calculado só com as análises deste navegador.</p>
 </section>
 
 <!-- ================= CONJUNTO GERENCIAL ================= -->
 <section class="page" id="manager" aria-labelledby="managerTitle">
-  <div class="head"><div><div class="eyebrow">Auditoria independente · experimental</div><h1 id="managerTitle">Conjunto gerencial</h1><p>Avalia um conjunto de chamados exportado de forma autorizada, sem depender do envio pelos técnicos.</p></div></div>
-  <div class="callout"><b>Estado desta versão:</b> não há integração direta com o Aranda. Esta área aceita um JSON normalizado e mantém os dados somente na memória desta aba (nada é salvo nem enviado).</div>
+  <div class="head"><h1 id="managerTitle">Conjunto gerencial</h1></div>
   <article class="card">
-    <h2>Importar conjunto de chamados</h2>
-    <p class="muted">Formato: array na raiz ou no campo <code>data</code>. Consulte <a href="docs/contrato-importacao-aranda.md" target="_blank" rel="noopener">o contrato intermediário</a>.</p>
-    <div class="field"><label for="managerFile">Arquivo JSON normalizado</label><input id="managerFile" type="file" accept=".json,application/json"></div>
-    <div class="footer-actions"><button class="btn ghost" id="clearManager" type="button">Limpar conjunto</button><button class="btn primary" id="importManager" type="button">Importar e avaliar</button></div>
-    <p class="muted" id="managerFeedback" aria-live="polite">Nenhum conjunto importado nesta sessão.</p>
+    <div class="file-row">
+      <label class="sr" for="managerFile">Arquivo JSON</label><input id="managerFile" type="file" accept=".json,application/json">
+      <button class="btn primary" id="importManager" type="button">Avaliar</button>
+      <button class="btn ghost" id="clearManager" type="button">Limpar</button>
+    </div>
+    <p class="muted small" id="managerFeedback" aria-live="polite">Avalia um JSON de chamados só nesta aba; nada é salvo. <a href="docs/contrato-importacao-aranda.md" target="_blank" rel="noopener">Formato</a></p>
   </article>
-  <div class="grid stats three" style="margin-top:14px">
-    <article class="card stat"><small>Chamados importados</small><strong id="managerTotal">0</strong></article>
-    <article class="card stat"><small>Média de qualidade</small><strong id="managerAverage">—</strong></article>
+  <div class="grid stats three">
+    <article class="card stat"><small>Chamados</small><strong id="managerTotal">0</strong></article>
+    <article class="card stat"><small>Média</small><strong id="managerAverage">—</strong></article>
     <article class="card stat"><small>Para revisão</small><strong id="managerReview">0</strong></article>
   </div>
-  <div class="grid stats three">
-    <article class="card stat"><small>Encerrados</small><strong id="opClosed">—</strong></article>
-    <article class="card stat"><small>Em aberto</small><strong id="opBacklog">—</strong></article>
-    <article class="card stat"><small>Tempo médio (min)</small><strong id="opResolution">—</strong></article>
-  </div>
-  <article class="card"><h2>Resultado do conjunto</h2><div id="managerList" class="list"></div></article>
+  <p class="muted small op-line">Encerrados: <b id="opClosed">—</b> · Em aberto: <b id="opBacklog">—</b> · Tempo médio: <b id="opResolution">—</b> min</p>
+  <article class="card"><div id="managerList" class="list"></div></article>
 </section>
 
 <!-- ================= CONFIGURAÇÕES ================= -->
 <section class="page" id="settings" aria-labelledby="settingsTitle">
-  <div class="head"><div><div class="eyebrow">Preferências</div><h1 id="settingsTitle">Configurações</h1><p>Inteligência artificial, texto padrão, aparência e dados locais.</p></div></div>
-  <div class="settings-grid">
-    <article class="card span-2" id="aiCard">
-      <div class="card-head"><div><div class="eyebrow">Opcional · requer internet</div><h2>Inteligência artificial</h2></div><span class="state-chip" id="aiStateChip" data-state="idle">Aguardando configuração</span></div>
+  <div class="head"><h1 id="settingsTitle">Configurações</h1></div>
+  <div class="settings-stack">
+    <article class="card" id="aiCard">
+      <div class="card-head"><h2>Inteligência artificial <span class="muted small">opcional</span></h2><span class="state-chip" id="aiStateChip" data-state="idle">Aguardando configuração</span></div>
       <div class="form">
         <div class="field"><label for="aiProvider">Provedor</label><select id="aiProvider"><option value="gemini">Google Gemini</option><option value="openai">OpenAI</option><option value="claude">Anthropic Claude</option><option value="grok">xAI Grok</option><option value="custom">API compatível com OpenAI</option></select></div>
-        <div class="field"><label for="geminiKey">Chave de API</label><div class="input-group"><input id="geminiKey" type="password" autocomplete="off" spellcheck="false" placeholder="Cole a chave do provedor escolhido"><button class="btn ghost small" type="button" id="toggleKey" aria-pressed="false">Mostrar</button></div></div>
-        <div class="field full hidden" id="customBaseWrap"><label for="customBase">URL base da API compatível</label><input id="customBase" inputmode="url" placeholder="https://seu-servidor/v1"></div>
-        <div class="field"><label for="geminiModel">Modelo</label><select id="geminiModel" disabled><option value="">Teste a conexão para listar modelos</option></select></div>
-        <div class="field"><label for="manualModel">Ou digite o modelo manualmente</label><input id="manualModel" autocomplete="off" spellcheck="false" placeholder="Identificador exato do provedor"></div>
+        <div class="field"><label for="geminiKey">Chave de API</label><div class="input-group"><input id="geminiKey" type="password" autocomplete="off" spellcheck="false"><button class="btn ghost small" type="button" id="toggleKey" aria-pressed="false">Mostrar</button></div></div>
+        <div class="field full hidden" id="customBaseWrap"><label for="customBase">URL base</label><input id="customBase" inputmode="url" placeholder="https://servidor/v1"></div>
+        <div class="field full"><label for="geminiModel">Modelo</label><select id="geminiModel" disabled><option value="">Teste a conexão para listar</option></select></div>
       </div>
-      <div class="footer-actions left">
-        <button class="btn primary" id="testGemini" type="button">Testar conexão e listar modelos</button>
+      <div class="action-row">
+        <button class="btn primary" id="testGemini" type="button">Testar conexão</button>
         <button class="btn ghost" id="clearGemini" type="button">Limpar chave</button>
       </div>
-      <div class="status-line" id="aiStatus" data-state="idle" aria-live="polite">Escolha o provedor, cole a chave e teste a conexão.</div>
-      <p class="muted small" id="providerNote"></p>
-      <p class="muted small"><b>Privacidade:</b> a chave fica só na memória desta aba (não é salva). Os textos enviados à IA vão diretamente do seu navegador para o provedor escolhido. Use somente dados fictícios nesta fase experimental.</p>
-    </article>
-
-    <article class="card">
-      <h2>Texto padrão</h2>
-      <div class="field"><label for="draftSignature">Assinatura</label><textarea id="draftSignature" rows="3"></textarea></div>
-      <p class="muted small">Usada no texto padrão e nos rascunhos de IA. Salva neste navegador.</p>
-    </article>
-
-    <article class="card">
-      <h2>Aparência</h2>
-      <div class="field"><label for="themeMode">Tema</label><select id="themeMode"><option value="system">Automático (dispositivo)</option><option value="light">Claro</option><option value="dark">Escuro</option></select></div>
-    </article>
-
-    <article class="card">
-      <h2>Armazenamento local</h2>
-      <p class="muted" id="storageInfo">Calculando…</p>
-      <div class="footer-actions left"><button class="btn small" type="button" id="persistStorage">Proteger dados contra limpeza automática</button></div>
-    </article>
-
-    <article class="card">
-      <h2>Funcionamento offline</h2>
-      <p class="muted" id="offlineInfo">Verificando…</p>
-    </article>
-
-    <article class="card span-2">
-      <div class="card-head"><h2>Critérios de qualidade</h2><span class="badge">Pesos provisórios</span></div>
-      <div id="criteriaTable" class="table-wrap"></div>
-      <p class="muted small">A IA pode propor ajustes, mas nada é aplicado automaticamente. Consulte <a href="docs/modulo-ia-e-criterios.md" target="_blank" rel="noopener">a política do módulo de IA</a>.</p>
-      <details class="sub-details"><summary>Pedir proposta de critérios à IA</summary>
-        <div class="field"><label for="criteriaContext">Contexto</label><textarea id="criteriaContext" rows="3" placeholder="Tipo de suporte, padrões de atendimento e objetivos. Não inclua dados reais."></textarea></div>
-        <div class="footer-actions left"><button class="btn" id="proposeCriteria" type="button">Propor parâmetros com IA</button></div>
-        <div id="criteriaProposal" class="callout hidden"></div>
+      <div class="status-line" id="aiStatus" data-state="idle" aria-live="polite"></div>
+      <details class="sub-details"><summary>Avançado</summary>
+        <div class="field"><label for="manualModel">Modelo manual</label><input id="manualModel" autocomplete="off" spellcheck="false" placeholder="Identificador exato do provedor"></div>
+        <p class="muted small" id="providerNote"></p>
       </details>
+      <p class="muted small">A chave fica só nesta aba. O texto vai direto ao provedor escolhido.</p>
     </article>
 
-    <article class="card span-2 author-card" id="authorCredit">
-      <img src="assets/regua-icone.svg" alt="" width="44" height="44">
-      <div><h2>Régua — Inteligência Operacional</h2><p class="muted">Concepção e desenvolvimento: <strong>Jamerson Rafael</strong> · versão <span id="appVersion"></span></p><p class="muted small">Projeto experimental independente para apoiar a qualidade dos registros de atendimento de TI. Não é um sistema de chamados.</p></div>
+    <article class="card">
+      <h2>Preferências</h2>
+      <div class="form">
+        <div class="field"><label for="draftSignature">Assinatura</label><textarea id="draftSignature" rows="2"></textarea></div>
+        <div class="field"><label for="themeMode">Tema</label><select id="themeMode"><option value="system">Automático</option><option value="light">Claro</option><option value="dark">Escuro</option></select></div>
+      </div>
     </article>
+
+    <article class="card">
+      <h2>Dados</h2>
+      <p class="muted" id="storageInfo">Calculando…</p>
+      <p class="muted" id="offlineInfo"></p>
+      <button class="btn small hidden" type="button" id="persistStorage">Proteger dados contra limpeza</button>
+    </article>
+
+    <details class="card details-card">
+      <summary>Critérios de qualidade <span class="badge">provisórios</span></summary>
+      <div id="criteriaTable" class="table-wrap"></div>
+      <div class="field"><label for="criteriaContext">Pedir proposta à IA (contexto)</label><textarea id="criteriaContext" rows="2" placeholder="Sem dados reais"></textarea></div>
+      <div class="action-row"><button class="btn small" id="proposeCriteria" type="button">Propor com IA</button></div>
+      <div id="criteriaProposal" class="callout hidden"></div>
+    </details>
   </div>
 </section>
 
-      <footer class="app-footer"><span>© 2026 <strong>Régua — Inteligência Operacional</strong></span><span>Concepção e desenvolvimento: <strong>Jamerson Rafael</strong> · <a href="https://github.com/Rafajames" target="_blank" rel="noopener">GitHub</a></span></footer>
+      <footer class="app-footer" id="authorCredit"><span>Régua — Inteligência Operacional · versão <span id="appVersion"></span></span><span>Concepção e desenvolvimento: <strong>Jamerson Rafael</strong> · <a href="https://github.com/Rafajames" target="_blank" rel="noopener">GitHub</a></span></footer>
     </div>
   </main>
 </div>

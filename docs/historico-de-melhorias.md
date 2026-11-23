@@ -25,3 +25,9 @@ Correção: ao chegar no gemini-2.5-flash (listado pela chave, mas "no longer av
 
 ## 2026.11.23.6 — Etapa 3 preenchida a partir do comentário
 Novo `src/comment-parser.js` (sem IA, offline): separa o comentário do técnico em frases e classifica cada uma como ação realizada, causa, teste/confirmação ou pendência, preenchendo a etapa 3 automaticamente ao sair do campo de comentários (ou pelo botão "Preencher solução a partir do comentário"). Usa somente as frases do técnico; campos digitados manualmente não são sobrescritos; campos preenchidos automaticamente ficam destacados até serem editados. Testes: 55 unitários e 58 verificações em navegador.
+
+## 2026.11.23.7 — Interface mínima em todas as telas
+Referências: formulários de uma coluna e divulgação progressiva (Nielsen Norman Group, U.S. Web Design System) e o padrão de campo único do Linear.
+- Pré-auditoria em 3 blocos numa coluna: (1) colar a mensagem — interpretada sozinha ao colar, com resumo em etiquetas e os campos escondidos em "Editar dados"; (2) seu comentário — preenche ação/causa/teste/pendência sozinho, com indicadores e "Falta: …"; (3) texto para o Aranda — gerado sozinho com o modelo padrão até o técnico editá-lo ("Refazer texto padrão" volta ao automático). "Copiar e salvar" salva a análise. IA reunida em "Melhorar com IA". Nota em selo no topo; critérios completos em "Detalhes da avaliação".
+- Visão geral: 3 indicadores e últimas análises. Histórico: pesquisa, filtro e menu "Mais" (backup, importar, pasta, limpar). Relatórios: 2 indicadores, o que mais falta, por etapa e notas. Conjunto gerencial: uma linha de importação. Configurações: IA (com "Avançado"), Preferências, Dados e Critérios recolhíveis.
+- Nenhuma função removida. Testes: 55 unitários, 62 verificações em navegador.

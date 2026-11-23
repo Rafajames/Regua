@@ -6,7 +6,7 @@ import { extractFromComments } from './comment-parser.js';
 import { buildStandardDraft, checkClosureClaims, DEFAULT_SIGNATURE } from './draft-template.js';
 import * as store from './storage.js';
 
-export const APP_VERSION = '2026.11.23.6';
+export const APP_VERSION = '2026.11.23.7';
 
 const $ = id => document.getElementById(id);
 const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -25,6 +25,7 @@ const state = {
   managerRecords: [],
   localFolder: null,
   signature: DEFAULT_SIGNATURE,
+  draftManual: false,
   detailId: null,
   ai: { provider: 'gemini', key: '', models: [], model: '', manualModel: '', customBase: '', connected: false, prefs: {} }
 };
@@ -132,7 +133,7 @@ function updateNetwork() {
   const pill = $('netPill');
   const online = navigator.onLine !== false;
   pill.classList.toggle('offline', !online);
-  pill.textContent = online ? 'Dados neste dispositivo' : 'Offline · funções locais ativas';
+  pill.textContent = online ? 'Neste dispositivo' : 'Offline';
 }
 window.addEventListener('online', updateNetwork);
 window.addEventListener('offline', updateNetwork);
@@ -204,9 +205,9 @@ function showLocationMatch(match) {
     + '<br><span class="muted small">Confirme se corresponde ao local do chamado. </span><a href="https://rafajames.github.io/MapTec-TJRR/" target="_blank" rel="noopener">Abrir MapTec</a>';
 }
 
-$('parseWhatsapp').addEventListener('click', () => {
+function parseMessage() {
   const raw = $('whatsappText').value.trim();
-  if (!raw) { toast('Cole primeiro a mensagem do WhatsApp.'); $('whatsappText').focus(); return; }
+  if (!raw) return;
   const f = { number: waField(raw, 'Chamado'), requester: waField(raw, 'Solicitante'), description: waField(raw, 'Descri[çc][ãa]o'), solutionTime: waField(raw, 'Tempo de solu[çc][ãa]o'), sector: waField(raw, 'Setor'), room: waField(raw, 'Sala') };
   const filled = [];
   const assign = (id, v, label) => { if (v) { $(id).value = v; filled.push(label); } };
@@ -231,11 +232,12 @@ $('parseWhatsapp').addEventListener('click', () => {
     filled.push('local (sem confirmação no MapTec)');
   }
   showLocationMatch(match);
-  $('parseFeedback').textContent = filled.length ? 'Preenchido: ' + filled.join(', ') + '. Confira e complete antes de salvar.' : 'Nenhum campo reconhecido. Verifique se a mensagem segue o padrão “Campo: valor”.';
+  $('parseFeedback').textContent = filled.length ? '' : 'Não reconheci os campos. Use “Editar dados” para preencher.';
   markDirty();
   evaluateLive();
-  toast(filled.length ? 'Mensagem interpretada. Confira os campos.' : 'Nenhum campo reconhecido.');
-});
+}
+$('whatsappText').addEventListener('paste', () => setTimeout(parseMessage, 0));
+$('whatsappText').addEventListener('change', parseMessage);
 
 /* ================= Pré-auditoria ================= */
 
@@ -248,7 +250,9 @@ function readForm() {
 function fillForm(record) {
   for (const k of FORM_FIELDS) $(k).value = record[k] || '';
   for (const id of ['action', 'cause', 'test', 'notes']) markAuto($(id), false);
-  $('commentsFeedback').textContent = 'Ao sair do campo, a Régua identifica ação, causa, teste e pendências e preenche a etapa 3.';
+  $('commentsFeedback').textContent = '';
+  state.draftManual = !!record.draft;
+  $('regenDraft').classList.toggle('hidden', !state.draftManual);
   $('closureConfirmed').checked = !!record.closureConfirmed;
   $('draftOutput').value = record.draft || '';
   state.lastLocationMatch = record.locationMatch || null;
@@ -260,8 +264,7 @@ function markDirty() { state.dirty = true; }
 
 function setEditing(id) {
   state.currentId = id;
-  $('editingBadge').classList.toggle('hidden', !id);
-  $('saveAudit').textContent = id ? 'Atualizar análise' : 'Salvar análise';
+  $('saveAudit').textContent = id ? 'Atualizar' : 'Salvar';
 }
 
 async function resetAudit({ ask = true } = {}) {
@@ -273,7 +276,8 @@ async function resetAudit({ ask = true } = {}) {
   setEditing(null);
   state.dirty = false;
   $('aiResult').classList.add('hidden');
-  setStatus($('draftStatus'), 'idle', 'O texto padrão funciona sem internet. A IA é opcional.');
+  $('draftStatus').classList.add('hidden');
+  $('parseFeedback').textContent = '';
   evaluateLive();
   return true;
 }
@@ -289,8 +293,32 @@ function renderEvaluation(ev, { empty = false } = {}) {
     const b = scoreBand(d.score);
     return '<div class="dim"><span>' + esc(DIMENSION_LABELS[k]) + '</span><div class="bar ' + b + '"><i style="width:' + (empty ? 0 : d.score ?? 0) + '%"></i></div><b>' + (empty ? '—' : scoreText(d.score)) + '</b></div>';
   }).join('');
+  const pill = $('scorePill');
+  pill.dataset.band = band;
+  pill.textContent = empty ? '—' : scoreText(ev.score);
+  pill.setAttribute('aria-label', empty ? 'Sem avaliação' : 'Nota ' + scoreText(ev.score) + '. Ver detalhes');
+  const missing = ev.criteria.filter(c => c.status === 'not_evidenced' || c.status === 'needs_review').map(c => c.label.toLowerCase());
+  $('missingList').className = 'missing' + (empty ? '' : missing.length ? ' warn' : ' ok');
+  $('missingList').textContent = empty ? '' : missing.length ? 'Falta: ' + missing.join(', ') + '.' : 'Registro completo.';
   const icon = { met: '✓', needs_review: '!', not_evidenced: '×', not_applicable: '–' };
   $('criteriaList').innerHTML = ev.criteria.map(c => '<li><span class="st ' + c.status + '" aria-hidden="true">' + icon[c.status] + '</span><div><b>' + esc(c.label) + ' <span class="tag-st ' + c.status + '">' + esc(STATUS_LABELS[c.status]) + '</span></b><span class="muted">' + esc(c.status === 'met' || c.status === 'not_applicable' ? c.evidence : c.recommendation) + '</span></div></li>').join('');
+}
+
+function renderSummary(d) {
+  const parts = [d.number && 'Chamado ' + d.number, d.building, d.assetType, d.subject].filter(Boolean);
+  $('ticketSummary').innerHTML = parts.length ? parts.map(p => '<span class="chip">' + esc(p.length > 48 ? p.slice(0, 47) + '…' : p) + '</span>').join('') : '<span class="muted small">Nenhum dado ainda.</span>';
+  const ind = [['action', 'Ação'], ['cause', 'Causa'], ['test', 'Teste'], ['notes', 'Pendência']];
+  $('solutionIndicators').innerHTML = ind.map(([k, label]) => '<button type="button" class="chip ' + (d[k] ? 'on' : 'off') + '" data-field="' + k + '">' + (d[k] ? '✓ ' : '') + label + '</button>').join('');
+}
+
+// Texto padrão gerado automaticamente enquanto o técnico não editar o texto à mão.
+function autoDraft(d) {
+  if (state.draftManual) return;
+  const has = d.action || d.comments || d.description;
+  if (!has) { $('draftOutput').value = ''; showDraftWarnings([]); return; }
+  const r = buildStandardDraft({ ...d, closureConfirmed: $('closureConfirmed').checked, signature: state.signature });
+  $('draftOutput').value = r.draft;
+  showDraftWarnings(r.warnings.filter(w => !/não confirmado pelo técnico/i.test(w)));
 }
 
 let liveTimer;
@@ -301,21 +329,36 @@ function evaluateLive() {
     const empty = !Object.values(d).some(Boolean);
     state.lastEvaluation = evaluateQuality(d);
     renderEvaluation(state.lastEvaluation, { empty });
+    renderSummary(d);
+    autoDraft(d);
   }, 120);
 }
 
-$('auditForm').addEventListener('input', () => { markDirty(); evaluateLive(); });
-$('closureConfirmed').addEventListener('change', markDirty);
-$('draftOutput').addEventListener('input', markDirty);
-$('resetForm').addEventListener('click', () => resetAudit());
-$('newAudit').addEventListener('click', async () => { if (await resetAudit()) $('importCard').open = true; });
+function openFields(focusId) {
+  $('fieldsPanel').classList.remove('hidden');
+  $('toggleFields').setAttribute('aria-expanded', 'true');
+  $('toggleFields').textContent = 'Ocultar dados';
+  if (focusId) $(focusId).focus();
+}
+$('toggleFields').addEventListener('click', () => {
+  if ($('fieldsPanel').classList.contains('hidden')) openFields();
+  else { $('fieldsPanel').classList.add('hidden'); $('toggleFields').setAttribute('aria-expanded', 'false'); $('toggleFields').textContent = 'Editar dados'; }
+});
+$('solutionIndicators').addEventListener('click', e => { const b = e.target.closest('[data-field]'); if (b) openFields(b.dataset.field); });
+$('scorePill').addEventListener('click', () => { $('criteriaDetails').open = true; $('criteriaDetails').scrollIntoView({ behavior: 'smooth', block: 'start' }); });
 
-$('auditForm').addEventListener('submit', async e => {
-  e.preventDefault();
+$('auditForm').addEventListener('input', () => { markDirty(); evaluateLive(); });
+let commentTimer;
+$('comments').addEventListener('input', () => { markDirty(); evaluateLive(); clearTimeout(commentTimer); commentTimer = setTimeout(() => fillFromComments(), 500); });
+$('closureConfirmed').addEventListener('change', () => { markDirty(); evaluateLive(); });
+$('draftOutput').addEventListener('input', () => { markDirty(); state.draftManual = true; $('regenDraft').classList.remove('hidden'); });
+$('regenDraft').addEventListener('click', () => { state.draftManual = false; $('regenDraft').classList.add('hidden'); evaluateLive(); });
+$('newAudit').addEventListener('click', async () => { if (await resetAudit()) $('whatsappText').focus(); });
+
+async function saveCurrent({ quiet = false } = {}) {
   const d = readForm();
-  const missing = [['building', 'prédio'], ['subject', 'assunto'], ['description', 'solicitação original'], ['action', 'ação realizada']].filter(([k]) => !d[k]);
-  if (missing.length && !(await confirmDialog('Campos principais vazios: ' + missing.map(m => m[1]).join(', ') + '. A avaliação vai registrá-los como não evidenciados. Salvar assim mesmo?', { title: 'Salvar análise incompleta', ok: 'Salvar' }))) { $(missing[0][0]).focus(); return; }
-  if (!state.db) { toast('O armazenamento local não está disponível. Use HTTPS ou localhost e verifique se o navegador permite IndexedDB.', 'error'); return; }
+  if (!Object.values(d).some(Boolean)) { if (!quiet) toast('Nada para salvar ainda.'); return false; }
+  if (!state.db) { toast('O armazenamento local não está disponível neste navegador.', 'error'); return false; }
   const now = new Date().toISOString();
   const existing = state.currentId ? state.items.find(x => x.id === state.currentId) : null;
   const record = {
@@ -334,14 +377,17 @@ $('auditForm').addEventListener('submit', async e => {
     state.items = await store.listAudits(state.db);
     setEditing(record.id);
     state.dirty = false;
-    $('result').classList.remove('saved-pulse'); void $('result').offsetWidth; $('result').classList.add('saved-pulse');
-    toast(existing ? 'Análise atualizada. O chamado original não foi alterado.' : 'Análise salva no histórico. O chamado original não foi alterado.');
+    $('scorePill').classList.remove('saved-pulse'); void $('scorePill').offsetWidth; $('scorePill').classList.add('saved-pulse');
+    if (!quiet) toast(existing ? 'Análise atualizada.' : 'Análise salva.');
     renderHome();
-    persistFolderCopy().catch(err => { $('folderStatus').textContent = 'Falha ao atualizar a pasta: ' + err.message + '. O registro continua salvo no navegador.'; });
+    persistFolderCopy().catch(err => { $('folderStatus').classList.remove('hidden'); $('folderStatus').classList.remove('hidden'); $('folderStatus').textContent = 'Falha ao atualizar a pasta: ' + err.message; });
+    return true;
   } catch (err) {
     toast('Não foi possível salvar: ' + (err?.message || err) + '. Exporte um backup e tente novamente.', 'error');
+    return false;
   }
-});
+}
+$('saveAudit').addEventListener('click', () => saveCurrent());
 
 /* ================= Preenchimento a partir do comentário ================= */
 
@@ -371,13 +417,9 @@ function fillFromComments({ manual = false } = {}) {
     filled.push(label);
   }
   const fb = $('commentsFeedback');
-  if (filled.length) fb.textContent = 'Preenchido a partir do comentário: ' + filled.join(', ') + '. Confira na etapa 3.' + (kept.length ? ' Mantido o que você digitou em: ' + kept.join(', ') + '.' : '');
-  else if (kept.length) fb.textContent = 'Os campos da etapa 3 já foram preenchidos por você e foram mantidos (' + kept.join(', ') + ').';
-  else fb.textContent = 'Não identifiquei ação, causa, teste ou pendência no comentário. Use frases como “foi realizada…”, “foi verificado que…”, “o usuário confirmou…”.';
-  if (filled.length) { markDirty(); evaluateLive(); if (manual) toast('Etapa 3 preenchida a partir do comentário.'); }
+  fb.textContent = filled.length ? 'Preenchido do comentário: ' + filled.join(', ') + '.' + (kept.length ? ' Mantido: ' + kept.join(', ') + '.' : '') : kept.length ? 'Mantido: ' + kept.join(', ') + '.' : '';
+  if (filled.length) { markDirty(); evaluateLive(); }
 }
-$('fillFromComments').addEventListener('click', () => fillFromComments({ manual: true }));
-$('comments').addEventListener('change', () => fillFromComments());
 // Ao editar um campo preenchido automaticamente, ele passa a ser do técnico.
 for (const [, id] of AUTO_FIELDS) $(id).addEventListener('input', () => { if ($(id).dataset.auto !== undefined && $(id).dataset.auto !== $(id).value) markAuto($(id), false); });
 
@@ -390,18 +432,8 @@ function showDraftWarnings(list, footer = '') {
 }
 
 async function confirmReplaceDraft() {
-  return !$('draftOutput').value.trim() || confirmDialog('Substituir o texto atual do rascunho?', { title: 'Substituir rascunho', ok: 'Substituir' });
+  return !state.draftManual || !$('draftOutput').value.trim() || confirmDialog('Substituir o texto atual do rascunho?', { title: 'Substituir rascunho', ok: 'Substituir' });
 }
-
-$('standardDraft').addEventListener('click', async () => {
-  if (!(await confirmReplaceDraft())) return;
-  const d = readForm();
-  const r = buildStandardDraft({ ...d, closureConfirmed: $('closureConfirmed').checked, signature: state.signature });
-  $('draftOutput').value = r.draft;
-  markDirty();
-  showDraftWarnings(r.warnings);
-  setStatus($('draftStatus'), 'ok', 'Texto padrão montado localmente, sem IA. Revise e complete os marcadores.');
-});
 
 function effectiveModel() { return normalizeModelId(state.ai.manualModel || state.ai.model); }
 // Todos os modelos habilitados na chave (lista testada) servem de reserva, na ordem recomendada.
@@ -415,6 +447,7 @@ async function makeAiDraft(stage) {
   if (!(await confirmDialog('O conteúdo técnico do chamado (solicitação, comentários e ações) será enviado diretamente ao provedor ' + PROVIDERS[state.ai.provider].label + '. Remova dados pessoais ou sigilosos. Continuar?', { title: 'Enviar para a IA', ok: 'Enviar' }))) return;
   if (!(await confirmReplaceDraft())) return;
   const btn = stage === 'initial' ? $('initialDraft') : $('finalDraft');
+  $('draftStatus').classList.remove('hidden');
   setBusy(btn, true);
   setStatus($('draftStatus'), 'working', 'Gerando resposta com ' + effectiveModel() + '…');
   try {
@@ -427,6 +460,7 @@ async function makeAiDraft(stage) {
       pending: d.notes, signature: state.signature, stage, closureConfirmed: $('closureConfirmed').checked
     });
     $('draftOutput').value = r.draft;
+    state.draftManual = true; $('regenDraft').classList.remove('hidden');
     markDirty();
     const warnings = [...r.guard_warnings, ...r.missing_information.map(x => 'Informação ausente: ' + x), ...r.contradictions.map(x => 'Divergência: ' + x), ...r.pending_items.map(x => 'Pendência: ' + x)];
     showDraftWarnings(warnings, r.requires_technician_confirmation ? 'A confirmação do técnico é necessária antes de afirmar conclusão ou encerramento.' : '');
@@ -438,8 +472,10 @@ async function makeAiDraft(stage) {
     if (e.code === 'model' || e.code === 'auth') updateAiChip('error', e.code === 'auth' ? 'Falha na autenticação' : 'Modelo indisponível');
   } finally { setBusy(btn, false); }
 }
-$('initialDraft').addEventListener('click', () => makeAiDraft('initial'));
-$('finalDraft').addEventListener('click', () => makeAiDraft('completion'));
+const closeMenus = () => document.querySelectorAll('details.menu[open]').forEach(d => d.removeAttribute('open'));
+$('initialDraft').addEventListener('click', () => { closeMenus(); makeAiDraft('initial'); });
+$('finalDraft').addEventListener('click', () => { closeMenus(); makeAiDraft('completion'); });
+document.addEventListener('click', e => { if (!e.target.closest('details.menu')) closeMenus(); });
 
 $('copyDraft').addEventListener('click', async () => {
   const text = $('draftOutput').value.trim();
@@ -448,7 +484,8 @@ $('copyDraft').addEventListener('click', async () => {
   if (warnings.length) showDraftWarnings(warnings);
   try {
     await navigator.clipboard.writeText(text);
-    toast(warnings.length ? 'Texto copiado — atenção aos avisos antes de colar.' : 'Texto copiado. Cole no Aranda após revisar.');
+    const saved = await saveCurrent({ quiet: true });
+    toast((warnings.length ? 'Texto copiado — veja os avisos.' : 'Texto copiado.') + (saved ? ' Análise salva.' : ''));
   } catch {
     $('draftOutput').select();
     toast('Não foi possível copiar automaticamente. O texto foi selecionado: use Ctrl+C.', 'error');
@@ -458,6 +495,7 @@ $('copyDraft').addEventListener('click', async () => {
 /* ================= Análise com IA ================= */
 
 $('aiReview').addEventListener('click', async () => {
+  closeMenus();
   if (!state.ai.key || !effectiveModel()) { toast('Configure a chave e o modelo da IA em Configurações.'); go('settings'); return; }
   const d = readForm();
   if (!Object.values(d).some(Boolean)) { toast('Preencha o chamado antes da análise.'); return; }
@@ -501,29 +539,24 @@ function renderHome() {
   $('total').textContent = state.items.length;
   $('average').textContent = scoreText(avg);
   $('review').textContent = scores.filter(s => s < 80).length;
-  const last = sortedItems()[0];
-  $('lastDate').textContent = last ? fmtDate(last.updatedAt || last.createdAt) : '—';
-  $('lastSubject').textContent = last ? (last.subject || last.number || '') : ' ';
   $('recent').innerHTML = state.items.length ? sortedItems().slice(0, 5).map(itemRow).join('') : emptyState('Nenhuma análise ainda', ' Comece colando a mensagem de um chamado.', { page: 'audit', label: 'Fazer a primeira pré-auditoria' });
-  $('homeBands').innerHTML = bandsHtml(state.items);
 }
 
 /* ================= Histórico ================= */
 
 function renderHistory() {
-  const q = norm($('historySearch').value), f = $('historyFilter').value, sort = $('historySort').value;
+  const q = norm($('historySearch').value), f = $('historyFilter').value;
   let list = state.items.filter(x => {
     if (f !== 'all' && scoreBand(x.result?.score) !== f) return false;
     if (!q) return true;
     return norm([x.number, x.subject, x.building, x.location, x.tech, x.requester, x.description].join(' ')).includes(q);
   });
   const key = x => String(x.updatedAt || x.createdAt);
-  const sc = x => typeof x.result?.score === 'number' ? x.result.score : -1;
-  list.sort(sort === 'old' ? (a, b) => key(a).localeCompare(key(b)) : sort === 'high' ? (a, b) => sc(b) - sc(a) : sort === 'low' ? (a, b) => sc(a) - sc(b) : (a, b) => key(b).localeCompare(key(a)));
-  $('historyCount').textContent = state.items.length ? list.length + ' de ' + state.items.length + ' análise(s)' : '';
+  list.sort((a, b) => key(b).localeCompare(key(a)));
+  $('historyCount').textContent = state.items.length && (q || f !== 'all') ? list.length + ' de ' + state.items.length : '';
   $('historyList').innerHTML = list.length ? list.map(itemRow).join('') : state.items.length ? emptyState('Nada encontrado', ' Ajuste a pesquisa ou o filtro.') : emptyState('Histórico vazio', ' As análises salvas aparecem aqui.', { page: 'audit', label: 'Nova pré-auditoria' });
 }
-['historySearch', 'historyFilter', 'historySort'].forEach(id => $(id).addEventListener('input', renderHistory));
+['historySearch', 'historyFilter'].forEach(id => $(id).addEventListener('input', renderHistory));
 
 document.addEventListener('click', e => {
   const row = e.target.closest('[data-detail]');
@@ -589,7 +622,7 @@ $('backup').addEventListener('click', () => {
   toast('Backup exportado com ' + state.items.length + ' análise(s).');
 });
 
-$('importBackupBtn').addEventListener('click', () => $('importBackupFile').click());
+$('importBackupBtn').addEventListener('click', () => { closeMenus(); $('importBackupFile').click(); });
 $('importBackupFile').addEventListener('change', async () => {
   const file = $('importBackupFile').files[0];
   $('importBackupFile').value = '';
@@ -626,14 +659,14 @@ async function persistFolderCopy() {
   const folder = state.localFolder;
   if (!folder) return false;
   if ((await folder.queryPermission({ mode: 'readwrite' })) !== 'granted' && (await folder.requestPermission({ mode: 'readwrite' })) !== 'granted') {
-    $('folderStatus').textContent = 'Permissão da pasta não concedida. O histórico continua salvo no navegador.';
+    $('folderStatus').classList.remove('hidden'); $('folderStatus').textContent = 'Permissão da pasta não concedida. O histórico continua salvo no navegador.';
     return false;
   }
   const dir = await (await folder.getDirectoryHandle('Régua', { create: true })).getDirectoryHandle('Meus chamados', { create: true });
   const w = await (await dir.getFileHandle('chamados.json', { create: true })).createWritable();
   await w.write(JSON.stringify(store.buildBackup(state.items, APP_VERSION), null, 2));
   await w.close();
-  $('folderStatus').textContent = 'Cópia atualizada em ' + folder.name + '/Régua/Meus chamados/chamados.json às ' + new Date().toLocaleTimeString('pt-BR') + '.';
+  $('folderStatus').classList.remove('hidden'); $('folderStatus').textContent = 'Cópia atualizada em ' + folder.name + '/Régua/Meus chamados/chamados.json às ' + new Date().toLocaleTimeString('pt-BR') + '.';
   return true;
 }
 $('chooseFolder').addEventListener('click', async () => {
@@ -652,7 +685,6 @@ function renderReports() {
   const scores = scoresOf(state.items);
   $('reportAudits').textContent = state.items.length;
   $('reportAverage').textContent = scoreText(scores.length ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length) : null);
-  $('reportManager').textContent = state.managerRecords.length;
   $('reportBars').innerHTML = bandsHtml(state.items);
   const withDims = state.items.filter(x => x.result?.dimensions);
   $('reportDims').innerHTML = withDims.length ? Object.keys(DIMENSION_LABELS).map(k => {
@@ -708,9 +740,6 @@ function updateAiChip(kind, text) {
   const chip = $('aiStateChip');
   chip.dataset.state = kind === 'keyed' || kind === 'idle' ? 'idle' : kind === 'manual' ? 'warn' : kind;
   chip.textContent = text || AI_CHIP_TEXT[kind];
-  const ready = !!state.ai.key && !!effectiveModel();
-  $('homeAiDot').classList.toggle('ok', ready && (state.ai.connected || !!state.ai.manualModel));
-  $('homeAiText').textContent = ready ? 'IA pronta: ' + PROVIDERS[state.ai.provider].label + ' · ' + effectiveModel() : 'IA não configurada — opcional.';
 }
 
 function aiPrefsFor(p) { return state.ai.prefs[p] || {}; }
@@ -824,7 +853,6 @@ $('draftSignature').addEventListener('change', async () => {
 /* ================= Configurações: dados e critérios ================= */
 
 async function renderSettingsInfo() {
-  $('appVersion').textContent = APP_VERSION + ' · critérios ' + CRITERIA_VERSION;
   const info = $('storageInfo');
   try {
     const est = await navigator.storage?.estimate?.();
@@ -868,6 +896,8 @@ async function init() {
   applyTheme(themePref());
   updateNetwork();
   renderEvaluation(evaluateQuality({}), { empty: true });
+  renderSummary({});
+  $('appVersion').textContent = APP_VERSION;
   $('draftSignature').value = state.signature;
   applyProvider('gemini');
   registerServiceWorker();
@@ -878,7 +908,7 @@ async function init() {
       store.listAudits(state.db), store.getSetting(state.db, 'localFolder'), store.getSetting(state.db, 'signature'), store.getSetting(state.db, 'aiPrefs')
     ]);
     state.items = items;
-    if (folder) { state.localFolder = folder; $('folderStatus').textContent = 'Pasta configurada: ' + folder.name + '. A permissão será confirmada ao salvar.'; }
+    if (folder) { state.localFolder = folder; $('folderStatus').classList.remove('hidden'); $('folderStatus').textContent = 'Pasta configurada: ' + folder.name + '. A permissão será confirmada ao salvar.'; }
     if (signature) { state.signature = signature; $('draftSignature').value = signature; }
     if (prefs?.byProvider) { state.ai.prefs = prefs.byProvider; applyProvider(PROVIDERS[prefs.last] ? prefs.last : 'gemini'); }
   } catch (err) {

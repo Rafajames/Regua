@@ -6,7 +6,7 @@ const read = p => readFile(new URL('../' + p, import.meta.url), 'utf8');
 
 test('página contém telas, campos e créditos essenciais', async () => {
   const html = await read('index.html');
-  for (const id of ['home', 'audit', 'history', 'reports', 'manager', 'settings', 'auditForm', 'themeToggle', 'geminiKey', 'aiProvider', 'geminiModel', 'manualModel', 'standardDraft', 'initialDraft', 'finalDraft', 'draftOutput', 'closureConfirmed', 'copyDraft', 'historySearch', 'importBackupFile', 'detailDialog', 'chooseFolder', 'updateBar'])
+  for (const id of ['home', 'audit', 'history', 'reports', 'manager', 'settings', 'auditForm', 'themeToggle', 'geminiKey', 'aiProvider', 'geminiModel', 'manualModel', 'regenDraft', 'scorePill', 'ticketSummary', 'solutionIndicators', 'initialDraft', 'finalDraft', 'draftOutput', 'closureConfirmed', 'copyDraft', 'historySearch', 'importBackupFile', 'detailDialog', 'chooseFolder', 'updateBar'])
     assert.ok(html.includes('id="' + id + '"'), id + ' deve existir');
   assert.ok(html.includes('src/app.js'));
   assert.ok(html.includes('manifest.webmanifest'));

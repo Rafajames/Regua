@@ -401,3 +401,52 @@ th { color: var(--muted); font-weight: 650; font-size: 11.5px; text-transform: u
   .side, .top, .update-bar, .footer-actions, .app-footer { display: none !important; }
   .main { margin: 0; }
 }
+
+/* ===== Layout mínimo (v2026.11.23.7) ===== */
+.head { align-items: center; margin-bottom: 16px; }
+.head h1 { margin: 0; }
+.flow, .settings-stack { max-width: 820px; display: grid; gap: 12px; }
+#history .card, #home > .card, #manager > .card { max-width: 980px; }
+.step-card h2 { display: flex; align-items: center; gap: 9px; margin-bottom: 10px; }
+.step-card .field textarea { min-height: 0; }
+.summary-line { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 8px; flex-wrap: wrap; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { display: inline-flex; align-items: center; gap: 4px; border: 1px solid var(--blue-line); background: var(--blue-soft); color: var(--navy); border-radius: 20px; padding: 3px 10px; font-size: 12px; font-weight: 600; }
+button.chip { cursor: pointer; transition: background .15s, border-color .15s; }
+.chip.on { background: var(--ok-soft); border-color: transparent; color: var(--ok); }
+.chip.off { background: transparent; color: var(--faint); border-style: dashed; }
+#solutionIndicators { margin-top: 10px; }
+.missing { margin: 8px 0 0; font-size: 12.5px; color: var(--muted); }
+.missing.warn { color: var(--warn); }
+.missing.ok { color: var(--ok); font-weight: 600; }
+.fields-panel { margin-top: 14px; padding-top: 14px; border-top: 1px dashed var(--line); animation: rise .25s var(--ease); }
+.score-pill { min-width: 62px; height: 36px; padding: 0 12px; border-radius: 20px; border: 1px solid var(--blue-line); background: var(--surface); color: var(--muted); font-weight: 800; font-size: 14px; transition: background .3s, color .3s; }
+.score-pill[data-band="good"] { background: var(--blue-soft); color: var(--blue); border-color: transparent; }
+.score-pill[data-band="fair"] { background: var(--warn-soft); color: var(--warn); border-color: transparent; }
+.score-pill[data-band="low"] { background: var(--bad-soft); color: var(--bad); border-color: transparent; }
+.action-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+.action-row .link-btn { display: inline-flex; align-items: center; gap: 6px; }
+.check-line { margin: 0 0 10px; }
+details.menu { position: relative; }
+details.menu > summary { list-style: none; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
+details.menu > summary::-webkit-details-marker { display: none; }
+.menu-list { position: absolute; right: 0; top: calc(100% + 6px); z-index: 30; min-width: 250px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; box-shadow: var(--shadow-lg); padding: 6px; display: grid; animation: dialogIn .15s var(--ease); }
+.menu-list button { display: flex; align-items: center; gap: 9px; text-align: left; border: 0; background: none; padding: 9px 10px; border-radius: 8px; font-size: 13px; color: var(--text); }
+.menu-list button:hover { background: var(--blue-soft); }
+.menu-list .danger-item { color: var(--bad); }
+.menu-list .danger-item:hover { background: var(--bad-soft); }
+.details-card { padding: 0; }
+.details-card > summary { cursor: pointer; padding: 14px 20px; font-weight: 700; color: var(--navy); list-style: none; display: flex; align-items: center; gap: 8px; }
+.details-card > summary::-webkit-details-marker { display: none; }
+.details-card > summary::after { content: "+"; margin-left: auto; color: var(--blue); font-size: 18px; transition: transform .2s; }
+.details-card[open] > summary::after { transform: rotate(45deg); }
+.details-card > :not(summary) { margin-left: 20px; margin-right: 20px; }
+.details-card > :last-child { margin-bottom: 18px; }
+.two-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); max-width: 640px; }
+.file-row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.file-row input[type=file] { flex: 1; min-width: 200px; font-size: 13px; }
+.op-line { margin: -4px 0 12px; }
+.mt { margin-top: 16px; }
+.toolbar { margin-bottom: 12px; }
+.stat { min-height: 92px; }
+@media (max-width: 680px) { .two-stats { grid-template-columns: 1fr 1fr; } .menu-list { right: auto; left: 0; } details.menu.right .menu-list { left: auto; right: 0; } }
