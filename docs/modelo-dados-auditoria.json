@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "system": "nome-da-plataforma-de-chamados",
+    "recordId": "id-estavel-na-origem",
+    "importedAt": "2026-11-23T11:00:00Z"
+  },
+  "ticket": {
+    "number": "identificador-do-chamado",
+    "openedAt": null,
+    "closedAt": null,
+    "solutionTimestamp": null,
+    "status": null,
+    "priority": null,
+    "channel": null,
+    "subject": null,
+    "description": null,
+    "buildingId": null,
+    "unitId": null,
+    "sector": null,
+    "room": null,
+    "assetTag": null,
+    "assetType": null,
+    "category": null,
+    "technicianId": null,
+    "comments": [],
+    "resolution": null,
+    "reopened": null
+  },
+  "quality": {
+    "opening": { "status": "not_evaluated", "score": null, "criteria": [] },
+    "updates": { "status": "not_evaluated", "score": null, "criteria": [] },
+    "closure": { "status": "not_evaluated", "score": null, "criteria": [] },
+    "evaluatedAt": null,
+    "engine": "rules"
+  }
+}
