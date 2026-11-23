@@ -48,3 +48,8 @@ Referências: formulários de uma coluna e divulgação progressiva (Nielsen Nor
 - Datas no formato americano com AM/PM (como o Aranda exporta) e no formato brasileiro.
 - Novos padrões: tempo registrado, cumprimento do prazo previsto, registro em lote (mesmo dia concentrando as datas reais de atendimento), dias até atendimento e até fechamento, canais, SLA × prioridade, assuntos genéricos e assuntos iguais em categorias diferentes.
 - "Progresso" é exibido como "% do prazo do SLA" quando o arquivo traz a coluna SLA: nos dados analisados, Progresso ≈ Tempo ÷ prazo do SLA × 100 (ex.: 45 min em prazo de 130 min = 34,6%; o arquivo mostra 34,67).
+
+## 2026.11.23.11 — Métricas individuais no Conjunto gerencial
+- Clique em um chamado abre o painel com: indicadores operacionais (tempo, % do prazo do SLA, prazo previsto, atendimento dentro/fora do prazo, dias até atendimento e fechamento, canal), pontos de atenção (registro em lote, assunto genérico, categoria possivelmente errada) e os 9 critérios da pré-auditoria.
+- Critérios sem coluna correspondente no arquivo ficam "Não exportado" e não entram na nota. A nota parcial só é exibida com pelo menos 3 critérios avaliáveis (evita 100% calculado só com o assunto).
+- "Abrir na pré-auditoria" carrega o chamado no formulário para completar o registro.

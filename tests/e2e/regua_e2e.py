@@ -238,6 +238,14 @@ with sync_playwright() as p:
     page.wait_for_function("() => document.getElementById('managerTotal').textContent === '40'", timeout=10000)
     txt = page.text_content('#managerInsights')
     ok('formato completo do Aranda: prazo, lote, canais e classificação', 'registro em lote' in txt and 'Canais' in txt and 'prazo previsto' in txt and 'categorias diferentes' in txt, txt[:200])
+    page.locator('#managerList [data-ticket]').nth(1).click()
+    page.wait_for_selector('#ticketDialog[open]')
+    body = page.text_content('#ticketBody')
+    ok('clique no chamado mostra métricas individuais', 'Indicadores operacionais' in body and 'Não exportado' in body and '% do prazo do SLA usado' in body, body[:160])
+    page.screenshot(path=f'{OUT}/13-chamado-individual.png')
+    page.click('#ticketToAudit'); page.wait_for_timeout(400)
+    ok('chamado abre na pré-auditoria', page.locator('#audit.active').count() == 1 and page.input_value('#number').startswith('RF-8'))
+    page.click('nav [data-page="manager"]')
     page.screenshot(path=f'{OUT}/12-conjunto-gerencial.png', full_page=True)
 
     # --- Atualização: publica nova versão do SW
@@ -264,7 +272,7 @@ with sync_playwright() as p:
         ok('com dados não salvos, pergunta antes de atualizar (uma única vez)', asked and not native, native)
         page.wait_for_load_state('networkidle'); page.wait_for_timeout(800)
         keys = page.evaluate('() => caches.keys()')
-        ok('após atualizar, só o cache novo permanece', keys == ['regua-shell-teste-2026.11.23.10'], keys)
+        ok('após atualizar, só o cache novo permanece', keys == ['regua-shell-teste-2026.11.23.11'], keys)
     except Exception as e:
         ok('aviso discreto de nova versão', False, f'{e} | navegações: {nav_log}')
     open(swp, 'w', encoding='utf-8').write(src)

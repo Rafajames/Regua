@@ -2,11 +2,11 @@
 import { evaluateQuality, DEFAULT_CRITERIA, DIMENSION_LABELS, STATUS_LABELS, scoreBand, CRITERIA_VERSION } from './quality-engine.js';
 import { PROVIDERS, AIError, testProviderConnection, generateResolutionDraft, reviewTicketWithProvider, proposeCriteriaConfiguration, normalizeModelId } from './ai-provider.js';
 import { extractFromComments } from './comment-parser.js';
-import { readTicketFile, summarizeTickets } from './ticket-import.js';
+import { readTicketFile, summarizeTickets, ticketMetrics } from './ticket-import.js';
 import { buildStandardDraft, checkClosureClaims, DEFAULT_SIGNATURE } from './draft-template.js';
 import * as store from './storage.js';
 
-export const APP_VERSION = '2026.11.23.10';
+export const APP_VERSION = '2026.11.23.11';
 
 const $ = id => document.getElementById(id);
 const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -741,12 +741,49 @@ function renderManager() {
   $('managerInsights').innerHTML = ins.map(x => '<li>' + x + '</li>').join('') || '<li class="muted">Os padrões aparecem após a análise.</li>';
   const q = norm($('managerSearch').value);
   const list = q ? rows.filter(r => norm(Object.values(r).join(' ')).includes(q)) : rows;
+  const ctx = managerContext(sum);
   $('managerList').innerHTML = list.length ? list.slice(0, 200).map(r => {
-    const score = TEXT_KEYS.some(k => r[k]) ? evaluateQuality(r).score : null;
-    return '<div class="item"><span><b>' + esc([r.number, r.subject].filter(Boolean).join(' — ') || 'Sem número') + '</b><small>' + esc([r.category, r.status, r.duration && 'tempo ' + r.duration, r.progress && (state.managerProgressLabel || 'Progresso') + ' ' + r.progress].filter(Boolean).join(' · ')) + '</small></span>' + (score !== null ? '<span class="score-tag ' + scoreBand(score) + '">' + scoreText(score) + '</span>' : '') + '</div>';
+    const m = ticketMetrics(r, ctx);
+    const warn = m.flags.length && m.evaluated ? ' · ' + m.flags.length + ' alerta(s)' : '';
+    return '<button type="button" class="item" data-ticket="' + rows.indexOf(r) + '"><span><b>' + esc([r.number, r.subject].filter(Boolean).join(' — ') || 'Sem número') + '</b><small>' + esc([r.category, r.duration && 'tempo ' + r.duration, r.progress && (state.managerProgressLabel || 'Progresso') + ' ' + r.progress].filter(Boolean).join(' · ') + warn) + '</small></span>' + (m.score !== null ? '<span class="score-tag ' + scoreBand(m.score) + '" title="Nota parcial: ' + m.evaluated + ' critério(s) avaliável(is)">' + m.score + '%</span>' : '<span class="score-tag" title="Sem textos no arquivo">—</span>') + '</button>';
   }).join('') + (list.length > 200 ? '<p class="muted small">Exibindo 200 de ' + list.length + '. Use a pesquisa para encontrar outros.</p>' : '') : rows.length ? emptyState('Nada encontrado', '') : '';
 }
 const TEXT_KEYS = ['description', 'comments', 'action', 'cause', 'test'];
+function managerContext(sum) {
+  return { fields: state.managerFields || new Set(), batchDay: sum.attendedBatch && sum.attendedBatch.share >= 0.3 ? sum.attendedBatch.day : null, progressIsSla: !!state.managerProgressIsSla };
+}
+function openTicket(index) {
+  const r = state.managerRecords[index];
+  if (!r) return;
+  state.ticketIndex = index;
+  const m = ticketMetrics(r, managerContext(summarizeTickets(state.managerRecords)));
+  $('ticketTitle').textContent = [r.number, r.subject].filter(Boolean).join(' — ') || 'Chamado';
+  const flagCls = f => f ? ' class="flag-' + f + '"' : '';
+  const icon = { met: '✓', needs_review: '!', not_evidenced: '×', not_applicable: '–', not_exported: '·' };
+  $('ticketBody').innerHTML =
+    '<div class="ticket-score"><span class="score-pill" data-band="' + scoreBand(m.score) + '">' + (m.score === null ? '—' : m.score + '%') + '</span><span class="muted small">' + (m.score === null ? 'Sem nota: só ' + m.evaluated + ' critério(s) têm dados no arquivo (mínimo 3). Faltam os textos do chamado.' : 'Nota parcial com ' + m.evaluated + ' de 9 critérios (os demais não vieram no arquivo).') + '</span></div>'
+    + (m.flags.length ? '<div class="callout warn"><b>Pontos de atenção</b><ul>' + m.flags.map(f => '<li>' + esc(f) + '</li>').join('') + '</ul></div>' : '')
+    + (m.ops.length ? '<h3 class="sub">Indicadores operacionais</h3><dl class="kv">' + m.ops.map(o => '<div><dt>' + esc(o.label) + '</dt><dd' + flagCls(o.flag) + '>' + esc(o.value) + '</dd></div>').join('') + '</dl>' : '')
+    + '<h3 class="sub">Critérios da pré-auditoria</h3><ul class="criteria">' + m.criteria.map(c => '<li><span class="st ' + c.status + '" aria-hidden="true">' + icon[c.status] + '</span><div><b>' + esc(c.label) + ' <span class="tag-st ' + c.status + '">' + esc(STATUS_LABELS[c.status]) + '</span></b>' + (c.status === 'not_evidenced' || c.status === 'needs_review' ? '<span class="muted">' + esc(c.recommendation) + '</span>' : '') + '</div></li>').join('') + '</ul>'
+    + '<details class="sub-details"><summary>Dados do arquivo</summary><dl class="kv">' + Object.entries(r).filter(([, v]) => v).map(([k, v]) => '<div><dt>' + esc(FIELD_NAMES[k] || k) + '</dt><dd>' + esc(/At$/.test(k) ? fmtDate(v) : v) + '</dd></div>').join('') + '</dl></details>';
+  const dlg = $('ticketDialog');
+  if (typeof dlg.showModal === 'function') dlg.showModal(); else dlg.setAttribute('open', '');
+}
+document.addEventListener('click', e => { const b = e.target.closest('[data-ticket]'); if (b) openTicket(+b.dataset.ticket); });
+$('ticketDialog').addEventListener('click', e => { if (e.target.closest('[data-close]') || e.target === $('ticketDialog')) $('ticketDialog').close(); });
+$('ticketToAudit').addEventListener('click', async () => {
+  const r = state.managerRecords[state.ticketIndex];
+  if (!r) return;
+  if (state.dirty && !(await confirmDialog('Há dados não salvos na pré-auditoria atual. Descartá-los?', { ok: 'Descartar' }))) return;
+  $('ticketDialog').close();
+  await resetAudit({ ask: false });
+  fillForm({ ...r, location: r.location || [r.sector, r.room && 'Sala ' + r.room].filter(Boolean).join(' · '), solutionTime: r.attendedAt ? fmtDate(r.attendedAt) : '' });
+  state.dirty = true;
+  go('audit');
+  openFields();
+  evaluateLive();
+  toast('Chamado carregado. Complete o comentário e os dados que faltam.');
+});
 const FIELD_NAMES = { channel: 'canal', ticketType: 'tipo de chamado', dueAt: 'atendimento previsto', attendedAt: 'atendimento real', duration: 'tempo', sla: 'SLA', impact: 'impacto', number: 'número', status: 'estado', openedAt: 'abertura', closedAt: 'encerramento', progress: 'progresso', priority: 'prioridade', category: 'categoria', subject: 'assunto', requester: 'solicitante', tech: 'técnico', building: 'prédio', sector: 'setor', room: 'sala', description: 'descrição', comments: 'comentários', cause: 'causa', test: 'teste', notes: 'pendências', action: 'solução' };
 $('managerSearch').addEventListener('input', renderManager);
 $('importManager').addEventListener('click', async () => {
@@ -760,6 +797,8 @@ $('importManager').addEventListener('click', async () => {
     state.managerRecords = r.records;
     const has = f => r.mapping.some(m => m.field === f);
     state.managerProgressLabel = has('progress') && has('sla') ? '% do prazo do SLA' : r.mapping.find(m => m.field === 'progress')?.column || 'Progresso';
+    state.managerFields = new Set(r.format === 'JSON' ? r.records.flatMap(x => Object.keys(x)) : r.mapping.map(m => m.field));
+    state.managerProgressIsSla = has('progress') && has('sla');
     renderManager();
     $('managerFeedback').textContent = r.format + ': ' + r.records.length + ' chamados analisados nesta aba. Nada foi salvo ou enviado.';
     const map = $('managerMapping');

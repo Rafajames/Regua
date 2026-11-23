@@ -24,7 +24,8 @@ export const STATUS_LABELS = {
   met: 'Atendido',
   not_evidenced: 'Não evidenciado',
   needs_review: 'Requer revisão',
-  not_applicable: 'Não aplicável'
+  not_applicable: 'Não aplicável',
+  not_exported: 'Não exportado'
 };
 
 const text = value => String(value ?? '').trim();

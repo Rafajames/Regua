@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
-import { parseCsv, parseXlsx, rowsToRecords, matchField, summarizeTickets, itemsToRows, alignPdfRows, readTicketFile } from '../src/ticket-import.js';
+import { parseCsv, parseXlsx, rowsToRecords, matchField, summarizeTickets, itemsToRows, alignPdfRows, readTicketFile, ticketMetrics } from '../src/ticket-import.js';
 
 const fx = name => new URL('./fixtures/' + name, import.meta.url);
 
@@ -103,4 +103,22 @@ test('formato completo do Aranda: datas M/D/AAAA AM/PM, tempo "0d:0h:4min", praz
   assert.equal(s.subjects.generic, 1);
   assert.equal(s.channels.length, 3);
   assert.equal(s.categorySpread[0]?.label, undefined, 'só 2 chamados de impressora: abaixo do mínimo para apontar inconsistência');
+});
+
+test('métricas por chamado: critérios sem coluna ficam "não exportado" e saem da nota', () => {
+  const rec = { number: 'RF-1', subject: 'suporte-impressora', category: 'Suporte ao uso dos sistemas e aplicativos', duration: '0d:0h:10min', progress: '7.86', sla: 'TJRR - Prioridade Média',
+    openedAt: new Date(2026, 9, 19, 10, 36).toISOString(), dueAt: new Date(2026, 9, 19, 12, 46).toISOString(), attendedAt: new Date(2026, 9, 27, 16, 3).toISOString(), closedAt: new Date(2026, 10, 3, 15, 35).toISOString(), channel: 'Telephone' };
+  const fields = new Set(['number', 'subject', 'category', 'duration', 'progress', 'sla', 'openedAt', 'dueAt', 'attendedAt', 'closedAt', 'channel']);
+  const m = ticketMetrics(rec, { fields, batchDay: new Date(2026, 9, 27).toLocaleDateString('pt-BR'), progressIsSla: true });
+  assert.equal(m.score, null, 'só o assunto é avaliável: sem nota');
+  assert.equal(m.criteria.filter(c => c.status === 'not_exported').length, 8);
+  assert.ok(m.ops.some(o => /fora do prazo/.test(o.value) && o.flag === 'bad'));
+  assert.ok(m.ops.some(o => o.label === '% do prazo do SLA usado' && o.value === '7,86%'));
+  assert.ok(m.flags.some(f => /registro em lote/.test(f)));
+  assert.ok(m.flags.some(f => /equipamento classificado como "uso dos sistemas"/.test(f)));
+
+  const full = ticketMetrics({ ...rec, description: 'Impressora do setor não imprime desde ontem, documentos ficam presos na fila.', comments: 'Realizada visita técnica.', action: 'Reinstalado o driver da impressora e limpa a fila.', test: 'Impressão de teste com sucesso.', cause: 'Driver corrompido após atualização.' },
+    { fields: new Set([...fields, 'description', 'comments', 'action', 'test', 'cause']) });
+  assert.equal(typeof full.score, 'number');
+  assert.ok(full.evaluated >= 6);
 });

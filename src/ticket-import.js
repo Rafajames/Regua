@@ -346,3 +346,62 @@ export function summarizeTickets(records, { progressLabel = 'Progresso' } = {}) 
     quality: scores.length ? { evaluated: scores.length, average: Math.round(scores.reduce((a, b) => a + b, 0) / scores.length), below80: scores.filter(s => s < 80).length } : null
   };
 }
+
+/* ---------------- Métricas por chamado ---------------- */
+
+export const MIN_CRITERIA_FOR_SCORE = 3;
+
+// Colunas do arquivo que alimentam cada critério da pré-auditoria.
+const CRITERIA_SOURCES = {
+  location: ['building', 'location', 'sector', 'room'], subject: ['subject'], symptom: ['description'],
+  asset: ['assetType', 'asset'], updates: ['comments'], cause: ['cause'], action: ['action'],
+  validation: ['test'], pending: ['notes', 'comments']
+};
+const EQUIPMENT = /impress|computador|\bpc\b|monitor|nobreak|scanner|scaner|notebook|teclado|mouse|fone|data ?show/;
+const SYSTEMS = /projudi|\bsei\b|login|senha|malote|serp|scriba|sistema|e-?mail|gemini|acesso/;
+
+/**
+ * Aplica os critérios da pré-auditoria e indicadores operacionais a um chamado importado.
+ * Critérios sem coluna correspondente no arquivo ficam "não exportado" e saem da nota.
+ */
+export function ticketMetrics(record, { fields = new Set(Object.keys(record)), batchDay = null, progressIsSla = false } = {}) {
+  const data = { ...record, location: record.location || [record.sector, record.room && 'Sala ' + record.room].filter(Boolean).join(' · ') };
+  const ev = evaluateQuality(data);
+  const criteria = ev.criteria.map(c => {
+    const exported = CRITERIA_SOURCES[c.id].some(f => fields.has(f));
+    return { id: c.id, label: c.label, weight: c.weight, status: exported ? c.status : 'not_exported', recommendation: c.recommendation };
+  });
+  const scored = criteria.filter(c => c.status !== 'not_exported' && c.status !== 'not_applicable');
+  const w = scored.reduce((a, c) => a + c.weight, 0);
+  // Com menos de 3 critérios avaliáveis a nota seria enganosa (ex.: só o assunto): não é calculada.
+  const score = w && scored.length >= MIN_CRITERIA_FOR_SCORE ? Math.round(scored.filter(c => c.status === 'met').reduce((a, c) => a + c.weight, 0) / w * 100) : null;
+
+  const date = v => { const d = v ? new Date(v) : null; return d && !Number.isNaN(d.getTime()) ? d : null; };
+  const fmt = d => d.toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' });
+  const ops = [];
+  const mins = parseDuration(record.duration);
+  if (mins !== null) ops.push({ label: 'Tempo registrado', value: mins + ' min', flag: null });
+  const prog = num(record.progress);
+  if (prog !== null) ops.push({ label: progressIsSla ? '% do prazo do SLA usado' : 'Progresso', value: String(prog).replace('.', ',') + (progressIsSla ? '%' : ''), flag: progressIsSla ? (prog > 100 ? 'bad' : prog > 50 ? 'warn' : 'ok') : null });
+  if (record.sla) ops.push({ label: 'SLA', value: record.sla, flag: null });
+  const opened = date(record.openedAt), due = date(record.dueAt), att = date(record.attendedAt), closed = date(record.closedAt);
+  if (due && opened) ops.push({ label: 'Prazo previsto', value: fmt(due) + ' (' + Math.round((due - opened) / 60000) + ' min após o registro)', flag: null });
+  if (att) {
+    const late = due ? att > due : null;
+    ops.push({ label: 'Atendimento registrado', value: fmt(att) + (late === null ? '' : late ? ' — fora do prazo' : ' — dentro do prazo'), flag: late === null ? null : late ? 'bad' : 'ok' });
+  }
+  if (opened && att && att >= opened) ops.push({ label: 'Do registro ao atendimento', value: String(Math.round((att - opened) / 86400000 * 10) / 10).replace('.', ',') + ' dia(s)', flag: null });
+  if (att && closed && closed >= att) ops.push({ label: 'Do atendimento ao fechamento', value: String(Math.round((closed - att) / 86400000 * 10) / 10).replace('.', ',') + ' dia(s)', flag: null });
+  if (record.channel) ops.push({ label: 'Canal', value: record.channel, flag: null });
+
+  const flags = [];
+  if (att && batchDay && att.toLocaleDateString('pt-BR') === batchDay) flags.push('Data de atendimento igual à do registro em lote (' + batchDay + '): o atendimento real pode ter ocorrido antes; confira se o prazo foi de fato perdido.');
+  const subj = fold(record.subject || '');
+  if (/criado via chatbot/.test(subj) || /^\s*(suporte|chamado|solicitacao)\s*$/.test(subj)) flags.push('Assunto genérico: use "EQUIPAMENTO/SISTEMA - PROBLEMA".');
+  const cat = fold(record.category || '');
+  if (cat && EQUIPMENT.test(subj) && /sistemas e aplicativos/.test(cat)) flags.push('Assunto de equipamento classificado como "uso dos sistemas": confira a categoria (muda o prazo do SLA).');
+  if (cat && SYSTEMS.test(subj) && !EQUIPMENT.test(subj) && /computador e outros/.test(cat)) flags.push('Assunto de sistema classificado como "Computador e outros": confira a categoria.');
+  if (scored.length < MIN_CRITERIA_FOR_SCORE) flags.push('O arquivo não traz descrição, comentários nem solução: a qualidade do registro não pode ser medida. Abra na pré-auditoria para completar.');
+
+  return { score, evaluated: scored.length, exported: criteria.filter(c => c.status !== 'not_exported').length, criteria, ops, flags };
+}
