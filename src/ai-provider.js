@@ -27,4 +27,21 @@ export async function reviewTicketWithGemini(apiKey,model,data={}){
   const allowed={subject:data.subject||'',building:data.building||'',location:data.location||'',description:data.description||'',comments:data.comments||'',cause:data.cause||'',action:data.action||'',test:data.test||'',notes:data.notes||'',assetType:data.assetType||''};
   return callGemini(apiKey,model,SYSTEM_PROMPT+'\n\nCHAMADO PARA ANÁLISE (sem número, solicitante ou técnico):\n'+JSON.stringify(allowed));
 }
+
+export async function proposeCriteriaConfiguration(apiKey,model,context=''){
+  const current=[
+    {id:'location',label:'Local identificável',weight:2,dimension:'opening'},
+    {id:'subject',label:'Assunto específico',weight:1,dimension:'opening'},
+    {id:'symptom',label:'Sintoma descrito',weight:2,dimension:'opening'},
+    {id:'asset',label:'Equipamento ou sistema identificado',weight:1,dimension:'opening'},
+    {id:'updates',label:'Comentários úteis',weight:2,dimension:'updates'},
+    {id:'cause',label:'Causa registrada',weight:1,dimension:'closure'},
+    {id:'action',label:'Ação realizada descrita',weight:2,dimension:'closure'},
+    {id:'validation',label:'Teste ou confirmação',weight:2,dimension:'closure'},
+    {id:'pending',label:'Pendências contextualizadas',weight:1,dimension:'closure'}
+  ];
+  const prompt='Você é consultor de desenho de critérios de qualidade para suporte de TI. Proponha parâmetros objetivos e auditáveis para a Régua. Não transforme suposições em norma e não atribua metas institucionais sem base. Preserve os IDs existentes; sugira pesos inteiros de 1 a 5 e justifique cada ajuste. Pode sugerir critérios adicionais separadamente, mas identifique-os como proposta futura que exige implementação. Retorne somente JSON com rationale, criteria (id, weight, reason), proposed_additions (label, dimension, evidence_required, reason), governance_warnings e human_approval_required=true. Contexto fornecido pelo usuário: '+context+' Critérios atuais provisórios: '+JSON.stringify(current);
+  return callGemini(apiKey,model,prompt);
+}
+
 export {SYSTEM_PROMPT,DEFAULT_MODEL};
