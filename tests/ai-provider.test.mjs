@@ -211,7 +211,7 @@ test('sobrecarga persistente: usa o modelo reserva e informa', async () => {
 test('sobrecarga em todos os modelos: mensagem clara; erros de chave não geram novas tentativas', async () => {
   await withFetch(() => json(HIGH_DEMAND, 503), async () => {
     await assert.rejects(generateResolutionDraft({ provider: 'gemini', apiKey: 'k', model: 'gemini-3.8-flash', fallbacks: ['gemini-3.7-flash'], request: 'x' }),
-      e => e.code === 'server' && /sobrecarregado/.test(e.message) && /high demand/.test(e.detail));
+      e => e.code === 'server' && /Nenhum dos 2 modelos/.test(e.message) && /2 sobrecarregado/.test(e.message) && /high demand/.test(e.detail));
   });
   await withFetch(() => json({ error: { message: 'API key not valid.' } }, 400), async calls => {
     await assert.rejects(generateResolutionDraft({ provider: 'gemini', apiKey: 'k', model: 'gemini-3.8-flash', fallbacks: ['gemini-3.7-flash'], request: 'x' }), e => e.code === 'auth');
@@ -258,5 +258,22 @@ test('percorre todos os modelos habilitados até um responder (reservas sem nova
     assert.equal(r.model_used, 'gemini-2.5-flash');
     assert.equal(calls.length, 3 + 4 + 1, 'escolhido: 3 tentativas; 4 reservas: 1 cada; último responde');
     assert.ok(progress.some(m => /modelo 6 de 6/.test(m)));
+  });
+});
+
+test('reserva descontinuado (2.5 Flash "no longer available") é pulado e a fila continua', async () => {
+  const gone = { error: { code: 404, message: 'This model models/gemini-2.5-flash is no longer available to new users.' } };
+  await withFetch(url => url.includes('gemini-2.5-flash') ? json(gone, 404) : url.includes('gemini-2.0-flash') ? json(OK_DRAFT) : json(quota('Day', 'x', 20), 429), async calls => {
+    const r = await generateResolutionDraft({ provider: 'gemini', apiKey: 'k', model: 'gemini-3.8-flash', fallbacks: ['gemini-3.7-flash', 'gemini-2.5-flash', 'gemini-2.0-flash'], request: 'x' });
+    assert.equal(r.model_used, 'gemini-2.0-flash');
+    assert.equal(calls.length, 4);
+  });
+});
+
+test('todos os modelos falham: resumo por motivo; chave inválida interrompe a fila', async () => {
+  const gone = { error: { code: 404, message: 'no longer available' } };
+  await withFetch(url => url.includes('gemini-2.5-flash') ? json(gone, 404) : json(quota('Day', 'x', 20), 429), async () => {
+    await assert.rejects(generateResolutionDraft({ provider: 'gemini', apiKey: 'k', model: 'gemini-3.8-flash', fallbacks: ['gemini-3.7-flash', 'gemini-2.5-flash'], request: 'x' }),
+      e => /Nenhum dos 3 modelos/.test(e.message) && /2 sem cota/.test(e.message) && /1 indisponível/.test(e.message) && e.failures.length === 3);
   });
 });

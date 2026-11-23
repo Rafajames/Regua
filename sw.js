@@ -3,7 +3,7 @@
 // Assim, uma nova publicação nunca mistura index.html novo com módulos antigos.
 // Chamadas para outros domínios (APIs de IA) não são interceptadas.
 
-const VERSION = '2026.11.23.4';
+const VERSION = '2026.11.23.5';
 const CACHE_NAME = 'regua-shell-' + VERSION;
 const APP_SHELL = [
   './',

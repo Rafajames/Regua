@@ -323,42 +323,55 @@ const isQuota = err => err?.code === 'quota' && !isOverload(err);
  * Gera com o modelo escolhido; em sobrecarga, tenta de novo e depois usa os modelos reserva.
  * Retorna { result, modelUsed, fallbackUsed }.
  */
+// Erros que nenhum outro modelo resolveria: interrompem a fila de reservas.
+const STOP_CODES = new Set(['auth', 'config', 'network']);
+const SKIP_REASON = { quota: 'sem cota', server: 'sobrecarregado', model: 'indisponível para esta chave', permission: 'sem permissão', timeout: 'sem resposta a tempo', invalid_response: 'resposta inválida', blocked: 'resposta bloqueada', bad_request: 'recusou o pedido' };
+
+/**
+ * Gera com o modelo escolhido; se ele falhar por motivo do próprio modelo
+ * (sobrecarga, cota, descontinuado etc.), percorre todos os modelos reserva.
+ * Retorna { result, modelUsed, fallbackUsed }.
+ */
 async function generate(provider, key, model, prompt, customBase, system, { fallbacks = [], onProgress } = {}) {
   const k = String(key || '').trim();
   const id = normalizeModelId(model);
   if (!k) throw new AIError('config', 'Informe uma chave de API e teste a conexão.');
   if (!id) throw new AIError('config', 'Selecione ou digite um modelo antes de gerar.');
-  // Tenta o modelo escolhido e, se preciso, todos os demais modelos habilitados na chave.
   const chain = [...new Set([id, ...fallbacks.map(normalizeModelId).filter(Boolean)])];
-  let lastError, firstQuotaError;
+  const failures = [];
+  let firstError;
   for (const [index, current] of chain.entries()) {
-    // Só o modelo escolhido recebe novas tentativas; os reservas são tentados uma vez cada.
+    // Só o modelo escolhido recebe novas tentativas em caso de sobrecarga.
     const retries = index === 0 ? RETRY_DELAYS.length : 0;
+    let error;
     for (let attempt = 0; attempt <= retries; attempt++) {
       try {
         const result = await generateOnce(provider, k, current, prompt, customBase, system);
         return { result, modelUsed: current, fallbackUsed: index > 0 };
       } catch (err) {
-        lastError = err;
-        if (isQuota(err)) {
-          // A cota é por modelo: não repete o mesmo modelo, passa para o próximo.
-          if (!firstQuotaError) { firstQuotaError = err; if (!err.quota?.model) err.message = quotaMessage(err.quota, current); }
-          break;
-        }
-        if (!isOverload(err)) throw err;
-        if (attempt < retries) {
-          onProgress?.(`${current} sobrecarregado; nova tentativa ${attempt + 2} de ${RETRY_DELAYS.length + 1}…`);
-          await sleep(RETRY_DELAYS[attempt]);
-        }
+        error = err;
+        if (STOP_CODES.has(err?.code) || !(err instanceof AIError)) throw err;
+        if (!isOverload(err) || attempt >= retries) break;
+        onProgress?.(`${current} sobrecarregado; nova tentativa ${attempt + 2} de ${retries + 1}…`);
+        await sleep(RETRY_DELAYS[attempt]);
       }
     }
-    if (chain[index + 1]) onProgress?.(`${current} ${isQuota(lastError) ? 'sem cota disponível' : 'sobrecarregado'}; tentando ${chain[index + 1]} (modelo ${index + 2} de ${chain.length})…`);
+    if (isQuota(error) && !error.quota?.model) error.message = quotaMessage(error.quota, current);
+    if (!firstError) firstError = error;
+    // Com um único modelo (sem reservas), mantém o comportamento direto: mostra o erro dele.
+    if (chain.length === 1) throw error;
+    failures.push({ model: current, code: isQuota(error) ? 'quota' : isOverload(error) ? 'server' : error.code });
+    if (chain[index + 1]) onProgress?.(`${current}: ${SKIP_REASON[failures.at(-1).code] || 'falhou'}; tentando ${chain[index + 1]} (modelo ${index + 2} de ${chain.length})…`);
   }
-  if (firstQuotaError) {
-    if (chain.length > 1) firstQuotaError.message += ' Também foram tentados os outros ' + (chain.length - 1) + ' modelo(s) habilitados na chave, sem sucesso.';
-    throw firstQuotaError;
-  }
-  throw new AIError('server', ERROR_MESSAGES.server + (chain.length > 1 ? ' Foram tentados ' + chain.length + ' modelos.' : ''), lastError?.detail || '');
+  // Nenhum modelo respondeu: resume o que aconteceu com cada grupo.
+  const groups = {};
+  for (const f of failures) (groups[f.code] ||= []).push(f.model);
+  const summary = Object.entries(groups).map(([code, list]) => list.length + ' ' + (SKIP_REASON[code] || 'com falha')).join(', ');
+  const code = groups.quota && Object.keys(groups).length === 1 ? 'quota' : groups.server ? 'server' : firstError.code;
+  const advice = groups.quota ? ' A cota é por projeto do Google: aguarde a renovação diária ou ative a cobrança no projeto da chave.' : ' Aguarde alguns minutos e tente novamente.';
+  const err = new AIError(code, `Nenhum dos ${chain.length} modelos habilitados respondeu (${summary}).${advice}`, firstError?.detail || '');
+  err.failures = failures;
+  throw err;
 }
 
 /* ---------- Tarefas ---------- */

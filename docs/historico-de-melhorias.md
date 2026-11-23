@@ -19,3 +19,6 @@ A Régua lê os detalhes de cota enviados pelo Google (modelo, limite diário ou
 
 ## 2026.11.23.4 — Reserva com todos os modelos da chave
 A pedido do autor, quando o modelo escolhido está sobrecarregado ou sem cota, a Régua tenta todos os demais modelos de texto habilitados na chave (lista obtida no teste de conexão), na ordem recomendada. Só o modelo escolhido recebe novas tentativas; cada reserva é tentada uma vez, para limitar a espera. O status mostra "modelo N de M".
+
+## 2026.11.23.5 — Fila de reservas não para em modelo descontinuado
+Correção: ao chegar no gemini-2.5-flash (listado pela chave, mas "no longer available to new users"), a fila de reservas era interrompida. Agora qualquer falha do próprio modelo (indisponível, sem cota, sobrecarregado, sem permissão, tempo esgotado, resposta inválida ou bloqueada) pula para o próximo; só chave inválida, configuração ou falta de internet interrompem. Se nenhum modelo responder, a mensagem resume quantos falharam por motivo. Testes: 51.
