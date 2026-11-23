@@ -3,32 +3,52 @@
 ## 1. Propósito
 Plataforma de pré-auditoria e inteligência operacional dos serviços de TI. Não abre, distribui, encaminha, atualiza nem encerra chamados no sistema oficial.
 
-## 2. Fluxos
-1. Pré-auditoria individual de chamado existente.
-2. Auditoria operacional de registros importados/cadastrados.
-3. Sincronização diária dos catálogos de referência MapTec e patrimônio, exclusivamente por APIs autorizadas.
+## 2. Perfis e fluxos
+### Técnico
+- Consulta e mensura os próprios atendimentos.
+- Realiza pré-auditoria e identifica lacunas de documentação.
+- Corrige o chamado diretamente no Aranda; a Régua não escreve na origem.
 
-## 3. Qualidade
-Três dimensões: abertura, acompanhamento/comentários e encerramento. Cada critério retorna estado, justificativa e evidência. O motor determinístico está em `src/quality-engine.js`; a ausência de dados não pode ser tratada como fato presumido. IA futura será apenas assistiva, com dados minimizados e resposta estruturada, sem alterar chamados.
+### Gestor/supervisor
+- Executa auditoria independente.
+- Obtém o conjunto de chamados diretamente do Aranda por API autorizada ou exportação.
+- Filtra por período, técnico, prédio/unidade, categoria e situação, conforme campos disponíveis.
+- Não recebe chamados encaminhados pelos técnicos e não depende de submissão individual.
+- A visão gerencial completa exige backend privado, perfis e permissões; a importação JSON atual é local e provisória.
 
-## 4. Indicadores
-Total, aberturas, encerramentos, backlog, tempo médio/mediano de resolução quando houver datas válidas, distribuição por prédio/categoria/prioridade, cobertura dos campos e comparação de períodos. Funções iniciais em `src/reporting.js`. SLA, recorrência e carga por técnico dependem de dados confiáveis e parâmetros oficiais.
+## 3. Fontes
+- Aranda: fonte dos chamados e histórico de atendimento.
+- MapTec: referência de prédios, blocos, andares, salas, setores e unidades.
+- Plataforma patrimonial: referência de equipamentos e tombamentos, conforme autorização.
+- Não consultar fontes genéricas externas nem realizar crawling público.
 
-## 5. Integrações
-- MapTec: prédios, blocos, andares, salas, setores e unidades.
-- Patrimônio: equipamentos e tombamentos, conforme campos autorizados.
-- Agendamento diário às 07h de Boa Vista (11h UTC), com execução manual.
-- Credenciais somente em GitHub Actions Secrets.
-- APIs somente leitura; timeout, validação de JSON e logs sem payload bruto.
-- URLs, autenticação e formatos reais ainda dependem dos responsáveis pelas plataformas.
-- O workflow atual valida as APIs e guarda relatório técnico; não publica dados de API no site.
+## 4. Qualidade
+Dimensões: abertura, acompanhamento/comentários e encerramento. Critérios determinísticos em src/quality-engine.js, com pesos iniciais provisórios. Cada resultado apresenta estado, evidência e recomendação. Ausência de dado não deve ser confundida com falha técnica. A IA é assistiva, não altera nota determinística nem decide encerramento.
 
-## 6. Privacidade e arquitetura
-GitHub Pages é público e IndexedDB é local ao navegador. Não armazenar dados pessoais de chamados ou inventário restrito no repositório público. Consolidação multiusuário exige backend privado, autenticação, autorização e política de retenção.
+## 5. Indicadores e relatórios
+Total, aberturas, encerramentos, backlog, tempo médio/mediano quando houver datas válidas, distribuição por prédio/categoria/prioridade/técnico, recorrência e cobertura. Cada métrica deve informar período, filtros e quantidade de registros. Não confundir data/hora de solução com duração. SLA e metas dependem de parâmetros oficiais.
 
-## 7. Fases
+## 6. IA
+- Gemini inicial por chave individual, mantida apenas em memória nesta versão.
+- Teste de conexão e modelo editável.
+- Prompt restritivo, resposta JSON e minimização de campos.
+- Nenhuma chave é armazenada no repositório.
+- Chamada direta do navegador é somente para teste individual; uso institucional exige backend privado.
+- Pesos/regras oficiais só podem ser alterados por pessoa autorizada e com versionamento.
+
+## 7. Integrações
+- Aranda: adaptador de chamados pendente de API/exportação, autenticação, filtros, paginação e autorização.
+- MapTec e patrimônio: APIs autorizadas; sincronização prevista diariamente às 07h de Boa Vista (11h UTC).
+- Consultas somente leitura.
+- O workflow atual valida endpoints e gera relatório técnico; ainda não publica cache sincronizado.
+
+## 8. Privacidade e arquitetura
+GitHub Pages é público; IndexedDB/localStorage são locais ao navegador. Não publicar dados pessoais, chamados ou inventário restrito no repositório. Dados compartilhados exigem backend privado, autenticação, autorização, retenção e trilha de auditoria.
+
+## 9. Fases
 1. Base manual e pré-auditoria inicial.
-2. Motor de qualidade por dimensões, critérios e preparação para IA segura.
-3. Indicadores, comparação de períodos e relatórios.
-4. Importação em lote de CSV/Aranda.
-5. Automação autorizada.
+2. Critérios avançados, evidências e IA segura.
+3. Indicadores e relatórios.
+4. Importação em lote e auditoria gerencial independente.
+5. Integração Aranda e backend multiusuário.
+6. Sincronização autorizada de catálogos e patrimônio.
