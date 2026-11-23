@@ -3,7 +3,7 @@
 // Assim, uma nova publicação nunca mistura index.html novo com módulos antigos.
 // Chamadas para outros domínios (APIs de IA) não são interceptadas.
 
-const VERSION = '2026.11.23.8';
+const VERSION = '2026.11.23.9';
 const CACHE_NAME = 'regua-shell-' + VERSION;
 const APP_SHELL = [
   './',
@@ -18,6 +18,7 @@ const APP_SHELL = [
   './src/ai-provider.js',
   './src/draft-template.js',
   './src/comment-parser.js',
+  './src/ticket-import.js',
   './src/storage.js',
   './src/reporting.js',
   './data/maptec-locations.json'

@@ -23,6 +23,7 @@ Aranda é a fonte dos chamados. MapTec e a plataforma patrimonial são fontes de
 
 - Texto padrão de resposta montado sem IA (funciona offline), com trava: só declara encerramento quando o técnico confirma.
 - Histórico com pesquisa, filtros, detalhes, recuperação para edição, exclusão e importação validada de backup.
+- Conjunto gerencial lê CSV, Excel (.xlsx), PDF e JSON e descreve padrões do conjunto (categorias, tempos, recorrência e qualidade quando há texto).
 - Aviso de nova versão: a aplicação só recarrega quando o usuário escolhe.
 
 ## Testes

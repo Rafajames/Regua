@@ -1,0 +1,295 @@
+// Importação de conjuntos de chamados para o Conjunto gerencial.
+// Formatos: CSV, Excel (.xlsx), PDF (tabelas com texto) e JSON. Tudo é processado no navegador;
+// nada é enviado nem salvo.
+
+import { evaluateQuality } from './quality-engine.js';
+
+export const MAX_IMPORT_BYTES = 30 * 1024 * 1024;
+
+const fold = s => String(s ?? '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+const key = s => fold(s).replace(/\b(de|da|do|dos|das|em)\b/g, ' ').replace(/[^a-z0-9]/g, '');
+
+/* ---------------- CSV ---------------- */
+
+export function parseCsv(text) {
+  const src = String(text || '').replace(/^﻿/, '');
+  const firstLine = src.split(/\r?\n/, 1)[0] || '';
+  const delim = [';', ',', '\t'].map(d => [d, firstLine.split(d).length]).sort((a, b) => b[1] - a[1])[0][0];
+  const rows = [];
+  let row = [], cell = '', quoted = false;
+  for (let i = 0; i < src.length; i++) {
+    const c = src[i];
+    if (quoted) {
+      if (c === '"') { if (src[i + 1] === '"') { cell += '"'; i++; } else quoted = false; }
+      else cell += c;
+    } else if (c === '"' && cell === '') quoted = true;
+    else if (c === delim) { row.push(cell); cell = ''; }
+    else if (c === '\n' || c === '\r') {
+      if (c === '\r' && src[i + 1] === '\n') i++;
+      row.push(cell); cell = '';
+      if (row.some(v => v.trim() !== '')) rows.push(row);
+      row = [];
+    } else cell += c;
+  }
+  row.push(cell);
+  if (row.some(v => v.trim() !== '')) rows.push(row);
+  return rows;
+}
+
+/* ---------------- Excel (.xlsx) sem bibliotecas ---------------- */
+
+async function inflateRaw(bytes) {
+  if (typeof DecompressionStream === 'undefined') throw new Error('Este navegador não consegue abrir arquivos Excel. Atualize o navegador ou salve a planilha como CSV.');
+  const stream = new Blob([bytes]).stream().pipeThrough(new DecompressionStream('deflate-raw'));
+  return new Uint8Array(await new Response(stream).arrayBuffer());
+}
+
+async function unzip(buffer, wanted) {
+  const b = new Uint8Array(buffer), v = new DataView(buffer);
+  let eocd = -1;
+  for (let i = b.length - 22; i >= Math.max(0, b.length - 66000); i--) if (v.getUint32(i, true) === 0x06054b50) { eocd = i; break; }
+  if (eocd < 0) throw new Error('O arquivo não é uma planilha .xlsx válida. Se for .xls antigo, salve como .xlsx ou CSV.');
+  const count = v.getUint16(eocd + 10, true);
+  let p = v.getUint32(eocd + 16, true);
+  const out = {}, dec = new TextDecoder();
+  for (let n = 0; n < count; n++) {
+    if (v.getUint32(p, true) !== 0x02014b50) break;
+    const method = v.getUint16(p + 10, true), size = v.getUint32(p + 20, true);
+    const nameLen = v.getUint16(p + 28, true), extraLen = v.getUint16(p + 30, true), commentLen = v.getUint16(p + 32, true);
+    const local = v.getUint32(p + 42, true);
+    const name = dec.decode(b.subarray(p + 46, p + 46 + nameLen));
+    p += 46 + nameLen + extraLen + commentLen;
+    if (!wanted(name)) continue;
+    const start = local + 30 + v.getUint16(local + 26, true) + v.getUint16(local + 28, true);
+    const data = b.subarray(start, start + size);
+    out[name] = dec.decode(method === 0 ? data : await inflateRaw(data));
+  }
+  return out;
+}
+
+const xmlText = s => s.replace(/<[^>]+>/g, '').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&apos;/g, "'").replace(/&#(\d+);/g, (_, d) => String.fromCharCode(+d)).replace(/&amp;/g, '&');
+const colIndex = ref => [...ref.replace(/\d+/g, '')].reduce((n, ch) => n * 26 + ch.charCodeAt(0) - 64, 0) - 1;
+
+export async function parseXlsx(buffer) {
+  const files = await unzip(buffer, n => /^xl\/(sharedStrings|workbook)\.xml$|^xl\/_rels\/workbook\.xml\.rels$|^xl\/worksheets\/sheet\d+\.xml$/.test(n));
+  const shared = [...(files['xl/sharedStrings.xml'] || '').matchAll(/<si>([\s\S]*?)<\/si>/g)].map(m => xmlText(m[1].replace(/<rPh[\s\S]*?<\/rPh>/g, '')));
+  let sheetPath = '';
+  const rid = (files['xl/workbook.xml'] || '').match(/<sheet\b[^>]*r:id="([^"]+)"/)?.[1];
+  if (rid) {
+    const target = (files['xl/_rels/workbook.xml.rels'] || '').match(new RegExp('Id="' + rid + '"[^>]*Target="([^"]+)"|Target="([^"]+)"[^>]*Id="' + rid + '"'));
+    const t = target?.[1] || target?.[2];
+    if (t) sheetPath = 'xl/' + t.replace(/^\/?xl\//, '').replace(/^\//, '');
+  }
+  if (!files[sheetPath]) sheetPath = Object.keys(files).filter(n => n.startsWith('xl/worksheets/')).sort()[0];
+  if (!sheetPath) throw new Error('Nenhuma planilha encontrada no arquivo.');
+  const rows = [];
+  for (const r of files[sheetPath].matchAll(/<row\b[^>]*>([\s\S]*?)<\/row>/g)) {
+    const row = [];
+    for (const c of r[1].matchAll(/<c\b([^>]*?)(?:\/>|>([\s\S]*?)<\/c>)/g)) {
+      const attrs = c[1], body = c[2] || '';
+      const ref = attrs.match(/\br="([A-Z]+\d+)"/)?.[1];
+      const type = attrs.match(/\bt="(\w+)"/)?.[1];
+      const raw = body.match(/<v>([\s\S]*?)<\/v>/)?.[1];
+      let value = '';
+      if (type === 's') value = shared[+raw] ?? '';
+      else if (type === 'inlineStr') value = xmlText(body.match(/<is>([\s\S]*?)<\/is>/)?.[1] || '');
+      else if (raw !== undefined) value = xmlText(raw);
+      row[ref ? colIndex(ref) : row.length] = value;
+    }
+    const filled = Array.from(row, x => x ?? '');
+    if (filled.some(x => String(x).trim())) rows.push(filled);
+  }
+  return rows;
+}
+
+/* ---------------- PDF (texto de tabelas) ---------------- */
+
+let pdfjsPromise;
+async function loadPdfJs() {
+  pdfjsPromise ||= import('../assets/vendor/pdfjs/pdf.min.mjs').then(lib => {
+    lib.GlobalWorkerOptions.workerSrc = new URL('../assets/vendor/pdfjs/pdf.worker.min.mjs', import.meta.url).href;
+    return lib;
+  });
+  return pdfjsPromise;
+}
+
+// Agrupa os textos de cada página em linhas (mesma altura) e células (espaço horizontal).
+export function itemsToRows(items) {
+  const lines = [];
+  for (const it of items) {
+    const str = String(it.str || '').trim();
+    if (!str) continue;
+    const x = it.x, y = it.y, w = it.w || str.length * 4;
+    let line = lines.find(l => Math.abs(l.y - y) <= 3);
+    if (!line) { line = { y, parts: [] }; lines.push(line); }
+    line.parts.push({ x, end: x + w, str });
+  }
+  lines.sort((a, b) => b.y - a.y);
+  return lines.map(l => {
+    l.parts.sort((a, b) => a.x - b.x);
+    const cells = [];
+    for (const p of l.parts) {
+      const last = cells[cells.length - 1];
+      if (last && p.x - last.end < 6) { last.str += ' ' + p.str; last.end = p.end; } else cells.push({ ...p });
+    }
+    return cells;
+  });
+}
+
+// Usa a posição horizontal do cabeçalho para encaixar cada célula na coluna certa.
+export function alignPdfRows(lines) {
+  const headerIdx = lines.findIndex(cells => cells.filter(c => matchField(c.str)).length >= 2);
+  if (headerIdx < 0) throw new Error('Não encontrei uma tabela com cabeçalho (ex.: Chamado, Estado, Categoria) no PDF.');
+  const header = lines[headerIdx];
+  const out = [header.map(c => c.str)];
+  for (const cells of lines.slice(headerIdx + 1)) {
+    const headerTexts = new Set(header.map(h => key(h.str)));
+    if (cells.filter(c => headerTexts.has(key(c.str))).length >= 2) continue; // cabeçalho repetido em outra página
+    const row = new Array(header.length).fill('');
+    for (const c of cells) {
+      let best = 0, dist = Infinity;
+      header.forEach((h, i) => { const d = Math.abs(h.x - c.x); if (d < dist) { dist = d; best = i; } });
+      row[best] = row[best] ? row[best] + ' ' + c.str : c.str;
+    }
+    out.push(row);
+  }
+  return out;
+}
+
+export async function parsePdf(buffer) {
+  const pdfjs = await loadPdfJs();
+  const doc = await pdfjs.getDocument({ data: new Uint8Array(buffer), isEvalSupported: false }).promise;
+  const lines = [];
+  for (let n = 1; n <= doc.numPages; n++) {
+    const page = await doc.getPage(n);
+    const content = await page.getTextContent();
+    const items = content.items.map(it => ({ str: it.str, x: it.transform[4], y: it.transform[5], w: it.width }));
+    lines.push(...itemsToRows(items));
+  }
+  if (!lines.length) throw new Error('O PDF não tem texto selecionável (pode ser uma imagem escaneada). Exporte do sistema em CSV ou Excel.');
+  return alignPdfRows(lines);
+}
+
+/* ---------------- Mapeamento de colunas ---------------- */
+
+// A ordem importa: datas e tempos antes de campos de texto (ex.: "Data de solução" é data, não solução).
+const FIELDS = [
+  ['number', ['chamado', 'numero', 'ticket', 'requisicao', 'protocolo', 'codigo', 'id', 'n', 'no']],
+  ['status', ['estado', 'status', 'situacao']],
+  ['openedAt', ['dataabertura', 'datasolicitacao', 'abertura', 'aberto', 'criado', 'datacriacao', 'criacao', 'registro']],
+  ['closedAt', ['dataencerramento', 'encerramento', 'encerrado', 'datafechamento', 'fechamento', 'datasolucao', 'resolvido', 'conclusao']],
+  ['progress', ['progresso', 'temposolucao', 'tempo', 'duracao', 'horas', 'sla']],
+  ['priority', ['prioridade', 'urgencia']],
+  ['category', ['categoria', 'servico', 'classificacao', 'tipo']],
+  ['subject', ['assunto', 'titulo', 'resumo']],
+  ['requester', ['solicitante', 'requerente', 'usuario', 'cliente']],
+  ['tech', ['tecnico', 'responsavel', 'atendente', 'analista', 'executor']],
+  ['building', ['predio', 'unidade', 'localidade', 'comarca', 'local']],
+  ['sector', ['setor', 'departamento', 'lotacao']],
+  ['room', ['sala']],
+  ['description', ['descricao', 'solicitacao', 'detalhes', 'problema']],
+  ['comments', ['comentarios', 'comentario', 'atualizacoes', 'historico', 'notas']],
+  ['cause', ['causa']],
+  ['test', ['teste', 'validacao', 'confirmacao']],
+  ['notes', ['pendencias', 'pendencia', 'observacoes', 'observacao']],
+  ['action', ['solucao', 'resolucao', 'acao', 'procedimento']]
+];
+
+export function matchField(header) {
+  const h = key(header);
+  if (!h) return null;
+  for (const [field, aliases] of FIELDS) if (aliases.some(a => h === a || (a.length >= 4 && h.includes(a)))) return field;
+  return null;
+}
+
+const excelDate = v => {
+  const n = Number(v);
+  if (!Number.isFinite(n) || n < 20000 || n > 80000) return v;
+  return new Date(Math.round((n - 25569) * 86400000)).toISOString();
+};
+const brDate = v => {
+  const m = String(v).trim().match(/^(\d{1,2})\/(\d{1,2})\/(\d{2,4})(?:\s+(\d{1,2}):(\d{2})(?::(\d{2}))?)?$/);
+  if (!m) return v;
+  const y = m[3].length === 2 ? 2000 + +m[3] : +m[3];
+  return new Date(y, +m[2] - 1, +m[1], +(m[4] || 0), +(m[5] || 0), +(m[6] || 0)).toISOString();
+};
+
+/** Converte linhas (primeira = cabeçalho) em registros com os nomes de campo da Régua. */
+export function rowsToRecords(rows) {
+  if (!rows.length) return { records: [], mapping: [], ignored: [] };
+  const header = rows[0].map(h => String(h ?? '').trim());
+  const used = new Set(), mapping = [], ignored = [];
+  const fields = header.map(h => {
+    const f = matchField(h);
+    if (f && !used.has(f)) { used.add(f); mapping.push({ column: h, field: f }); return f; }
+    if (h) ignored.push(h);
+    return null;
+  });
+  const records = [];
+  for (const row of rows.slice(1)) {
+    const rec = {};
+    fields.forEach((f, i) => { if (f) rec[f] = String(row[i] ?? '').trim(); });
+    if (!Object.values(rec).some(Boolean)) continue;
+    for (const d of ['openedAt', 'closedAt']) if (rec[d]) rec[d] = brDate(excelDate(rec[d]));
+    records.push(rec);
+  }
+  return { records, mapping, ignored };
+}
+
+/** Lê um arquivo (File/Blob com nome) e devolve { records, mapping, ignored, format }. */
+export async function readTicketFile(file) {
+  if (file.size > MAX_IMPORT_BYTES) throw new Error('Arquivo maior que 30 MB.');
+  const name = (file.name || '').toLowerCase();
+  if (name.endsWith('.json')) {
+    const parsed = JSON.parse(await file.text());
+    const records = Array.isArray(parsed) ? parsed : Array.isArray(parsed?.data) ? parsed.data : null;
+    if (!records || records.some(x => !x || typeof x !== 'object' || Array.isArray(x))) throw new Error('O JSON precisa ser uma lista de chamados (ou ter o campo "data").');
+    return { records, mapping: [], ignored: [], format: 'JSON' };
+  }
+  let rows, format;
+  if (name.endsWith('.csv') || name.endsWith('.txt')) { rows = parseCsv(await file.text()); format = 'CSV'; }
+  else if (name.endsWith('.xlsx') || name.endsWith('.xlsm')) { rows = await parseXlsx(await file.arrayBuffer()); format = 'Excel'; }
+  else if (name.endsWith('.xls')) throw new Error('Formato .xls antigo não é suportado. No Excel, use "Salvar como" .xlsx ou CSV.');
+  else if (name.endsWith('.pdf')) { rows = await parsePdf(await file.arrayBuffer()); format = 'PDF'; }
+  else throw new Error('Formato não reconhecido. Use CSV, Excel (.xlsx), PDF ou JSON.');
+  const out = rowsToRecords(rows);
+  if (!out.mapping.length) throw new Error('Não reconheci nenhuma coluna. A primeira linha deve ter títulos como Chamado, Estado, Categoria, Solicitante.');
+  return { ...out, format };
+}
+
+/* ---------------- Indicadores ---------------- */
+
+const CLOSED = /(closed|fechad|encerrad|resolvid|conclu|finaliz|cancel|solucionad)/i;
+const median = v => { if (!v.length) return null; const s = [...v].sort((a, b) => a - b), m = Math.floor(s.length / 2); return s.length % 2 ? s[m] : (s[m - 1] + s[m]) / 2; };
+const pct = (v, p) => { if (!v.length) return null; const s = [...v].sort((a, b) => a - b); return s[Math.min(s.length - 1, Math.floor(p * s.length))]; };
+const round = (n, d = 1) => n === null || n === undefined ? null : Math.round(n * 10 ** d) / 10 ** d;
+const num = v => { const n = Number(String(v ?? '').replace(',', '.')); return Number.isFinite(n) ? n : null; };
+const TEXT_FIELDS = ['description', 'comments', 'action', 'cause', 'test'];
+
+export function summarizeTickets(records, { progressLabel = 'Progresso' } = {}) {
+  const total = records.length;
+  const hasStatus = records.some(r => r.status);
+  const closed = records.filter(r => hasStatus ? CLOSED.test(r.status || '') : !!r.closedAt).length;
+  const progress = records.map(r => num(r.progress)).filter(n => n !== null);
+  const p90 = pct(progress, 0.9);
+  const byCat = {};
+  for (const r of records) {
+    const c = r.category || r.subject || 'Não informado';
+    (byCat[c] ||= { name: c, count: 0, progress: [] }).count++;
+    const n = num(r.progress); if (n !== null) byCat[c].progress.push(n);
+  }
+  const categories = Object.values(byCat).sort((a, b) => b.count - a.count).map(c => ({ name: c.name, count: c.count, share: total ? c.count / total : 0, median: round(median(c.progress)), mean: c.progress.length ? round(c.progress.reduce((a, b) => a + b, 0) / c.progress.length) : null }));
+  const req = {};
+  for (const r of records) if (r.requester) { const k = fold(r.requester).trim(); req[k] = (req[k] || 0) + 1; }
+  const reqCounts = Object.values(req);
+  const recurring = reqCounts.filter(n => n >= 2);
+  const withText = records.filter(r => TEXT_FIELDS.some(f => String(r[f] || '').trim()));
+  const scores = withText.map(r => evaluateQuality(r).score).filter(s => typeof s === 'number');
+  return {
+    total, closed, open: total - closed, hasStatus,
+    progress: progress.length ? { label: progressLabel, count: progress.length, mean: round(progress.reduce((a, b) => a + b, 0) / progress.length), median: round(median(progress)), p90: round(p90), max: round(Math.max(...progress)), outliers: progress.filter(n => n > p90).length } : null,
+    categories,
+    requesters: reqCounts.length ? { distinct: reqCounts.length, recurring: recurring.length, recurringTickets: recurring.reduce((a, b) => a + b, 0), top: Math.max(...reqCounts) } : null,
+    quality: scores.length ? { evaluated: scores.length, average: Math.round(scores.reduce((a, b) => a + b, 0) / scores.length), below80: scores.filter(s => s < 80).length } : null
+  };
+}

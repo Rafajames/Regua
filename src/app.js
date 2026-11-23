@@ -1,12 +1,12 @@
 // Régua — lógica da interface.
 import { evaluateQuality, DEFAULT_CRITERIA, DIMENSION_LABELS, STATUS_LABELS, scoreBand, CRITERIA_VERSION } from './quality-engine.js';
 import { PROVIDERS, AIError, testProviderConnection, generateResolutionDraft, reviewTicketWithProvider, proposeCriteriaConfiguration, normalizeModelId } from './ai-provider.js';
-import { buildOperationalSummary } from './reporting.js';
 import { extractFromComments } from './comment-parser.js';
+import { readTicketFile, summarizeTickets } from './ticket-import.js';
 import { buildStandardDraft, checkClosureClaims, DEFAULT_SIGNATURE } from './draft-template.js';
 import * as store from './storage.js';
 
-export const APP_VERSION = '2026.11.23.8';
+export const APP_VERSION = '2026.11.23.9';
 
 const $ = id => document.getElementById(id);
 const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -701,37 +701,67 @@ function renderReports() {
 
 /* ================= Conjunto gerencial ================= */
 
+const fmtNum = n => n === null || n === undefined ? '—' : String(n).replace('.', ',');
+
 function renderManager() {
-  const rows = state.managerRecords.map(r => ({ r, q: evaluateQuality(r) }));
-  const scores = rows.map(x => x.q.score).filter(s => typeof s === 'number');
-  $('managerTotal').textContent = rows.length;
-  $('managerAverage').textContent = scoreText(scores.length ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length) : null);
-  $('managerReview').textContent = scores.filter(s => s < 80).length;
-  $('managerList').innerHTML = rows.length ? rows.slice(0, 200).map(x => '<div class="item"><span><b>' + esc(x.r.number || x.r.subject || 'Chamado sem identificador') + '</b><small>' + esc((x.r.building || 'Unidade não informada') + ' · ' + (x.r.tech || 'Técnico não informado')) + '</small></span><span class="score-tag ' + scoreBand(x.q.score) + '">' + scoreText(x.q.score) + '</span></div>').join('') + (rows.length > 200 ? '<p class="muted small">Exibindo 200 de ' + rows.length + '.</p>' : '') : emptyState('Nenhum conjunto importado', ' Selecione um JSON normalizado acima.');
-  const s = rows.length ? buildOperationalSummary(state.managerRecords) : null;
-  $('opClosed').textContent = s ? s.closedCount : '—';
-  $('opBacklog').textContent = s ? s.openBacklog : '—';
-  $('opResolution').textContent = s && s.resolutionMinutes.average !== null ? s.resolutionMinutes.average : '—';
+  const rows = state.managerRecords;
+  const sum = summarizeTickets(rows, { progressLabel: state.managerProgressLabel || 'Progresso' });
+  $('managerTotal').textContent = sum.total;
+  $('managerClosed').textContent = sum.total ? sum.closed : '—';
+  $('managerOpen').textContent = sum.total ? sum.open : '—';
+  $('managerAverage').textContent = sum.quality ? sum.quality.average + '%' : '—';
+  $('managerQualityNote').textContent = sum.total && !sum.quality ? 'arquivo sem textos de registro' : sum.quality ? sum.quality.evaluated + ' com texto' : '';
+  const maxCount = sum.categories[0]?.count || 1;
+  $('managerCategories').innerHTML = sum.total ? sum.categories.slice(0, 12).map(c => '<div class="band-row"><div><span>' + esc(c.name) + '</span><b>' + c.count + ' · ' + Math.round(c.share * 100) + '%' + (c.median !== null ? ' · mediana ' + fmtNum(c.median) : '') + '</b></div><div class="bar"><i style="width:' + Math.round(c.count / maxCount * 100) + '%"></i></div></div>').join('') : emptyState('Nenhum conjunto', ' Escolha um arquivo acima.');
+  const ins = [];
+  if (sum.total) {
+    const top = sum.categories[0];
+    if (top) ins.push('<b>' + esc(top.name) + '</b> é a categoria mais frequente (' + Math.round(top.share * 100) + '% dos chamados).');
+    if (sum.categories.length > 1) { const top3 = sum.categories.slice(0, 3).reduce((a, c) => a + c.share, 0); ins.push('As 3 principais categorias somam ' + Math.round(top3 * 100) + '% do volume.'); }
+    if (sum.progress) {
+      const p = sum.progress;
+      ins.push(esc(p.label) + ': mediana ' + fmtNum(p.median) + ', média ' + fmtNum(p.mean) + ', 90% até ' + fmtNum(p.p90) + ' (máximo ' + fmtNum(p.max) + ').');
+      const slow = sum.categories.filter(c => c.median !== null && c.count >= 3).sort((a, b) => b.median - a.median)[0];
+      if (slow) ins.push('Maior ' + esc(p.label.toLowerCase()) + ' mediano: <b>' + esc(slow.name) + '</b> (' + fmtNum(slow.median) + ').');
+      if (p.outliers) ins.push(p.outliers + ' chamado(s) acima do limite de 90% — vale revisar o registro deles.');
+    }
+    if (sum.requesters) ins.push(sum.requesters.recurring + ' de ' + sum.requesters.distinct + ' solicitantes abriram 2 ou mais chamados (' + sum.requesters.recurringTickets + ' chamados, ' + Math.round(sum.requesters.recurringTickets / sum.total * 100) + '% do total); o mais recorrente abriu ' + sum.requesters.top + '.');
+    if (!sum.quality) ins.push('O arquivo não traz descrição, comentários ou solução: a qualidade do registro não pode ser avaliada. Inclua essas colunas na exportação.');
+    else ins.push(sum.quality.below80 + ' de ' + sum.quality.evaluated + ' registros com texto ficaram abaixo de 80% na avaliação por critérios.');
+  }
+  $('managerInsights').innerHTML = ins.map(x => '<li>' + x + '</li>').join('') || '<li class="muted">Os padrões aparecem após a análise.</li>';
+  const q = norm($('managerSearch').value);
+  const list = q ? rows.filter(r => norm(Object.values(r).join(' ')).includes(q)) : rows;
+  $('managerList').innerHTML = list.length ? list.slice(0, 200).map(r => {
+    const score = TEXT_KEYS.some(k => r[k]) ? evaluateQuality(r).score : null;
+    return '<div class="item"><span><b>' + esc(r.number || r.subject || 'Sem número') + '</b><small>' + esc([r.category || r.subject, r.status, r.progress && (state.managerProgressLabel || 'Progresso') + ' ' + r.progress].filter(Boolean).join(' · ')) + '</small></span>' + (score !== null ? '<span class="score-tag ' + scoreBand(score) + '">' + scoreText(score) + '</span>' : '') + '</div>';
+  }).join('') + (list.length > 200 ? '<p class="muted small">Exibindo 200 de ' + list.length + '. Use a pesquisa para encontrar outros.</p>' : '') : rows.length ? emptyState('Nada encontrado', '') : '';
 }
+const TEXT_KEYS = ['description', 'comments', 'action', 'cause', 'test'];
+const FIELD_NAMES = { number: 'número', status: 'estado', openedAt: 'abertura', closedAt: 'encerramento', progress: 'progresso/tempo', priority: 'prioridade', category: 'categoria', subject: 'assunto', requester: 'solicitante', tech: 'técnico', building: 'prédio', sector: 'setor', room: 'sala', description: 'descrição', comments: 'comentários', cause: 'causa', test: 'teste', notes: 'pendências', action: 'solução' };
+$('managerSearch').addEventListener('input', renderManager);
 $('importManager').addEventListener('click', async () => {
   const file = $('managerFile').files[0];
-  if (!file) { toast('Selecione um arquivo JSON.'); return; }
+  if (!file) { toast('Escolha um arquivo.'); return; }
+  const btn = $('importManager');
+  setBusy(btn, true);
+  $('managerFeedback').textContent = 'Lendo ' + file.name + '…';
   try {
-    if (file.size > store.MAX_BACKUP_BYTES) throw new Error('Arquivo maior que 10 MB.');
-    const parsed = JSON.parse(await file.text());
-    const records = Array.isArray(parsed) ? parsed : Array.isArray(parsed?.data) ? parsed.data : null;
-    if (!records) throw new Error('O arquivo precisa conter um array ou um campo "data" com array.');
-    if (records.some(x => !x || typeof x !== 'object' || Array.isArray(x))) throw new Error('Há registros que não são objetos.');
-    state.managerRecords = records;
+    const r = await readTicketFile(file);
+    state.managerRecords = r.records;
+    state.managerProgressLabel = r.mapping.find(m => m.field === 'progress')?.column || 'Progresso';
     renderManager();
-    $('managerFeedback').textContent = records.length + ' registros avaliados apenas nesta aba; nada foi salvo ou enviado.';
-    toast('Conjunto importado e avaliado localmente.');
+    $('managerFeedback').textContent = r.format + ': ' + r.records.length + ' chamados analisados nesta aba. Nada foi salvo ou enviado.';
+    const map = $('managerMapping');
+    map.classList.toggle('hidden', !r.mapping.length && !r.ignored.length);
+    map.textContent = (r.mapping.length ? 'Colunas reconhecidas: ' + r.mapping.map(m => m.column + ' → ' + FIELD_NAMES[m.field]).join(', ') + '.' : '') + (r.ignored.length ? ' Ignoradas: ' + r.ignored.join(', ') + '.' : '');
+    toast(r.records.length + ' chamados analisados.');
   } catch (err) {
-    $('managerFeedback').textContent = 'Falha: ' + (err instanceof SyntaxError ? 'o arquivo não é um JSON válido.' : err.message);
-    toast('Não foi possível importar o arquivo.', 'error');
-  }
+    $('managerFeedback').textContent = 'Não foi possível ler o arquivo: ' + (err instanceof SyntaxError ? 'o JSON é inválido.' : err.message);
+    toast('Falha ao ler o arquivo.', 'error');
+  } finally { setBusy(btn, false); }
 });
-$('clearManager').addEventListener('click', () => { state.managerRecords = []; $('managerFile').value = ''; $('managerFeedback').textContent = 'Conjunto removido da memória desta aba.'; renderManager(); });
+$('clearManager').addEventListener('click', () => { state.managerRecords = []; $('managerFile').value = ''; $('managerMapping').classList.add('hidden'); $('managerFeedback').textContent = 'Conjunto removido da memória desta aba.'; renderManager(); });
 
 /* ================= Configurações: IA ================= */
 

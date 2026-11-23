@@ -44,7 +44,7 @@ test('Service Worker: versão, arquivos existentes, rede primeiro e sem intercep
   assert.equal(swVersion, appVersion, 'versões do app e do cache devem andar juntas');
   const shell = [...sw.matchAll(/'\.\/([^']*)'/g)].map(m => m[1]).filter(Boolean);
   for (const f of shell) await access(new URL('../' + f, import.meta.url));
-  for (const m of ['app.js', 'comment-parser.js', 'quality-engine.js', 'ai-provider.js', 'draft-template.js', 'storage.js', 'reporting.js', 'theme-boot.js']) assert.ok(shell.includes('src/' + m), m + ' deve estar no cache');
+  for (const m of ['app.js', 'comment-parser.js', 'ticket-import.js', 'quality-engine.js', 'ai-provider.js', 'draft-template.js', 'storage.js', 'reporting.js', 'theme-boot.js']) assert.ok(shell.includes('src/' + m), m + ' deve estar no cache');
   assert.match(sw, /url\.origin !== self\.location\.origin\) return/);
   assert.match(sw, /SKIP_WAITING/);
   assert.ok(!/addEventListener\('install'[\s\S]*?skipWaiting\(\)[\s\S]*?\}\);/.test(sw.split("addEventListener('activate'")[0]), 'install não deve ativar sozinho');

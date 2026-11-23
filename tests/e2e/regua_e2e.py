@@ -226,7 +226,18 @@ with sync_playwright() as p:
     ok('nota atualizada após preenchimento', page.text_content('#scoreValue') != '—')
     page.screenshot(path=f'{OUT}/11-preenchimento-comentario.png', full_page=True)
 
+    # --- Conjunto gerencial: CSV, Excel e PDF
+    page.click('nav [data-page="manager"]')
+    for fname, fmt, n in [('chamados-ficticios.csv', 'CSV', '60'), ('chamados-ficticios.xlsx', 'Excel', '20'), ('chamados-ficticios.pdf', 'PDF', '45')]:
+        page.set_input_files('#managerFile', f'{SITE}/tests/fixtures/{fname}')
+        page.click('#importManager')
+        page.wait_for_function("t => document.getElementById('managerFeedback').textContent.startsWith(t)", arg=fmt, timeout=20000)
+        ok(f'conjunto gerencial lê {fmt}', page.text_content('#managerTotal') == n and page.locator('#managerCategories .band-row').count() >= 2, page.text_content('#managerFeedback'))
+    ok('padrões descritos', page.locator('#managerInsights li').count() >= 3)
+    page.screenshot(path=f'{OUT}/12-conjunto-gerencial.png', full_page=True)
+
     # --- Atualização: publica nova versão do SW
+    page.click('nav [data-page="audit"]')
     page.fill('#comments', page.input_value('#comments') + ' Observação ainda não salva.')
     swp = f'{SITE}/sw.js'
     src = open(swp, encoding='utf-8').read()
@@ -249,7 +260,7 @@ with sync_playwright() as p:
         ok('com dados não salvos, pergunta antes de atualizar (uma única vez)', asked and not native, native)
         page.wait_for_load_state('networkidle'); page.wait_for_timeout(800)
         keys = page.evaluate('() => caches.keys()')
-        ok('após atualizar, só o cache novo permanece', keys == ['regua-shell-teste-2026.11.23.8'], keys)
+        ok('após atualizar, só o cache novo permanece', keys == ['regua-shell-teste-2026.11.23.9'], keys)
     except Exception as e:
         ok('aviso discreto de nova versão', False, f'{e} | navegações: {nav_log}')
     open(swp, 'w', encoding='utf-8').write(src)

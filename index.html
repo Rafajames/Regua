@@ -221,19 +221,27 @@
   <div class="head"><h1 id="managerTitle">Conjunto gerencial</h1></div>
   <article class="card">
     <div class="file-row">
-      <label class="sr" for="managerFile">Arquivo JSON</label><input id="managerFile" type="file" accept=".json,application/json">
-      <button class="btn primary" id="importManager" type="button">Avaliar</button>
+      <label class="sr" for="managerFile">Arquivo de chamados</label><input id="managerFile" type="file" accept=".csv,.txt,.xlsx,.xlsm,.pdf,.json,text/csv,application/pdf,application/json,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+      <button class="btn primary" id="importManager" type="button">Analisar</button>
       <button class="btn ghost" id="clearManager" type="button">Limpar</button>
     </div>
-    <p class="muted small" id="managerFeedback" aria-live="polite">Avalia um JSON de chamados só nesta aba; nada é salvo. <a href="docs/contrato-importacao-aranda.md" target="_blank" rel="noopener">Formato</a></p>
+    <p class="muted small" id="managerFeedback" aria-live="polite">CSV, Excel (.xlsx), PDF ou JSON. Analisado só nesta aba; nada é salvo nem enviado.</p>
+    <p class="muted small hidden" id="managerMapping"></p>
   </article>
-  <div class="grid stats three">
+  <div class="grid stats four">
     <article class="card stat"><small>Chamados</small><strong id="managerTotal">0</strong></article>
-    <article class="card stat"><small>Média</small><strong id="managerAverage">—</strong></article>
-    <article class="card stat"><small>Para revisão</small><strong id="managerReview">0</strong></article>
+    <article class="card stat"><small>Encerrados</small><strong id="managerClosed">—</strong></article>
+    <article class="card stat"><small>Em aberto</small><strong id="managerOpen">—</strong></article>
+    <article class="card stat"><small>Qualidade média</small><strong id="managerAverage">—</strong><span class="stat-foot" id="managerQualityNote"></span></article>
   </div>
-  <p class="muted small op-line">Encerrados: <b id="opClosed">—</b> · Em aberto: <b id="opBacklog">—</b> · Tempo médio: <b id="opResolution">—</b> min</p>
-  <article class="card"><div id="managerList" class="list"></div></article>
+  <div class="grid two compact">
+    <article class="card"><h2>Por categoria</h2><div id="managerCategories"></div></article>
+    <article class="card"><h2>Padrões</h2><ul id="managerInsights" class="insights"></ul></article>
+  </div>
+  <article class="card" style="margin-top:14px">
+    <div class="toolbar"><label class="search"><svg class="ico"><use href="#i-search"/></svg><span class="sr">Pesquisar chamados</span><input id="managerSearch" type="search" placeholder="Pesquisar no conjunto"></label></div>
+    <div id="managerList" class="list"></div>
+  </article>
 </section>
 
 <!-- ================= CONFIGURAÇÕES ================= -->

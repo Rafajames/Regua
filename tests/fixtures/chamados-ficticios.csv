@@ -1,0 +1,61 @@
+Chamado,Estado,Progresso,Categoria,Solicitante
+RF-9000000,Open,10.26,Suporte ao Usuário,Ana Exemplo
+RF-9000001,Closed,5.20,Suporte ao uso dos sistemas e aplicativos,Bruno Teste
+RF-9000002,Closed,19.81,Computador e outros,Carla Ficticia
+RF-9000003,Closed,2.92,Suporte ao Usuário,Diego Modelo
+RF-9000004,Closed,16.45,Formatação,Eva Amostra
+RF-9000005,Closed,11.48,Suporte ao Usuário,Fabio Demo
+RF-9000006,Closed,2.49,Suporte ao Usuário,Ana Exemplo
+RF-9000007,Closed,15.62,Computador e outros,Bruno Teste
+RF-9000008,Closed,1.89,Mapeamento,Carla Ficticia
+RF-9000009,Closed,13.46,Suporte ao Usuário,Diego Modelo
+RF-9000010,Open,2.84,Suporte ao Usuário,Eva Amostra
+RF-9000011,Closed,3.45,Suporte ao uso dos sistemas e aplicativos,Fabio Demo
+RF-9000012,Closed,13.20,Suporte ao Usuário,Ana Exemplo
+RF-9000013,Closed,24.94,Mapeamento,Bruno Teste
+RF-9000014,Closed,4.42,Formatação,Carla Ficticia
+RF-9000015,Closed,7.32,Suporte ao Usuário,Diego Modelo
+RF-9000016,Closed,19.12,Suporte ao uso dos sistemas e aplicativos,Eva Amostra
+RF-9000017,Closed,28.47,Computador e outros,Fabio Demo
+RF-9000018,Closed,17.65,Suporte ao Usuário,Ana Exemplo
+RF-9000019,Closed,12.38,Formatação,Bruno Teste
+RF-9000020,Open,29.31,Suporte ao Usuário,Carla Ficticia
+RF-9000021,Closed,2.16,Suporte ao Usuário,Diego Modelo
+RF-9000022,Closed,25.87,Computador e outros,Eva Amostra
+RF-9000023,Closed,9.26,Mapeamento,Fabio Demo
+RF-9000024,Closed,5.01,Suporte ao Usuário,Ana Exemplo
+RF-9000025,Closed,4.24,Suporte ao Usuário,Bruno Teste
+RF-9000026,Closed,9.81,Suporte ao uso dos sistemas e aplicativos,Carla Ficticia
+RF-9000027,Closed,24.63,Suporte ao Usuário,Diego Modelo
+RF-9000028,Closed,6.08,Mapeamento,Eva Amostra
+RF-9000029,Closed,17.78,Formatação,Fabio Demo
+RF-9000030,Open,19.46,Suporte ao Usuário,Ana Exemplo
+RF-9000031,Closed,11.67,Suporte ao uso dos sistemas e aplicativos,Bruno Teste
+RF-9000032,Closed,16.79,Computador e outros,Carla Ficticia
+RF-9000033,Closed,2.63,Suporte ao Usuário,Diego Modelo
+RF-9000034,Closed,2.54,Formatação,Eva Amostra
+RF-9000035,Closed,6.81,Suporte ao Usuário,Fabio Demo
+RF-9000036,Closed,20.67,Suporte ao Usuário,Ana Exemplo
+RF-9000037,Closed,13.29,Computador e outros,Bruno Teste
+RF-9000038,Closed,9.97,Mapeamento,Carla Ficticia
+RF-9000039,Closed,17.90,Suporte ao Usuário,Diego Modelo
+RF-9000040,Open,14.03,Suporte ao Usuário,Eva Amostra
+RF-9000041,Closed,9.55,Suporte ao uso dos sistemas e aplicativos,Fabio Demo
+RF-9000042,Closed,24.00,Suporte ao Usuário,Ana Exemplo
+RF-9000043,Closed,21.21,Mapeamento,Bruno Teste
+RF-9000044,Closed,7.93,Formatação,Carla Ficticia
+RF-9000045,Closed,17.57,Suporte ao Usuário,Diego Modelo
+RF-9000046,Closed,16.14,Suporte ao uso dos sistemas e aplicativos,Eva Amostra
+RF-9000047,Closed,26.35,Computador e outros,Fabio Demo
+RF-9000048,Closed,22.10,Suporte ao Usuário,Ana Exemplo
+RF-9000049,Closed,9.21,Formatação,Bruno Teste
+RF-9000050,Open,29.42,Suporte ao Usuário,Carla Ficticia
+RF-9000051,Closed,4.25,Suporte ao Usuário,Diego Modelo
+RF-9000052,Closed,13.01,Computador e outros,Eva Amostra
+RF-9000053,Closed,22.91,Mapeamento,Fabio Demo
+RF-9000054,Closed,5.24,Suporte ao Usuário,Ana Exemplo
+RF-9000055,Closed,15.08,Suporte ao Usuário,Bruno Teste
+RF-9000056,Closed,1.94,Suporte ao uso dos sistemas e aplicativos,Carla Ficticia
+RF-9000057,Closed,20.31,Suporte ao Usuário,Diego Modelo
+RF-9000058,Closed,23.13,Mapeamento,Eva Amostra
+RF-9000059,Closed,17.53,Formatação,Fabio Demo

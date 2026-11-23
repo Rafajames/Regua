@@ -450,3 +450,7 @@ details.menu > summary::-webkit-details-marker { display: none; }
 .toolbar { margin-bottom: 12px; }
 .stat { min-height: 92px; }
 @media (max-width: 680px) { .two-stats { grid-template-columns: 1fr 1fr; } .menu-list { right: auto; left: 0; } details.menu.right .menu-list { left: auto; right: 0; } }
+.stats.four { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.insights { margin: 0; padding-left: 18px; display: grid; gap: 8px; font-size: 13px; line-height: 1.55; color: var(--text); }
+.insights b { color: var(--navy); }
+@media (max-width: 900px) { .stats.four { grid-template-columns: repeat(2, minmax(0, 1fr)); } }

@@ -35,3 +35,10 @@ Referências: formulários de uma coluna e divulgação progressiva (Nielsen Nor
 ## 2026.11.23.8 — Leitor de comentários e pendências
 - Leitor: "Testado…, sem sucesso" passa a ser teste (antes ia para pendência); "será + particípio" (ex.: "será avaliada") é pendência; novos verbos de ação (recolhido, retirado, enviado, desligado etc.); fragmentos curtos como "após a análise" são unidos à frase seguinte em vez de se perderem.
 - Critério "Pendências contextualizadas" (critérios 0.3-experimental): também reconhece "será necessário", "em andamento", "agendado" e "retorno". Pesos inalterados. Justificativa: pendências escritas assim eram ignoradas e o critério ficava "não aplicável" mesmo com o campo preenchido.
+
+## 2026.11.23.9 — Conjunto gerencial: CSV, Excel, PDF e padrões
+- Novo `src/ticket-import.js`: lê CSV (vírgula, ponto e vírgula ou tabulação), Excel .xlsx (leitor próprio com `DecompressionStream`, sem biblioteca), PDF com texto selecionável (PDF.js 6.5.438, Apache-2.0, em `assets/vendor/pdfjs/`, carregado só quando um PDF é escolhido) e JSON. Limite de 30 MB.
+- Colunas reconhecidas pelo nome (Chamado, Estado, Progresso, Categoria, Solicitante, Técnico, Prédio, Descrição, Comentários, Solução, Datas…); a tela mostra o mapeamento e as colunas ignoradas.
+- Indicadores: total, encerrados/em aberto (pela coluna Estado), qualidade média (somente quando há colunas de texto), distribuição por categoria com mediana de progresso, padrões descritos (concentração por categoria, tempo/progresso típico e limite de 90%, categoria mais lenta, recorrência de solicitantes) e pesquisa na lista. Testado com 20 mil registros.
+- Limitações: .xls antigo não é lido (salvar como .xlsx/CSV); PDF escaneado (imagem) não tem texto; tabelas em PDF são reconstruídas pela posição do texto e podem precisar de conferência.
+- Testes: 64 unitários; 66 verificações em navegador (inclui CSV, Excel e PDF de exemplo com dados fictícios).
