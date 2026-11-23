@@ -19,7 +19,7 @@ export const ERROR_MESSAGES = {
   quota: 'Limite de uso ou cota do provedor atingido. Aguarde alguns minutos ou verifique o plano da conta.',
   network: 'Não foi possível contatar o provedor. Verifique a internet. Se ela estiver funcionando, o provedor pode estar bloqueando chamadas feitas diretamente do navegador (CORS).',
   timeout: 'O provedor demorou demais para responder. Tente novamente; se persistir, escolha um modelo mais rápido.',
-  server: 'O provedor está instável no momento. Tente novamente em instantes.',
+  server: 'O modelo está sobrecarregado ou instável no provedor (alta demanda). A Régua tentou novamente e não conseguiu. Aguarde alguns minutos ou escolha outro modelo em Configurações.',
   blocked: 'O provedor bloqueou a resposta pela política de segurança de conteúdo. Revise o texto enviado.',
   invalid_response: 'A IA respondeu em um formato inesperado. Tente novamente ou escolha outro modelo.',
   no_discovery: 'Este provedor não informou a lista de modelos. Digite manualmente o identificador do modelo indicado na documentação dele.',
@@ -268,14 +268,46 @@ async function generateOpenAiCompatible(provider, key, model, system, prompt, cu
   throw new AIError('bad_request', ERROR_MESSAGES.bad_request);
 }
 
-async function generate(provider, key, model, prompt, customBase, system) {
+async function generateOnce(provider, key, id, prompt, customBase, system) {
+  if (provider === 'gemini') return generateGemini(key, id, system, prompt);
+  if (provider === 'claude') return generateClaude(key, id, system, prompt);
+  return generateOpenAiCompatible(provider, key, id, system, prompt, customBase);
+}
+
+// Esperas entre novas tentativas quando o provedor está sobrecarregado (HTTP 5xx / "high demand").
+let RETRY_DELAYS = [1500, 4000];
+export function setRetryDelays(delays) { RETRY_DELAYS = delays; }
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+const isOverload = err => err?.code === 'server' || (err?.code === 'quota' && /high demand|overload|try again later/i.test(err.detail || ''));
+
+/**
+ * Gera com o modelo escolhido; em sobrecarga, tenta de novo e depois usa os modelos reserva.
+ * Retorna { result, modelUsed, fallbackUsed }.
+ */
+async function generate(provider, key, model, prompt, customBase, system, { fallbacks = [], onProgress } = {}) {
   const k = String(key || '').trim();
   const id = normalizeModelId(model);
   if (!k) throw new AIError('config', 'Informe uma chave de API e teste a conexão.');
   if (!id) throw new AIError('config', 'Selecione ou digite um modelo antes de gerar.');
-  if (provider === 'gemini') return generateGemini(k, id, system, prompt);
-  if (provider === 'claude') return generateClaude(k, id, system, prompt);
-  return generateOpenAiCompatible(provider, k, id, system, prompt, customBase);
+  const chain = [...new Set([id, ...fallbacks.map(normalizeModelId).filter(Boolean)])].slice(0, 3);
+  let lastError;
+  for (const [index, current] of chain.entries()) {
+    for (let attempt = 0; attempt <= RETRY_DELAYS.length; attempt++) {
+      try {
+        const result = await generateOnce(provider, k, current, prompt, customBase, system);
+        return { result, modelUsed: current, fallbackUsed: index > 0 };
+      } catch (err) {
+        lastError = err;
+        if (!isOverload(err)) throw err;
+        if (attempt < RETRY_DELAYS.length) {
+          onProgress?.(`${current} sobrecarregado; nova tentativa ${attempt + 2} de ${RETRY_DELAYS.length + 1}…`);
+          await sleep(RETRY_DELAYS[attempt]);
+        }
+      }
+    }
+    if (chain[index + 1]) onProgress?.(`${current} continua sobrecarregado; tentando ${chain[index + 1]}…`);
+  }
+  throw new AIError('server', ERROR_MESSAGES.server, lastError?.detail || '');
 }
 
 /* ---------- Tarefas ---------- */
@@ -312,7 +344,7 @@ Retorne somente JSON válido com: draft (string), facts_used (array), missing_in
 
 const asArray = value => Array.isArray(value) ? value.map(x => typeof x === 'string' ? x : JSON.stringify(x)) : [];
 
-export async function generateResolutionDraft({ provider = 'gemini', apiKey, model, customBase = '', request: requestText = '', history = '', technicianNotes = '', pending = '', signature = DEFAULT_SIGNATURE, stage = 'initial', closureConfirmed = false, date = new Date() }) {
+export async function generateResolutionDraft({ provider = 'gemini', apiKey, model, fallbacks = [], onProgress, customBase = '', request: requestText = '', history = '', technicianNotes = '', pending = '', signature = DEFAULT_SIGNATURE, stage = 'initial', closureConfirmed = false, date = new Date() }) {
   const input = {
     etapa: stage,
     saudacao: greetingFor(date),
@@ -326,7 +358,7 @@ export async function generateResolutionDraft({ provider = 'gemini', apiKey, mod
   const task = stage === 'initial'
     ? 'Gere um primeiro esboço com base na solicitação e no histórico. O atendimento ainda não ocorreu: não afirme execução.'
     : 'Atualize a minuta após a execução, incorporando somente as ações que o técnico relata ter realizado. Não confunda disponibilização anterior com entrega ou instalação já realizada.';
-  const result = await generate(provider, apiKey, model, task + '\n\nENTRADAS:\n' + JSON.stringify(input), customBase, SYSTEM_PROMPT);
+  const { result, modelUsed, fallbackUsed } = await generate(provider, apiKey, model, task + '\n\nENTRADAS:\n' + JSON.stringify(input), customBase, SYSTEM_PROMPT, { fallbacks, onProgress });
   const draft = typeof result.draft === 'string' ? result.draft : '';
   if (!draft.trim()) throw new AIError('invalid_response', ERROR_MESSAGES.invalid_response, 'Campo draft ausente.');
   const guardWarnings = checkClosureClaims(draft, input.apto_para_encerramento);
@@ -337,19 +369,22 @@ export async function generateResolutionDraft({ provider = 'gemini', apiKey, mod
     contradictions: asArray(result.contradictions),
     pending_items: asArray(result.pending_items),
     requires_technician_confirmation: result.requires_technician_confirmation !== false || guardWarnings.length > 0,
-    guard_warnings: guardWarnings
+    guard_warnings: guardWarnings,
+    model_used: modelUsed,
+    fallback_used: fallbackUsed
   };
 }
 
-export async function reviewTicketWithProvider({ provider = 'gemini', apiKey, model, customBase = '', data = {} }) {
+export async function reviewTicketWithProvider({ provider = 'gemini', apiKey, model, fallbacks = [], onProgress, customBase = '', data = {} }) {
   const allowed = {};
   for (const k of ['subject', 'building', 'location', 'description', 'comments', 'cause', 'action', 'test', 'notes', 'assetType']) allowed[k] = data[k] || '';
   const system = 'Você é um auditor documental de chamados de suporte de TI. Não invente fatos nem atribua culpa. Diferencie ausência de registro de falha técnica e não presuma resolução. Você não altera a nota calculada pelas regras. Retorne somente JSON com overall, confidence, findings (criterion, status, evidence, explanation), missing_information, recommendations e human_review.';
-  return generate(provider, apiKey, model, 'Analise a qualidade documental do chamado. Dados técnicos minimizados (sem número, solicitante ou técnico):\n' + JSON.stringify(allowed), customBase, system);
+  const { result, modelUsed, fallbackUsed } = await generate(provider, apiKey, model, 'Analise a qualidade documental do chamado. Dados técnicos minimizados (sem número, solicitante ou técnico):\n' + JSON.stringify(allowed), customBase, system, { fallbacks, onProgress });
+  return { ...result, model_used: modelUsed, fallback_used: fallbackUsed };
 }
 
 export async function proposeCriteriaConfiguration(apiKey, model, context = '', provider = 'gemini', customBase = '', criteria = []) {
   const prompt = 'Proponha critérios objetivos e auditáveis para a Régua. Não crie normas institucionais. Preserve IDs, sugira pesos de 1 a 5 e justifique. Retorne JSON com rationale, criteria, proposed_additions, governance_warnings, human_approval_required=true. Contexto: ' + context + ' Critérios atuais (provisórios): ' + JSON.stringify(criteria);
   const system = 'Você é consultor de desenho de critérios de qualidade para suporte de TI. Retorne somente JSON válido com rationale, criteria, proposed_additions, governance_warnings e human_approval_required=true. Não invente normas institucionais.';
-  return generate(provider, apiKey, model, prompt, customBase, system);
+  return (await generate(provider, apiKey, model, prompt, customBase, system)).result;
 }

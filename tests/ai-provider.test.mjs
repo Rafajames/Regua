@@ -2,8 +2,10 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
   PROVIDERS, SYSTEM_PROMPT, AIError, testProviderConnection, discoverModels, generateResolutionDraft,
-  rankGeminiModels, filterChatModels, classifyHttpError, parseJson, normalizeModelId
+  rankGeminiModels, filterChatModels, classifyHttpError, parseJson, normalizeModelId, setRetryDelays
 } from '../src/ai-provider.js';
+
+setRetryDelays([1, 1]);
 
 const json = (body, status = 200) => new Response(JSON.stringify(body), { status, headers: { 'Content-Type': 'application/json' } });
 
@@ -181,4 +183,38 @@ test('prompt proíbe invenção, exige marcadores e condiciona o encerramento', 
   assert.match(SYSTEM_PROMPT, /\[CONFIRMAR/);
   assert.match(SYSTEM_PROMPT, /apto_para_encerramento/);
   assert.match(SYSTEM_PROMPT, /pesquisa de satisfação/);
+});
+
+const HIGH_DEMAND = { error: { code: 503, message: 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.', status: 'UNAVAILABLE' } };
+const OK_DRAFT = { candidates: [{ content: { parts: [{ text: '{"draft":"ok"}' }] } }] };
+
+test('sobrecarga (503 high demand): tenta novamente e conclui com o mesmo modelo', async () => {
+  await withFetch((url, o, n) => n < 3 ? json(HIGH_DEMAND, 503) : json(OK_DRAFT), async calls => {
+    const progress = [];
+    const r = await generateResolutionDraft({ provider: 'gemini', apiKey: 'k', model: 'gemini-3.8-flash', request: 'x', onProgress: m => progress.push(m) });
+    assert.equal(calls.length, 3);
+    assert.equal(r.model_used, 'gemini-3.8-flash');
+    assert.equal(r.fallback_used, false);
+    assert.equal(progress.length, 2);
+  });
+});
+
+test('sobrecarga persistente: usa o modelo reserva e informa', async () => {
+  await withFetch(url => url.includes('gemini-3.8-flash') ? json(HIGH_DEMAND, 503) : json(OK_DRAFT), async calls => {
+    const r = await generateResolutionDraft({ provider: 'gemini', apiKey: 'k', model: 'gemini-3.8-flash', fallbacks: ['gemini-3.7-flash'], request: 'x' });
+    assert.equal(r.model_used, 'gemini-3.7-flash');
+    assert.equal(r.fallback_used, true);
+    assert.equal(calls.filter(c => c.url.includes('gemini-3.8-flash')).length, 3);
+  });
+});
+
+test('sobrecarga em todos os modelos: mensagem clara; erros de chave não geram novas tentativas', async () => {
+  await withFetch(() => json(HIGH_DEMAND, 503), async () => {
+    await assert.rejects(generateResolutionDraft({ provider: 'gemini', apiKey: 'k', model: 'gemini-3.8-flash', fallbacks: ['gemini-3.7-flash'], request: 'x' }),
+      e => e.code === 'server' && /sobrecarregado/.test(e.message) && /high demand/.test(e.detail));
+  });
+  await withFetch(() => json({ error: { message: 'API key not valid.' } }, 400), async calls => {
+    await assert.rejects(generateResolutionDraft({ provider: 'gemini', apiKey: 'k', model: 'gemini-3.8-flash', fallbacks: ['gemini-3.7-flash'], request: 'x' }), e => e.code === 'auth');
+    assert.equal(calls.length, 1);
+  });
 });

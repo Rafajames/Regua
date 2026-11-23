@@ -5,7 +5,7 @@ import { buildOperationalSummary } from './reporting.js';
 import { buildStandardDraft, checkClosureClaims, DEFAULT_SIGNATURE } from './draft-template.js';
 import * as store from './storage.js';
 
-export const APP_VERSION = '2026.11.23';
+export const APP_VERSION = '2026.11.23.2';
 
 const $ = id => document.getElementById(id);
 const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -363,6 +363,8 @@ $('standardDraft').addEventListener('click', async () => {
 });
 
 function effectiveModel() { return normalizeModelId(state.ai.manualModel || state.ai.model); }
+// Modelos reserva (da lista testada) usados só quando o escolhido estiver sobrecarregado.
+function fallbackModels() { return state.ai.models.filter(m => m !== effectiveModel()).slice(0, 2); }
 
 async function makeAiDraft(stage) {
   if (!state.ai.key || !effectiveModel()) { toast('Configure a chave e o modelo da IA em Configurações.'); go('settings'); $('geminiKey').focus(); return; }
@@ -377,6 +379,7 @@ async function makeAiDraft(stage) {
   try {
     const r = await generateResolutionDraft({
       provider: state.ai.provider, apiKey: state.ai.key, model: effectiveModel(), customBase: state.ai.customBase,
+      fallbacks: fallbackModels(), onProgress: msg => setStatus($('draftStatus'), 'working', msg),
       request: ['Assunto: ' + d.subject, 'Local: ' + [d.building, d.location].filter(Boolean).join(' · '), 'Equipamento: ' + d.assetType, 'Patrimônio: ' + (d.asset || 'não informado'), 'Descrição: ' + d.description].join('\n'),
       history: d.comments,
       technicianNotes: ['Ação realizada: ' + (d.action || 'não informada'), 'Causa: ' + (d.cause || 'não informada'), 'Teste/validação: ' + (d.test || 'não informado')].join('\n'),
@@ -386,7 +389,8 @@ async function makeAiDraft(stage) {
     markDirty();
     const warnings = [...r.guard_warnings, ...r.missing_information.map(x => 'Informação ausente: ' + x), ...r.contradictions.map(x => 'Divergência: ' + x), ...r.pending_items.map(x => 'Pendência: ' + x)];
     showDraftWarnings(warnings, r.requires_technician_confirmation ? 'A confirmação do técnico é necessária antes de afirmar conclusão ou encerramento.' : '');
-    setStatus($('draftStatus'), 'ok', 'Resposta concluída. Nada foi enviado ao Aranda.');
+    if (r.fallback_used) setStatus($('draftStatus'), 'warn', 'Resposta concluída com ' + r.model_used + ', porque ' + effectiveModel() + ' estava sobrecarregado. Nada foi enviado ao Aranda.');
+    else setStatus($('draftStatus'), 'ok', 'Resposta concluída com ' + r.model_used + '. Nada foi enviado ao Aranda.');
   } catch (err) {
     const e = describeError(err);
     setStatus($('draftStatus'), 'error', 'Não foi possível gerar o rascunho. ' + e.message, e.detail);
@@ -422,9 +426,9 @@ $('aiReview').addEventListener('click', async () => {
   box.classList.remove('hidden');
   box.innerHTML = '<p class="muted">Analisando com ' + esc(effectiveModel()) + '…</p>';
   try {
-    const r = await reviewTicketWithProvider({ provider: state.ai.provider, apiKey: state.ai.key, model: effectiveModel(), customBase: state.ai.customBase, data: d });
+    const r = await reviewTicketWithProvider({ provider: state.ai.provider, apiKey: state.ai.key, model: effectiveModel(), fallbacks: fallbackModels(), onProgress: msg => { box.innerHTML = '<p class="muted">' + esc(msg) + '</p>'; }, customBase: state.ai.customBase, data: d });
     const list = (arr, pick) => (Array.isArray(arr) && arr.length ? arr.map(x => '<li>' + esc(typeof x === 'string' ? x : pick(x)) + '</li>').join('') : '<li>Nenhum.</li>');
-    box.innerHTML = '<h3>Análise assistida por IA</h3><p class="muted small">Consultiva e sujeita à revisão humana. Não altera a nota calculada pelas regras.</p>'
+    box.innerHTML = '<h3>Análise assistida por IA</h3><p class="muted small">Consultiva e sujeita à revisão humana. Não altera a nota calculada pelas regras. Modelo: ' + esc(r.model_used) + (r.fallback_used ? ' (reserva; o escolhido estava sobrecarregado)' : '') + '.</p>'
       + '<p><b>Conclusão:</b> ' + esc(r.overall || 'não informada') + '</p><p><b>Confiança:</b> ' + esc(r.confidence || 'não informada') + '</p>'
       + '<b>Achados</b><ul>' + list(r.findings, x => [x.criterion, x.explanation || x.evidence].filter(Boolean).join(': ') || JSON.stringify(x)) + '</ul>'
       + '<b>Recomendações</b><ul>' + list(r.recommendations, x => x.recommendation || JSON.stringify(x)) + '</ul>';

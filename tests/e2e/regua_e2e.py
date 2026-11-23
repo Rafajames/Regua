@@ -219,7 +219,7 @@ with sync_playwright() as p:
         ok('com dados não salvos, pergunta antes de atualizar (uma única vez)', asked and not native, native)
         page.wait_for_load_state('networkidle'); page.wait_for_timeout(800)
         keys = page.evaluate('() => caches.keys()')
-        ok('após atualizar, só o cache novo permanece', keys == ['regua-shell-teste-2026.11.23'], keys)
+        ok('após atualizar, só o cache novo permanece', keys == ['regua-shell-teste-2026.11.23.2'], keys)
     except Exception as e:
         ok('aviso discreto de nova versão', False, f'{e} | navegações: {nav_log}')
     open(swp, 'w', encoding='utf-8').write(src)
