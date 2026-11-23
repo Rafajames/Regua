@@ -20,17 +20,17 @@ function inspect(id,data){
     case 'cause': {const met=text(data.cause).length>=10;return {met,evidence:met?'Há informação no campo de causa.':'Causa não registrada ou insuficientemente descrita.',recommendation:'Registre a causa encontrada ou indique que permanece em investigação.'};}
     case 'action': {const met=text(data.action).length>=20;return {met,evidence:met?'Ação executada foi descrita.':'Ação ausente ou muito resumida.',recommendation:'Descreva o procedimento efetivamente realizado.'};}
     case 'validation': {const met=text(data.test).length>=10;return {met,evidence:met?'Há registro de teste ou confirmação.':'Não há evidência suficiente de validação.',recommendation:'Registre teste realizado ou confirmação de funcionamento.'};}
-    case 'pending': {const hasPending=/(aguardando|pendente|terceiro|depend[eê]ncia)/i.test(text(data.notes)+' '+text(data.comments));const met=!hasPending||text(data.notes).length>=10;return {met,evidence:!hasPending?'Nenhuma pendência explícita identificada nos campos analisados.':met?'Pendência possui contextualização.':'Há indicação de pendência sem contexto ou próximo passo.',recommendation:'Explique motivo da espera e próximo passo.'};}
+    case 'pending': {const hasPending=/(aguardando|pendente|terceiro|depend[eê]ncia)/i.test(text(data.notes)+' '+text(data.comments));const met=text(data.notes).length>=10;return {applicable:hasPending,met,evidence:!hasPending?'Nenhuma pendência explícita identificada; critério não aplicável.':met?'Pendência possui contextualização.':'Há indicação de pendência sem contexto ou próximo passo.',recommendation:'Explique motivo da espera e próximo passo.'};}
     default:return {met:false,evidence:'Critério desconhecido.',recommendation:'Revise a configuração do critério.'};
   }
 }
 export function evaluateQuality(data={},criteria=DEFAULT_CRITERIA){
-  const results=criteria.map(c=>{const r=inspect(c.id,data);return {id:c.id,dimension:c.dimension,label:c.label,weight:c.weight,status:r.met?'met':'review',evidence:r.evidence,recommendation:r.recommendation};});
+  const results=criteria.map(c=>{const r=inspect(c.id,data);return {id:c.id,dimension:c.dimension,label:c.label,weight:c.weight,status:r.applicable===false?'not_applicable':r.met?'met':'review',evidence:r.evidence,recommendation:r.recommendation};});
   const dimensions={};
   for(const key of ['opening','updates','closure']){
-    const rows=results.filter(r=>r.dimension===key),weight=rows.reduce((s,r)=>s+r.weight,0),earned=rows.filter(r=>r.status==='met').reduce((s,r)=>s+r.weight,0);
-    dimensions[key]={score:weight?Math.round(earned/weight*100):null,met:rows.filter(r=>r.status==='met').length,total:rows.length};
+    const rows=results.filter(r=>r.dimension===key),applicable=rows.filter(r=>r.status!=='not_applicable'),weight=applicable.reduce((s,r)=>s+r.weight,0),earned=applicable.filter(r=>r.status==='met').reduce((s,r)=>s+r.weight,0);
+    dimensions[key]={score:weight?Math.round(earned/weight*100):null,met:rows.filter(r=>r.status==='met').length,total:applicable.length};
   }
-  const weight=results.reduce((s,r)=>s+r.weight,0),earned=results.filter(r=>r.status==='met').reduce((s,r)=>s+r.weight,0);
+  const applicable=results.filter(r=>r.status!=='not_applicable'),weight=applicable.reduce((s,r)=>s+r.weight,0),earned=applicable.filter(r=>r.status==='met').reduce((s,r)=>s+r.weight,0);
   return {engine:'rules',evaluatedAt:new Date().toISOString(),score:weight?Math.round(earned/weight*100):null,dimensions,criteria:results};
 }
