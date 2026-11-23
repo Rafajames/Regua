@@ -1,0 +1,39 @@
+name: Sincronização diária das plataformas
+
+on:
+  schedule:
+    # 07:00 em Boa Vista (UTC-4) = 11:00 UTC
+    - cron: '0 11 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: regua-source-sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Validar APIs configuradas
+        run: node scripts/sync-sources.mjs
+        env:
+          REGUA_MAPTEC_API_URL: ${{ secrets.REGUA_MAPTEC_API_URL }}
+          REGUA_MAPTEC_API_TOKEN: ${{ secrets.REGUA_MAPTEC_API_TOKEN }}
+          REGUA_PATRIMONIO_API_URL: ${{ secrets.REGUA_PATRIMONIO_API_URL }}
+          REGUA_PATRIMONIO_API_TOKEN: ${{ secrets.REGUA_PATRIMONIO_API_TOKEN }}
+          REGUA_SYNC_TIMEOUT_MS: '15000'
+          REGUA_SYNC_MAX_BYTES: '5000000'
+      - name: Guardar relatório técnico da execução
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: regua-sync-report-${{ github.run_number }}
+          path: artifacts/sync-report.json
+          if-no-files-found: warn
+          retention-days: 30
