@@ -76,9 +76,9 @@ export async function reviewTicketWithProvider({provider='gemini',apiKey,model,c
  const allowed={subject:data.subject||'',building:data.building||'',location:data.location||'',description:data.description||'',comments:data.comments||'',cause:data.cause||'',action:data.action||'',test:data.test||'',notes:data.notes||'',assetType:data.assetType||''};
  return generate(provider,apiKey,model,SYSTEM_PROMPT+'\n\nAnalise também a qualidade documental deste chamado. Dados técnicos minimizados:\n'+JSON.stringify(allowed),customBase);
 }
-export async function proposeCriteriaConfiguration(apiKey,model,context=''){
+export async function proposeCriteriaConfiguration(apiKey,model,context='',provider='gemini',customBase=''){
  const current=[{id:'location',label:'Local identificável',weight:2,dimension:'opening'},{id:'subject',label:'Assunto específico',weight:1,dimension:'opening'},{id:'symptom',label:'Sintoma descrito',weight:2,dimension:'opening'},{id:'asset',label:'Equipamento ou sistema identificado',weight:1,dimension:'opening'},{id:'updates',label:'Comentários úteis',weight:2,dimension:'updates'},{id:'cause',label:'Causa registrada',weight:1,dimension:'closure'},{id:'action',label:'Ação realizada descrita',weight:2,dimension:'closure'},{id:'validation',label:'Teste ou confirmação',weight:2,dimension:'closure'},{id:'pending',label:'Pendências contextualizadas',weight:1,dimension:'closure'}];
  const prompt='Proponha critérios objetivos e auditáveis para a Régua. Não crie normas institucionais. Preserve IDs, sugira pesos de 1 a 5 e justifique. Retorne JSON com rationale, criteria, proposed_additions, governance_warnings, human_approval_required=true. Contexto: '+context+' Critérios: '+JSON.stringify(current);
- return generate('gemini',apiKey,model,prompt);
+ return generate(provider,apiKey,model,prompt,customBase);
 }
 export {PROVIDERS,SYSTEM_PROMPT};
