@@ -18,6 +18,8 @@ Aplicação estática em HTML, CSS e JavaScript, preparada para GitHub Pages.
 
 - Código público neste repositório.
 - Dados guardados no IndexedDB do navegador.
+- Catálogo de locais importado como snapshot do repositório MapTec-TJRR; deve ser atualizado quando a base oficial mudar.
+- O tipo de equipamento pode ser reconhecido a partir da descrição (ex.: PC), mas a identificação do ativo/tombamento depende de futura integração com a plataforma patrimonial.
 - Cada técnico terá sua própria base local por navegador/dispositivo.
 - **Não há sincronização nem painel consolidado entre usuários nesta versão.**
 
