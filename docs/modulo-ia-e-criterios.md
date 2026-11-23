@@ -20,7 +20,7 @@ A resposta estruturada contém o texto sugerido, fatos utilizados, informações
 - A redação pode seguir o padrão de saudação, introdução, procedimentos, pendências, encerramento condicional, disponibilidade e assinatura.
 
 ## Provedores disponíveis
-- Google Gemini (lista de modelos pela API Gemini).
+- Google Gemini (lista de modelos pela API Gemini); nesta versão, `gemini-3.8-flash` é priorizado como modelo padrão quando a conta o disponibiliza. Modelos antigos ficam abaixo na lista, e a seleção pode ser alterada após testar a conexão.
 - OpenAI (endpoint de modelos).
 - Anthropic Claude (endpoint de modelos e Messages API).
 - xAI Grok (API compatível com OpenAI).
@@ -49,7 +49,7 @@ Os pesos do motor em `src/quality-engine.js` são provisórios e editáveis no c
 - [x] Assistente de rascunho inicial e versão pós-atendimento.
 - [x] Saída estruturada com fatos, ausências, contradições e pendências.
 - [x] Provedores Gemini, OpenAI, Claude, Grok e compatível.
-- [x] Descoberta de modelos quando suportada pela API.
+- [x] Descoberta de modelos quando suportada pela API, com priorização do Gemini 3.8 Flash e seleção manual habilitada após o teste.
 - [x] Chaves mantidas somente em memória nesta versão experimental.
 - [x] Cópia JSON em pasta local autorizada e IndexedDB como persistência primária.
 - [ ] Backend seguro para uso institucional.
