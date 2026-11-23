@@ -13,3 +13,6 @@
 
 ## 2026.11.23.2 — Sobrecarga do provedor de IA
 O Gemini 3.8 Flash passou a responder "high demand" (HTTP 503) em horários de pico. A Régua agora tenta novamente sozinha (2 novas tentativas, com espera) e, se continuar sobrecarregado, usa até 2 modelos reserva da lista testada, informando qual modelo gerou o texto. Erros de chave, permissão e cota não geram novas tentativas. Testes: 3 novos (45 no total).
+
+## 2026.11.23.3 — Cota do provedor (HTTP 429)
+A Régua lê os detalhes de cota enviados pelo Google (modelo, limite diário ou por minuto, tempo de espera) e explica em linguagem simples. Como a cota do Gemini é por modelo, uma cota esgotada não gasta novas tentativas no mesmo modelo: passa direto para o modelo reserva. Testes: 3 novos (48 no total).

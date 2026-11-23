@@ -48,13 +48,51 @@ function providerMessage(body) {
   return body.error?.message || body.error?.type || body.message || '';
 }
 
-export function classifyHttpError(status, detail = '', key = '') {
+// Lê os detalhes estruturados de cota do Google (QuotaFailure / RetryInfo).
+export function parseQuotaDetails(details) {
+  if (!Array.isArray(details)) return null;
+  const info = { scope: null, model: '', limit: null, retryAfterSec: null, freeTier: false };
+  for (const d of details) {
+    const type = String(d?.['@type'] || '');
+    if (type.endsWith('QuotaFailure')) {
+      for (const v of d.violations || []) {
+        const id = String(v.quotaId || '') + ' ' + String(v.quotaMetric || '');
+        if (/PerDay/i.test(id)) info.scope = 'day';
+        else if (!info.scope && /PerMinute/i.test(id)) info.scope = 'minute';
+        if (/free_?tier/i.test(id)) info.freeTier = true;
+        if (v.quotaDimensions?.model) info.model = v.quotaDimensions.model;
+        if (v.quotaValue !== undefined && info.limit === null) info.limit = Number(v.quotaValue);
+      }
+    }
+    if (type.endsWith('RetryInfo') && d.retryDelay) {
+      const sec = parseFloat(String(d.retryDelay));
+      if (Number.isFinite(sec)) info.retryAfterSec = Math.ceil(sec);
+    }
+  }
+  return info.scope || info.model || info.retryAfterSec !== null ? info : null;
+}
+
+function quotaMessage(q, fallbackModel = '') {
+  const model = q?.model || fallbackModel;
+  const m = model ? ' para o modelo ' + model : '';
+  if (q?.limit === 0) return 'Sua chave não tem cota' + (q.freeTier ? ' gratuita' : '') + m + '. Escolha outro modelo em Configurações ou ative o faturamento no Google AI Studio.';
+  if (q?.scope === 'day') return 'O limite diário da sua chave' + m + ' foi atingido' + (q.limit ? ' (' + q.limit + ' pedidos por dia)' : '') + '. Ele é renovado a cada dia. Enquanto isso, escolha outro modelo em Configurações — cada modelo tem cota própria.';
+  if (q?.scope === 'minute' || q?.retryAfterSec) return 'Limite de pedidos por minuto atingido' + m + '. Tente novamente' + (q.retryAfterSec ? ' em cerca de ' + q.retryAfterSec + ' segundos' : ' em instantes') + '.';
+  return ERROR_MESSAGES.quota;
+}
+
+export function classifyHttpError(status, detail = '', key = '', details = null) {
   const msg = String(detail || '');
   const safe = scrub(msg, key);
   if (/api key not valid|invalid api key|incorrect api key|invalid x-api-key|invalid_api_key|authentication|unauthori[sz]ed|API_KEY_INVALID/i.test(msg) || status === 401) return new AIError('auth', ERROR_MESSAGES.auth, safe);
   if (/no longer available|not found for api version|is not found|does not exist|model_not_found|not supported for generatecontent|deprecated|unknown model|invalid model/i.test(msg) || status === 404) return new AIError('model', ERROR_MESSAGES.model, safe);
   if (status === 403) return new AIError('permission', ERROR_MESSAGES.permission, safe);
-  if (status === 429 || /quota|rate limit|resource_exhausted/i.test(msg)) return new AIError('quota', ERROR_MESSAGES.quota, safe);
+  if (status === 429 || /quota|rate limit|resource_exhausted/i.test(msg)) {
+    const q = parseQuotaDetails(details);
+    const err = new AIError('quota', quotaMessage(q), safe);
+    err.quota = q;
+    return err;
+  }
   if (status >= 500) return new AIError('server', ERROR_MESSAGES.server, safe);
   return new AIError('bad_request', ERROR_MESSAGES.bad_request + (safe ? ' Detalhe: ' + safe : ''), safe);
 }
@@ -72,7 +110,7 @@ async function request(url, options, { key = '', timeoutMs = 90000 } = {}) {
     clearTimeout(timer);
   }
   const body = await response.json().catch(() => ({}));
-  if (!response.ok) throw classifyHttpError(response.status, providerMessage(body), key);
+  if (!response.ok) throw classifyHttpError(response.status, providerMessage(body), key, body?.error?.details);
   return body;
 }
 
@@ -278,7 +316,8 @@ async function generateOnce(provider, key, id, prompt, customBase, system) {
 let RETRY_DELAYS = [1500, 4000];
 export function setRetryDelays(delays) { RETRY_DELAYS = delays; }
 const sleep = ms => new Promise(r => setTimeout(r, ms));
-const isOverload = err => err?.code === 'server' || (err?.code === 'quota' && /high demand|overload|try again later/i.test(err.detail || ''));
+const isOverload = err => err?.code === 'server' || (err?.code === 'quota' && /high demand|overload/i.test(err.detail || ''));
+const isQuota = err => err?.code === 'quota' && !isOverload(err);
 
 /**
  * Gera com o modelo escolhido; em sobrecarga, tenta de novo e depois usa os modelos reserva.
@@ -290,7 +329,7 @@ async function generate(provider, key, model, prompt, customBase, system, { fall
   if (!k) throw new AIError('config', 'Informe uma chave de API e teste a conexão.');
   if (!id) throw new AIError('config', 'Selecione ou digite um modelo antes de gerar.');
   const chain = [...new Set([id, ...fallbacks.map(normalizeModelId).filter(Boolean)])].slice(0, 3);
-  let lastError;
+  let lastError, firstQuotaError;
   for (const [index, current] of chain.entries()) {
     for (let attempt = 0; attempt <= RETRY_DELAYS.length; attempt++) {
       try {
@@ -298,6 +337,11 @@ async function generate(provider, key, model, prompt, customBase, system, { fall
         return { result, modelUsed: current, fallbackUsed: index > 0 };
       } catch (err) {
         lastError = err;
+        if (isQuota(err)) {
+          // A cota é por modelo: não repete o mesmo modelo, passa para o próximo.
+          if (!firstQuotaError) { firstQuotaError = err; if (!err.quota?.model) err.message = quotaMessage(err.quota, current); }
+          break;
+        }
         if (!isOverload(err)) throw err;
         if (attempt < RETRY_DELAYS.length) {
           onProgress?.(`${current} sobrecarregado; nova tentativa ${attempt + 2} de ${RETRY_DELAYS.length + 1}…`);
@@ -305,7 +349,11 @@ async function generate(provider, key, model, prompt, customBase, system, { fall
         }
       }
     }
-    if (chain[index + 1]) onProgress?.(`${current} continua sobrecarregado; tentando ${chain[index + 1]}…`);
+    if (chain[index + 1]) onProgress?.(`${current} ${isQuota(lastError) ? 'sem cota disponível' : 'continua sobrecarregado'}; tentando ${chain[index + 1]}…`);
+  }
+  if (firstQuotaError) {
+    if (chain.length > 1) firstQuotaError.message += ' Também foram tentados os modelos reserva (' + chain.slice(1).join(', ') + '), sem sucesso.';
+    throw firstQuotaError;
   }
   throw new AIError('server', ERROR_MESSAGES.server, lastError?.detail || '');
 }

@@ -218,3 +218,34 @@ test('sobrecarga em todos os modelos: mensagem clara; erros de chave não geram 
     assert.equal(calls.length, 1);
   });
 });
+
+const quota = (scope, model, value, retry) => ({ error: { code: 429, status: 'RESOURCE_EXHAUSTED', message: 'You exceeded your current quota, please check your plan and billing details.', details: [
+  { '@type': 'type.googleapis.com/google.rpc.QuotaFailure', violations: [{ quotaMetric: 'generativelanguage.googleapis.com/generate_content_free_tier_requests', quotaId: `GenerateRequestsPer${scope}PerProjectPerModel-FreeTier`, quotaDimensions: { location: 'global', model }, quotaValue: String(value) }] },
+  ...(retry ? [{ '@type': 'type.googleapis.com/google.rpc.RetryInfo', retryDelay: retry }] : [])
+] } });
+
+test('cota diária esgotada: mensagem explica modelo e limite; não repete o mesmo modelo', async () => {
+  await withFetch(() => json(quota('Day', 'gemini-3.8-flash', 20), 429), async calls => {
+    await assert.rejects(generateResolutionDraft({ provider: 'gemini', apiKey: 'k', model: 'gemini-3.8-flash', request: 'x' }),
+      e => e.code === 'quota' && /limite diário/.test(e.message) && /gemini-3\.8-flash/.test(e.message) && /20 pedidos/.test(e.message));
+    assert.equal(calls.length, 1, 'cota não deve gastar novas tentativas');
+  });
+});
+
+test('cota esgotada em um modelo: usa o modelo reserva (cota própria)', async () => {
+  await withFetch(url => url.includes('gemini-3.8-flash') ? json(quota('Day', 'gemini-3.8-flash', 20), 429) : json(OK_DRAFT), async calls => {
+    const r = await generateResolutionDraft({ provider: 'gemini', apiKey: 'k', model: 'gemini-3.8-flash', fallbacks: ['gemini-3.7-flash'], request: 'x' });
+    assert.equal(r.model_used, 'gemini-3.7-flash');
+    assert.equal(r.fallback_used, true);
+    assert.equal(calls.length, 2);
+  });
+});
+
+test('cota por minuto e cota gratuita zero têm orientações próprias', async () => {
+  await withFetch(() => json(quota('Minute', 'gemini-3.8-flash', 5, '37s'), 429), async () => {
+    await assert.rejects(generateResolutionDraft({ provider: 'gemini', apiKey: 'k', model: 'gemini-3.8-flash', request: 'x' }), e => /por minuto/.test(e.message) && /37 segundos/.test(e.message));
+  });
+  await withFetch(() => json(quota('Day', 'gemini-3.8-flash', 0), 429), async () => {
+    await assert.rejects(generateResolutionDraft({ provider: 'gemini', apiKey: 'k', model: 'gemini-3.8-flash', request: 'x' }), e => /não tem cota gratuita/.test(e.message));
+  });
+});
