@@ -56,7 +56,7 @@ function parseWhatsapp(){const raw=$('whatsappText').value.trim();if(!raw){toast
 $('parseWhatsapp').onclick=parseWhatsapp;
 function check(d){
  const engine=window.reguaQuality?.evaluateQuality?window.reguaQuality.evaluateQuality(d):null;
- if(engine){const rules=engine.criteria.map(r=>[r.label,r.status==='met',r.recommendation]);const passed=rules.filter(r=>r[1]).length;return{rules,passed,total:rules.length,score:engine.score,dimensions:engine.dimensions,engine};}
+ if(engine){const rules=engine.criteria.filter(r=>r.status!=='not_applicable').map(r=>[r.label,r.status==='met',r.recommendation]);const passed=rules.filter(r=>r[1]).length;return{rules,passed,total:rules.length,score:engine.score,dimensions:engine.dimensions,engine};}
  const rules=[['Local identificado',!!d.building.trim()&&!!d.location.trim(),'Informe prédio e localização.'],['Assunto específico',d.subject.trim().length>=8,'Use assunto objetivo.'],['Sintoma explicado',d.description.trim().length>=30,'Descreva sintoma e impacto.'],['Equipamento ou sistema identificado',!!d.assetType.trim()||!!d.asset.trim(),'Identifique equipamento ou sistema.'],['Comentários úteis',d.comments.trim().length>=15,'Registre atualizações relevantes.'],['Causa registrada',d.cause.trim().length>=10,'Registre a causa ou investigação.'],['Ação realizada descrita',d.action.trim().length>=20,'Detalhe a ação realizada.'],['Teste ou confirmação',d.test.trim().length>=10,'Registre validação.'],['Pendências contextualizadas',!/(aguardando|pendente|terceiro)/i.test(d.notes+' '+d.comments)||d.notes.trim().length>=10,'Explique a pendência e o próximo passo.']];
  const passed=rules.filter(x=>x[1]).length;return{rules,passed,total:rules.length,score:Math.round(passed/rules.length*100)};
 }
