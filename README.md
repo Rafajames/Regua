@@ -16,11 +16,15 @@ Aranda é a fonte dos chamados. MapTec e a plataforma patrimonial são fontes de
 - Tema claro, escuro e automático, com identidade azul derivada dos tokens CSS do MapTec.
 - Importação gerencial de JSON normalizado apenas em memória/sessão local.
 - Relatórios locais, sem alegação de indicadores institucionais consolidados.
-- Configuração individual do Gemini, teste de conexão, análise assistida e proposta de critérios/pesos com aprovação humana.
+- Assistente de resolução em duas etapas: esboço inicial e versão após atendimento, com revisão de fatos ausentes e contradições.
+- Provedores configuráveis (Gemini, OpenAI, Claude, Grok e endpoint compatível), com descoberta de modelos quando a API permite.
+- Histórico individual no IndexedDB e cópia JSON automática em pasta escolhida pelo técnico quando o navegador oferece File System Access API.
 
 ## Limitações importantes
 - A importação gerencial não é integração direta com Aranda; depende de JSON no contrato intermediário em docs/contrato-importacao-aranda.md.
-- A chave Gemini é mantida na memória da aba e enviada do navegador diretamente ao Google. É apenas um modo de teste individual; não usar com dados pessoais/sigilosos ou em ambiente institucional sem autorização.
+- As chaves dos provedores permanecem apenas na memória da aba e são enviadas diretamente às APIs. É um modo experimental individual; não usar com dados pessoais/sigilosos ou em ambiente institucional sem autorização.
+- A descoberta de modelos depende do suporte da API do provedor e das permissões/CORS; provedores compatíveis podem exigir URL base e seleção manual se não expuserem catálogo.
+- A cópia em pasta depende de navegador compatível e autorização explícita. O IndexedDB continua sendo a persistência primária; a cópia JSON é uma redundância local, não sincronização entre computadores.
 - Não há backend multiusuário nem histórico centralizado.
 - As integrações reais de Aranda, MapTec API e patrimônio dependem de URLs, contratos, credenciais e autorização.
 - O workflow de sincronização atual valida endpoints e gera relatório; não publica dados sincronizados no frontend.
