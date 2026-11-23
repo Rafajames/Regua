@@ -28,5 +28,13 @@ test('página contém rascunho, armazenamento local e provedores',async()=>{
  for(const id of ['manager','reports','settings','themeToggle','geminiKey','aiProvider','initialDraft','finalDraft','draftOutput','chooseFolder'])assert.ok(html.includes('id="'+id+'"'),id+' deve existir');
  assert.ok(html.includes('./src/ai-provider.js'));
  assert.ok(html.includes('showDirectoryPicker'));
- assert.ok(html.includes('regua-meus-chamados.json'));
+ assert.ok(html.includes('chamados.json'));
+ assert.ok(html.includes('manifest.webmanifest'));
+ assert.ok(html.includes('navigator.serviceWorker.register'));
+ assert.ok(html.includes('Jamerson Rafael'));
+ const sw=await readFile(new URL('../sw.js',import.meta.url),'utf8');
+ assert.ok(sw.includes('APP_SHELL'));
+ assert.ok(sw.includes("request.mode==='navigate'"));
+ const manifest=JSON.parse(await readFile(new URL('../manifest.webmanifest',import.meta.url),'utf8'));
+ assert.equal(manifest.name,'Régua — Inteligência Operacional');
 });
