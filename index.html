@@ -1,117 +1,365 @@
 <!doctype html>
-<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#123b3a"><meta name="application-name" content="Régua"><link rel="manifest" href="./manifest.webmanifest"><meta name="description" content="Régua — pré-auditoria e inteligência operacional dos serviços de TI."><title>Régua — Inteligência operacional</title><link rel="icon" href="assets/regua-icone.svg"><style>
-:root{--ink:#0a2c63;--green:#0b4fb0;--bg:#f3f6fb;--muted:#4a5b75;--line:#dfe6f1;--white:#fff;--amber:#b7791f;--red:#b94a48;--surface:#fff;--surface-2:#e8f0fb;font-family:Inter,system-ui,Arial,sans-serif;color:#14233d;color-scheme:light}*{box-sizing:border-box}body{margin:0;background:var(--bg)}button,input,textarea{font:inherit}button{cursor:pointer}.layout{min-height:100vh}.side{position:fixed;inset:0 auto 0 0;width:245px;background:var(--ink);color:white;padding:24px 16px;display:flex;flex-direction:column;z-index:3}.brand{display:flex;align-items:center;gap:10px;padding:0 8px 30px}.brand img{width:46px}.brand b{font-size:23px}.brand small{display:block;color:#9bc3bf;font-size:9px;letter-spacing:1.3px}.nav{display:grid;gap:6px}.nav button{border:0;background:none;color:#c7ddda;text-align:left;padding:13px;border-radius:10px;font-size:13px;transition:.2s}.nav button.active,.nav button:hover{background:#ffffff18;color:white;transform:translateX(2px)}.nav button.active{box-shadow:inset 3px 0 var(--green)}.side-note{margin-top:auto;color:#a7c3c1;font-size:11px;line-height:1.6;border-top:1px solid #ffffff24;padding:15px 8px 0}.main{margin-left:245px}.top{height:70px;background:#ffffffdf;backdrop-filter:blur(12px);border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 32px;position:sticky;top:0;z-index:2}.pill{background:#e5f6f1;color:#147b63;border-radius:30px;padding:8px 12px;font-size:11px;font-weight:700}.content{max-width:1450px;margin:auto;padding:30px}.page{display:none;animation:fade .25s}.page.active{display:block}.head{display:flex;justify-content:space-between;align-items:flex-start;gap:15px;margin-bottom:22px}.eyebrow{color:#159879;font-size:10px;letter-spacing:1.5px;font-weight:800;text-transform:uppercase}.head h1{margin:5px 0;color:var(--ink);font-size:28px;letter-spacing:-.8px}.head p{margin:0;color:var(--muted);font-size:13px}.btn{border:1px solid var(--line);background:white;color:var(--ink);border-radius:10px;padding:10px 14px;font-size:12px;font-weight:700;transition:.2s}.btn:hover{transform:translateY(-2px)}.primary{background:var(--ink);color:white;border-color:var(--ink)}.grid{display:grid;gap:14px}.stats{grid-template-columns:repeat(3,minmax(0,1fr));margin-bottom:16px}.card{background:white;border:1px solid var(--line);border-radius:16px;padding:18px;box-shadow:0 8px 28px #123d460d;animation:rise .4s}.stat small{font-size:11px;color:var(--muted)}.stat strong{display:block;font-size:29px;color:var(--ink);margin-top:8px}.two{grid-template-columns:1.3fr 1fr}.muted{color:var(--muted);font-size:12px;line-height:1.6}.callout{background:#eaf6f2;border:1px solid #cdece2;border-radius:12px;padding:14px;color:#245a50;font-size:12px;line-height:1.6;margin-bottom:16px}.form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}.field{display:grid;gap:6px}.field.full{grid-column:1/-1}.field label{font-size:11px;font-weight:700;color:#567176}.field input,.field textarea{width:100%;border:1px solid var(--line);border-radius:9px;padding:11px;background:#fff;color:#234247;font-size:12px;outline:none}.field input:focus,.field textarea:focus{border-color:var(--green);box-shadow:0 0 0 3px #20b58b20}.field textarea{min-height:82px;resize:vertical}.result{margin-top:16px}.check{display:flex;gap:10px;padding:11px 0;border-bottom:1px solid var(--line);font-size:12px}.check:last-child{border:0}.check b{display:block;margin-bottom:3px}.ok{color:#168269}.bad{color:var(--amber)}.score{font-size:34px;font-weight:800;color:var(--ink)}.history{display:grid;gap:8px}.history-item{padding:12px;border:1px solid var(--line);border-radius:10px;display:flex;justify-content:space-between;gap:10px;font-size:12px}.tag{border-radius:20px;padding:5px 8px;background:#e5f6f1;color:#147b63;font-weight:700;white-space:nowrap}.bar{height:8px;background:#eaf0f1;border-radius:10px;overflow:hidden}.bar i{display:block;height:100%;background:linear-gradient(90deg,#20b58b,#70d2b2);animation:grow .7s}.hidden{display:none!important}.footer-actions{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap;margin-top:16px}.toast{position:fixed;bottom:22px;right:22px;background:var(--ink);color:white;padding:13px 17px;border-radius:11px;font-size:12px;opacity:0;transform:translateY(10px);transition:.25s;z-index:9}.toast.show{opacity:1;transform:none}@keyframes fade{from{opacity:0}to{opacity:1}}@keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}@keyframes grow{from{width:0}}@media(max-width:850px){.side{width:205px}.main{margin-left:205px}.content{padding:22px}.two{grid-template-columns:1fr}}@media(max-width:650px){.side{position:static;width:auto;padding:12px}.brand{padding:0 5px 10px}.brand img{width:34px}.brand b{font-size:19px}.nav{grid-template-columns:repeat(3,1fr)}.nav button{text-align:center;padding:9px 4px;font-size:11px}.side-note{display:none}.main{margin:0}.top{height:52px;padding:0 15px}.content{padding:18px 13px}.head{flex-direction:column}.head h1{font-size:24px}.stats{grid-template-columns:1fr}.form{grid-template-columns:1fr}.field.full{grid-column:auto}}@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https: http://localhost:* http://127.0.0.1:*; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta name="referrer" content="no-referrer">
+<meta name="theme-color" content="#0a2c63">
+<meta name="application-name" content="Régua">
+<meta name="description" content="Régua — pré-auditoria e inteligência operacional dos atendimentos de TI.">
+<title>Régua — Inteligência Operacional</title>
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="icon" href="assets/regua-icone.svg" type="image/svg+xml">
+<link rel="stylesheet" href="assets/styles.css">
+<script src="src/theme-boot.js"></script>
+<script type="module" src="src/app.js"></script>
+</head>
+<body>
+<a class="skip" href="#content">Pular para o conteúdo</a>
 
-:root{--ink:#0a2c63;--green:#0b4fb0;--bg:#f3f6fb;--muted:#4a5b75;--line:#dfe6f1;--surface:#fff;--surface-2:#e8f0fb}
-.side{background:var(--ink)}.nav button.active{box-shadow:inset 3px 0 #e08300}.top{background:var(--surface)}
-.card,.btn,.field input,.field textarea,.history-item{background:var(--surface);color:var(--text,#14233d)}
-.primary{background:#0b4fb0;color:#fff;border-color:#0b4fb0}.eyebrow{color:#0b4fb0}.field input:focus,.field textarea:focus{border-color:#0b4fb0;box-shadow:0 0 0 3px #0b4fb020}
-.callout{background:var(--surface-2);border-color:var(--line);color:var(--ink)}.tag,.pill{background:var(--surface-2);color:#0b4fb0}
-.top-actions{display:flex;align-items:center;gap:10px}.theme-toggle{white-space:nowrap}.nav{max-height:calc(100vh - 170px);overflow:auto}
-[data-theme="dark"]{color-scheme:dark;--ink:#0b1d3a;--green:#6aa9ff;--bg:#0b1220;--muted:#a9b8cf;--line:#27364d;--surface:#121e30;--surface-2:#1b2c45;--text:#e7eef9}
-[data-theme="dark"] body{background:var(--bg);color:var(--text)}[data-theme="dark"] .side{background:#081a36}
-[data-theme="dark"] .top{background:#121e30;border-color:var(--line)}
-[data-theme="dark"] .card,[data-theme="dark"] .btn,[data-theme="dark"] .field input,[data-theme="dark"] .field textarea,[data-theme="dark"] .history-item{background:var(--surface);color:var(--text);border-color:var(--line)}
-[data-theme="dark"] .head h1,[data-theme="dark"] .stat strong,[data-theme="dark"] .score,[data-theme="dark"] h2,[data-theme="dark"] h3{color:#e7eef9}
-[data-theme="dark"] .field label{color:#b7c8df}[data-theme="dark"] .callout{background:#172943;border-color:#2b4668;color:#dce9fb}
-[data-theme="dark"] .pill,[data-theme="dark"] .tag{background:#1c3658;color:#9bc6ff}[data-theme="dark"] .bar{background:#29384d}
-[data-theme="dark"] .bar i{background:linear-gradient(90deg,#2873c8,#8bbcff)}[data-theme="dark"] .primary{background:#185da8;border-color:#185da8;color:#fff}
-[data-theme="dark"] a{color:#8bbcff}#manager .stats,#reports .stats{margin-bottom:14px}
-@media(max-width:650px){.nav{grid-template-columns:repeat(2,minmax(0,1fr));max-height:none}.top-actions{gap:5px}.top-actions .pill{display:none}.theme-toggle{padding:8px 10px}}
-@media(prefers-reduced-motion:reduce){.page,.card,.bar i{animation:none!important;transition:none!important}}
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 4h7v7H3zM14 4h7v4h-7zM14 12h7v8h-7zM3 15h7v5H3z"/></symbol>
+    <symbol id="i-audit" viewBox="0 0 24 24"><path d="M9 3h6v3H9z"/><path d="M8 4.5H6a1 1 0 0 0-1 1V20a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V5.5a1 1 0 0 0-1-1h-2"/><path d="m9 14 2 2 4-4.5"/></symbol>
+    <symbol id="i-history" viewBox="0 0 24 24"><path d="M3.5 12a8.5 8.5 0 1 0 2.6-6.1L3.5 8.4"/><path d="M3.5 3.5v4.9h4.9"/><path d="M12 7.5V12l3 2"/></symbol>
+    <symbol id="i-chart" viewBox="0 0 24 24"><path d="M3 20h18M6 20v-7M11 20V5M16 20v-9M21 20v-4"/></symbol>
+    <symbol id="i-layers" viewBox="0 0 24 24"><path d="m12 3 9 5-9 5-9-5z"/><path d="m3 13 9 5 9-5"/></symbol>
+    <symbol id="i-settings" viewBox="0 0 24 24"><path d="M4 6h9M17 6h3M4 12h3M11 12h9M4 18h11M19 18h1"/><circle cx="15" cy="6" r="2"/><circle cx="9" cy="12" r="2"/><circle cx="17" cy="18" r="2"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5 18 18M6 18l2.5-2.5M15.5 8.5 18 6"/></symbol>
+    <symbol id="i-copy" viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></symbol>
+    <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 4v11M7 10l5 5 5-5M4 20h16"/></symbol>
+    <symbol id="i-upload" viewBox="0 0 24 24"><path d="M12 15V4M7 9l5-5 5 5M4 20h16"/></symbol>
+    <symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></symbol>
+    <symbol id="i-folder" viewBox="0 0 24 24"><path d="M3 6a1 1 0 0 1 1-1h5l2 2h9a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z"/></symbol>
+    <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></symbol>
+    <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5 19 19M5 19l1.5-1.5M17.5 6.5 19 5"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+    <symbol id="i-message" viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/></symbol>
+    <symbol id="i-file" viewBox="0 0 24 24"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4M9 13h6M9 17h6"/></symbol>
+  </defs>
+</svg>
 
-/* Régua visual system — identidade teal, verde e branco */
-:root{--ink:#123b3a;--green:#16866b;--bg:#f4f8f6;--muted:#62736f;--line:#dce8e2;--white:#fff;--amber:#a86a16;--red:#b94a48;--surface:#fff;--surface-2:#eaf5f0;--text:#203a36;--brand-soft:#dff1e9;--shadow:0 10px 30px rgba(18,59,58,.065);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif}
-body{background:var(--bg);color:var(--text);font-size:14px;line-height:1.5}
-.side{width:252px;padding:25px 17px;background:linear-gradient(165deg,#123b3a 0%,#0e302f 100%);box-shadow:8px 0 28px rgba(18,59,58,.07)}
-.brand{padding:0 9px 31px;gap:12px}.brand img{width:43px;height:43px;filter:drop-shadow(0 4px 9px #061d1c55)}.brand b{font-size:22px;letter-spacing:-.7px}.brand small{color:#a7d9c5;font-size:9px;letter-spacing:1.45px;margin-top:2px}
-.nav{gap:7px;max-height:calc(100vh - 190px);padding:0 2px}.nav button{position:relative;display:flex;align-items:center;min-height:44px;padding:11px 13px;border-radius:11px;color:#c5dcd4;font-size:13px;font-weight:550;transition:background .18s ease,color .18s ease,transform .18s ease}.nav button.active,.nav button:hover{background:rgba(255,255,255,.105);color:#fff;transform:translateX(2px)}.nav button.active{box-shadow:inset 3px 0 #45c18e}
-.side-note{border-color:#ffffff24;color:#b7d0c7;font-size:10.5px;line-height:1.75;padding:15px 9px 0}.main{margin-left:252px;min-width:0}
-.top{height:68px;padding:0 clamp(18px,3vw,38px);background:rgba(255,255,255,.92);border-color:var(--line);box-shadow:0 3px 14px rgba(18,59,58,.025)}#crumb{font-size:12px;font-weight:650;color:var(--ink)}.top-actions{gap:9px}.pill{background:#e7f4ed;color:#177354;border:1px solid #d5eadf;padding:7px 11px;font-size:10px}
-.content{max-width:1500px;padding:clamp(20px,3vw,38px)}.page{animation:pageEnter .24s ease both}.head{margin-bottom:24px;align-items:center}.eyebrow{color:var(--green);font-size:10px;letter-spacing:1.25px}.head h1{font-size:clamp(24px,2.3vw,30px);font-weight:720;letter-spacing:-1px;color:var(--ink);margin:5px 0 6px}.head p{font-size:13px;color:var(--muted);max-width:720px;line-height:1.65}
-h2,h3{color:var(--ink);letter-spacing:-.25px}h3{font-size:15px;font-weight:680;margin:0 0 13px}.card{border:1px solid var(--line);border-radius:15px;padding:20px;box-shadow:var(--shadow);animation:cardEnter .32s ease both;transition:border-color .18s ease,box-shadow .18s ease,transform .18s ease}.card:hover{border-color:#c8ddd2;box-shadow:0 13px 34px rgba(18,59,58,.085)}
-.stats{gap:13px;margin-bottom:17px}.stat{position:relative;overflow:hidden;min-height:112px;padding:19px 20px}.stat:after{content:'';position:absolute;right:-22px;top:-28px;width:92px;height:92px;border-radius:50%;background:var(--brand-soft);opacity:.7}.stat small{position:relative;z-index:1;color:var(--muted);font-size:11px;font-weight:600}.stat strong{position:relative;z-index:1;font-size:30px;letter-spacing:-1px;color:var(--ink);margin-top:7px}.two{gap:15px;grid-template-columns:minmax(0,1.25fr) minmax(280px,1fr)}
-.muted{color:var(--muted);font-size:12px;line-height:1.7}.callout{background:#edf7f2;border:1px solid #d5eae0;border-left:3px solid var(--green);border-radius:10px;padding:14px 16px;color:#315b4d;font-size:12px;line-height:1.7}
-.form{gap:16px}.field{gap:7px}.field label{font-size:11px;color:#49645c;font-weight:680}.field input,.field textarea,.field select{border:1px solid #d6e3dc;border-radius:9px;padding:11px 12px;background:#fff;color:#203a36;font-size:12px;transition:border-color .18s ease,box-shadow .18s ease}.field input:hover,.field textarea:hover,.field select:hover{border-color:#b7d1c4}.field input:focus,.field textarea:focus,.field select:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(22,134,107,.12);outline:none}.field textarea{min-height:88px;line-height:1.6}.field input::placeholder,.field textarea::placeholder{color:#9aaea5}
-.btn{border:1px solid #d8e5de;background:#fff;color:var(--ink);border-radius:9px;padding:10px 14px;font-size:11.5px;font-weight:680;transition:background .18s ease,border-color .18s ease,box-shadow .18s ease,transform .18s ease}.btn:hover{transform:translateY(-1px);border-color:#a9cbb9;box-shadow:0 5px 12px rgba(18,59,58,.08)}.btn:active{transform:translateY(0)}.primary{background:var(--green);border-color:var(--green);color:#fff}.primary:hover{background:#11785e;border-color:#11785e;box-shadow:0 6px 16px rgba(22,134,107,.2)}
-.footer-actions{gap:9px;margin-top:18px}.history{gap:9px}.history-item{padding:13px 14px;border:1px solid var(--line);border-radius:10px;background:#fff;transition:background .18s ease,border-color .18s ease,transform .18s ease}.history-item:hover{background:#f8fbf9;border-color:#c8ddd2;transform:translateY(-1px)}.tag{background:#e8f5ed;color:#167353;padding:5px 9px;font-size:10px}.score{font-size:36px;letter-spacing:-1.5px}.check{padding:13px 2px;border-color:#edf2ee;line-height:1.55}.bar{height:7px;background:#e8efeb}.bar i{background:linear-gradient(90deg,#16866b,#65c49b);border-radius:10px}.toast{background:#123b3a;box-shadow:0 12px 35px #123b3a33}#draftPanel{border-top:3px solid var(--green)}#result .card{border-top:3px solid var(--green)}
-a{color:#16785f;text-underline-offset:3px}button:focus-visible,a:focus-visible{outline:3px solid rgba(22,134,107,.3);outline-offset:2px}
-.app-footer{margin:28px 0 0;padding:17px 4px 4px;border-top:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:12px;color:#7a8d84;font-size:10.5px}.app-footer strong{color:#49645c;font-weight:700}.app-footer a{color:#52796a;text-decoration:none}.author-card{display:flex;align-items:center;gap:14px;margin-top:14px}.author-mark{width:42px;height:42px;display:grid;place-items:center;border-radius:12px;background:#e5f4ec;color:#16785f;font-size:19px;font-weight:800}.author-card p{margin:3px 0 0}
-@keyframes pageEnter{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}@keyframes cardEnter{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:translateY(0)}}
-@media(max-width:900px){.side{width:220px}.main{margin-left:220px}.two{grid-template-columns:1fr}.content{padding:22px}}
-@media(max-width:650px){.side{position:sticky;top:0;width:auto;padding:10px 12px 9px;z-index:5;box-shadow:0 5px 20px rgba(18,59,58,.12)}.brand{padding:0 4px 8px;gap:9px}.brand img{width:32px;height:32px}.brand b{font-size:18px}.brand small{font-size:8px}.nav{display:flex;gap:6px;overflow-x:auto;max-height:none;padding:0 0 2px;scrollbar-width:none}.nav::-webkit-scrollbar{display:none}.nav button{flex:0 0 auto;min-height:36px;padding:8px 11px;font-size:10.5px;white-space:nowrap}.nav button.active,.nav button:hover{transform:none}.side-note{display:none}.main{margin:0}.top{height:49px;padding:0 14px}.top-actions{gap:5px}.top-actions .pill{display:inline-flex;font-size:9px;padding:6px 8px}.theme-toggle{padding:7px 9px;font-size:9px}.content{padding:18px 13px 24px}.head{align-items:flex-start;flex-direction:column;gap:12px;margin-bottom:18px}.head h1{font-size:24px}.stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.stat{min-height:94px;padding:14px}.stat strong{font-size:25px}.card{padding:16px;border-radius:13px}.form{grid-template-columns:1fr;gap:13px}.field.full{grid-column:auto}.app-footer{align-items:flex-start;flex-direction:column;gap:4px}}
-@media(prefers-reduced-motion:reduce){.page,.card,.nav button,.btn,.history-item{animation:none!important;transition:none!important;scroll-behavior:auto!important}.card:hover,.history-item:hover,.btn:hover{transform:none!important}}
-</style></head><body><div class="layout"><aside class="side"><div class="brand"><img src="assets/regua-icone.svg" alt=""><div><b>Régua</b><small>INTELIGÊNCIA OPERACIONAL</small></div></div><nav class="nav"><button class="active" data-page="home">▦ Visão geral</button><button data-page="audit">✓ Pré-auditoria</button><button data-page="reports">▥ Relatórios</button><button data-page="history">◷ Histórico</button><button data-page="settings">⚙ Configurações</button></nav><div class="side-note">Modo experimental · use somente dados fictícios.<br>A Régua não altera chamados no sistema oficial.</div></aside><main class="main"><header class="top"><strong id="crumb">Visão geral / Régua</strong><div class="top-actions"><span class="pill">● Dados neste dispositivo</span><button class="btn theme-toggle" id="themeToggle" type="button">☾ Tema escuro</button></div></header><div class="content">
-<section class="page active" id="home"><div class="head"><div><div class="eyebrow">Inteligência operacional</div><h1>Visão geral</h1><p>Pré-audite chamados existentes e acompanhe as verificações realizadas.</p></div><button class="btn primary" onclick="go('audit')">＋ Avaliar chamado</button></div><div class="grid stats"><article class="card stat"><small>Pré-auditorias realizadas</small><strong id="total">0</strong></article><article class="card stat"><small>Média de critérios atendidos</small><strong id="average">—</strong></article><article class="card stat"><small>Chamados que precisam de revisão</small><strong id="review">0</strong></article></div><div class="grid two"><article class="card"><h3>Últimas verificações</h3><div id="recent" class="history muted">Nenhuma pré-auditoria realizada.</div></article><article class="card"><h3>Como a Régua ajuda</h3><p class="muted">O técnico copia as informações de um chamado já aberto no sistema oficial. A Régua verifica a clareza da abertura, a utilidade dos comentários e a descrição da solução antes do encerramento.</p><p class="muted"><b>Importante:</b> a avaliação é uma orientação. O técnico corrige o chamado diretamente no sistema de origem. A Régua não envia alterações para ele.</p></article></div></section>
-<section class="page" id="audit"><div class="head"><div><div class="eyebrow">Apoio ao técnico · antes do encerramento</div><h1>Pré-auditoria do chamado</h1><p>Informe os dados de um chamado que já existe. Nada será alterado no sistema oficial.</p></div></div><div class="callout"><b>Fluxo seguro:</b> copie os campos do sistema de chamados, execute a verificação e aplique as melhorias diretamente no sistema original. Esta página não cria, distribui nem encerra chamados.</div><div class="card" style="margin-bottom:14px"><div class="eyebrow">Importação rápida · WhatsApp</div><h3 style="margin:6px 0">Cole a mensagem do chamado</h3><p class="muted">A Régua identifica os campos do padrão recebido e procura o local no catálogo do MapTec. Confira os dados antes de avaliar.</p><div class="field"><textarea id="whatsappText" style="min-height:145px" placeholder="Cole aqui a mensagem completa recebida no WhatsApp, incluindo Chamado, Solicitante, Descrição, Setor e Sala..."></textarea></div><div class="footer-actions"><button class="btn primary" type="button" id="parseWhatsapp">Interpretar mensagem</button></div><div id="parseFeedback" class="muted" style="margin-top:10px"></div></div><form id="auditForm" class="card"><div class="form"><div class="field"><label>Número do chamado (opcional)</label><input id="number" placeholder="Ex.: 2026-00123"></div><div class="field"><label>Solicitante (opcional)</label><input id="requester" placeholder="Nome do solicitante"></div><div class="field"><label>Técnico responsável (opcional)</label><input id="tech" placeholder="Nome do técnico"></div><div class="field"><label>Prédio / unidade *</label><input id="building" required placeholder="Prédio principal"></div><div class="field"><label>Andar, bloco, setor e sala</label><input id="location" placeholder="Bloco 1 · Sala 106 · Setor de Conciliação"></div><div class="field"><label>Data/hora de solução informada (opcional)</label><input id="solutionTime" placeholder="DD/MM/AAAA, HH:MM:SS"></div><div class="field full"><label>Assunto *</label><input id="subject" required placeholder="Resumo objetivo do problema"></div><div class="field full"><label>Descrição original da abertura *</label><textarea id="description" required placeholder="Qual o sintoma? Quando ocorre? Qual o impacto?"></textarea></div><div class="field"><label>Tipo de equipamento</label><input id="assetType" placeholder="Ex.: PC, impressora, monitor"></div><div class="field"><label>Tombamento / patrimônio</label><input id="asset" placeholder="Será identificado pela futura integração"></div><div class="field full"><div id="maptecMatch" class="callout hidden"></div></div><div class="field full"><label>Comentários e atualizações</label><textarea id="comments" placeholder="Cole os comentários e atualizações, com datas quando disponíveis"></textarea></div><div class="field full"><label>Causa identificada</label><textarea id="cause" placeholder="Qual foi a causa encontrada?"></textarea></div><div class="field full"><label>Ação realizada / solução proposta *</label><textarea id="action" required placeholder="Descreva o que foi efetivamente realizado"></textarea></div><div class="field full"><label>Teste realizado ou confirmação do usuário</label><textarea id="test" placeholder="Como foi validada a solução?"></textarea></div><div class="field full"><label>Pendências e observações</label><textarea id="notes" placeholder="Explique esperas, dependências e próximos passos"></textarea></div></div><div class="footer-actions"><button class="btn" type="reset">Limpar</button><button class="btn primary" type="submit">Verificar qualidade</button></div></form><article class="card" style="margin-top:14px" id="draftPanel"><div class="eyebrow">Assistente de resolução</div><h3>Esboço inteligente de solução</h3><p class="muted">Aproveita a solicitação, os comentários anteriores e as anotações do técnico. Use primeiro o rascunho inicial; depois complemente a ação realizada e gere a versão final. A IA não deve afirmar procedimentos que não foram confirmados.</p><div class="field"><label for="draftSignature">Assinatura do técnico (opcional)</label><input id="draftSignature" placeholder="Nome e cargo para o encerramento"></div><div class="footer-actions"><button class="btn" id="initialDraft" type="button">Criar esboço inicial</button><button class="btn primary" id="finalDraft" type="button">Gerar versão após atendimento</button></div><div id="draftStatus" class="muted" aria-live="polite" style="margin-top:10px">Configure e teste um provedor de IA nas Configurações.</div><div id="draftWarnings" class="callout hidden" style="margin-top:12px"></div><div class="field" style="margin-top:12px"><label for="draftOutput">Texto sugerido — revise antes de copiar para o Aranda</label><textarea id="draftOutput" style="min-height:260px" placeholder="O texto gerado aparecerá aqui."></textarea></div><div class="footer-actions"><button class="btn" id="copyDraft" type="button">Copiar texto</button></div></article><div id="result" class="result"></div></section>
-<section class="page" id="history"><div class="head"><div><div class="eyebrow">Armazenamento local</div><h1>Histórico de pré-auditorias</h1><p>Os registros pertencem a este navegador e não são compartilhados com outros técnicos.</p></div><div><button class="btn" id="chooseFolder">Escolher pasta no computador</button> <button class="btn" id="backup">Exportar backup</button> <button class="btn" id="clear">Limpar histórico</button></div></div><div class="card"><div id="historyList" class="history muted">Nenhuma pré-auditoria realizada.</div></div><p class="muted" id="folderStatus">Histórico salvo no IndexedDB deste navegador. Escolha uma pasta para manter também uma cópia JSON no computador. A pasta só será acessada após sua autorização.</p><p class="muted">O backup é um arquivo JSON. Guarde-o em local seguro. A limpeza dos dados do navegador pode apagar este histórico.</p></section>
+<div class="layout">
+  <aside class="side">
+    <div class="brand">
+      <img src="assets/regua-icone.svg" alt="" width="40" height="40">
+      <div><b>Régua</b><small>INTELIGÊNCIA OPERACIONAL</small></div>
+    </div>
+    <nav class="nav" aria-label="Seções da Régua">
+      <button type="button" class="active" data-page="home" aria-current="page"><svg class="ico"><use href="#i-home"/></svg>Visão geral</button>
+      <button type="button" data-page="audit"><svg class="ico"><use href="#i-audit"/></svg>Pré-auditoria</button>
+      <button type="button" data-page="history"><svg class="ico"><use href="#i-history"/></svg>Histórico</button>
+      <button type="button" data-page="reports"><svg class="ico"><use href="#i-chart"/></svg>Relatórios</button>
+      <button type="button" data-page="manager"><svg class="ico"><use href="#i-layers"/></svg>Conjunto gerencial</button>
+      <button type="button" data-page="settings"><svg class="ico"><use href="#i-settings"/></svg>Configurações</button>
+    </nav>
+    <div class="side-note">Modo experimental · use somente dados fictícios.<br>A Régua não altera chamados no sistema oficial.</div>
+  </aside>
 
-<section class="page hidden" id="manager">
-<div class="head"><div><div class="eyebrow">Auditoria independente · gestão</div><h1>Auditoria gerencial</h1><p>O gestor obtém os chamados diretamente do Aranda, sem depender do envio pelos técnicos.</p></div></div>
-<div class="callout"><b>Estado desta versão:</b> a integração direta com Aranda depende de API, credenciais técnicas e autorização. Por enquanto, esta área aceita JSON normalizado e mantém os dados apenas na memória desta sessão.</div>
-<article class="card"><h3>Importar conjunto de chamados</h3><p class="muted">Formato esperado: JSON normalizado a partir de exportação autorizada do Aranda, com array na raiz ou no campo data. O formato nativo do Aranda ainda depende de adaptador. Consulte <a href="docs/contrato-importacao-aranda.md" target="_blank" rel="noopener">o contrato intermediário</a>.</p><div class="field"><label for="managerFile">Arquivo JSON normalizado a partir do Aranda</label><input id="managerFile" type="file" accept=".json,application/json"></div><div class="footer-actions"><button class="btn" id="clearManager" type="button">Limpar conjunto</button><button class="btn primary" id="importManager" type="button">Importar e avaliar</button></div><p class="muted" id="managerFeedback" aria-live="polite">Nenhum conjunto importado nesta sessão.</p></article>
-<div class="grid stats" style="margin-top:14px"><article class="card stat"><small>Chamados importados</small><strong id="managerTotal">0</strong></article><article class="card stat"><small>Média de critérios atendidos</small><strong id="managerAverage">—</strong></article><article class="card stat"><small>Chamados para revisão</small><strong id="managerReview">0</strong></article></div>
-<div class="grid stats" id="operationalStats" style="margin-top:14px"><article class="card stat"><small>Encerrados</small><strong id="opClosed">—</strong></article><article class="card stat"><small>Backlog</small><strong id="opBacklog">—</strong></article><article class="card stat"><small>Tempo médio (min)</small><strong id="opResolution">—</strong></article></div><article class="card"><h3>Resultado da auditoria do conjunto</h3><div id="managerList" class="history muted">Importe um arquivo para iniciar.</div></article>
+  <main class="main">
+    <header class="top">
+      <strong id="crumb">Visão geral</strong>
+      <div class="top-actions">
+        <span class="pill" id="netPill" role="status">Dados neste dispositivo</span>
+        <button class="icon-btn" id="themeToggle" type="button" aria-label="Alternar tema"><svg class="ico"><use href="#i-moon"/></svg></button>
+      </div>
+    </header>
+    <div id="updateBar" class="update-bar hidden" role="status">
+      <span>Uma nova versão da Régua está disponível.</span>
+      <button type="button" class="btn small primary" id="applyUpdate">Atualizar agora</button>
+      <button type="button" class="btn small ghost" id="dismissUpdate">Depois</button>
+    </div>
+
+    <div class="content" id="content" tabindex="-1">
+
+<!-- ================= VISÃO GERAL ================= -->
+<section class="page active" id="home" aria-labelledby="homeTitle">
+  <div class="head">
+    <div><div class="eyebrow">Inteligência operacional</div><h1 id="homeTitle">Visão geral</h1><p>Pré-audite chamados já registrados no sistema oficial e acompanhe a qualidade das suas análises.</p></div>
+    <button class="btn primary" type="button" data-go="audit"><svg class="ico"><use href="#i-plus"/></svg>Nova pré-auditoria</button>
+  </div>
+  <div class="grid stats">
+    <article class="card stat"><small>Análises salvas</small><strong id="total">0</strong><span class="stat-foot" id="totalFoot">neste navegador</span></article>
+    <article class="card stat"><small>Média de qualidade</small><strong id="average">—</strong><span class="stat-foot">critérios atendidos (ponderado)</span></article>
+    <article class="card stat"><small>Precisam de revisão</small><strong id="review">0</strong><span class="stat-foot">abaixo de 80%</span></article>
+    <article class="card stat"><small>Última análise</small><strong id="lastDate" class="stat-text">—</strong><span class="stat-foot" id="lastSubject">&nbsp;</span></article>
+  </div>
+  <div class="grid two">
+    <article class="card">
+      <div class="card-head"><h2>Últimas análises</h2><button class="link-btn" type="button" data-go="history">Ver histórico</button></div>
+      <div id="recent" class="list"></div>
+    </article>
+    <div class="grid stack">
+      <article class="card">
+        <h2>Distribuição das notas</h2>
+        <div id="homeBands"></div>
+      </article>
+      <article class="card quick">
+        <h2>Como usar</h2>
+        <ol class="steps-list">
+          <li><b>Cole</b> a mensagem do chamado ou preencha os campos.</li>
+          <li><b>Confira</b> a avaliação por critérios, atualizada enquanto você digita.</li>
+          <li><b>Gere</b> o texto padrão (com ou sem IA), revise e copie para o Aranda.</li>
+        </ol>
+        <div class="ai-status-line"><span class="dot" id="homeAiDot"></span><span id="homeAiText">IA não configurada — opcional.</span><button class="link-btn" type="button" data-go="settings">Configurar</button></div>
+      </article>
+    </div>
+  </div>
 </section>
-<section class="page" id="reports"><div class="head"><div><div class="eyebrow">Indicadores e acompanhamento</div><h1>Relatórios</h1><p>Indicadores calculados a partir dos registros disponíveis neste navegador.</p></div></div><div class="grid stats"><article class="card stat"><small>Pré-auditorias do técnico</small><strong id="reportAudits">0</strong></article><article class="card stat"><small>Média de qualidade local</small><strong id="reportAverage">—</strong></article><article class="card stat"><small>Chamados gerenciais importados</small><strong id="reportManager">0</strong></article></div><article class="card"><h3>Distribuição das pré-auditorias</h3><div id="reportBars" class="history muted">Ainda não há dados suficientes.</div><p class="muted">Não representa indicador institucional consolidado. Relatórios multiusuário exigem backend privado e fonte autorizada.</p></article></section>
-<section class="page" id="settings"><div class="head"><div><div class="eyebrow">Preferências e inteligência artificial</div><h1>Configurações</h1><p>Personalize a aparência e configure análises assistidas.</p></div></div>
-<article class="card"><h3>Aparência</h3><p class="muted">Escolha um tema fixo ou acompanhe a configuração do dispositivo.</p><div class="field"><label for="themeMode">Tema da aplicação</label><select id="themeMode"><option value="system">Automático (dispositivo)</option><option value="light">Claro</option><option value="dark">Escuro</option></select></div></article>
-<article class="card" style="margin-top:14px"><div class="eyebrow">IA configurável · modo individual</div><h3>Configuração da inteligência artificial</h3><p class="muted">Escolha o provedor, informe a chave e teste. A chave permanece somente na memória desta aba; não é salva no navegador nem no GitHub.</p><div class="form"><div class="field"><label for="aiProvider">Provedor</label><select id="aiProvider"><option value="gemini">Google Gemini</option><option value="openai">OpenAI (GPT)</option><option value="claude">Anthropic Claude</option><option value="grok">xAI Grok</option><option value="custom">API compatível com OpenAI</option></select></div><div class="field"><label for="geminiStatus">Estado da conexão</label><input id="geminiStatus" value="Não testada" readonly></div><div class="field full"><label for="geminiKey">Chave de API</label><input id="geminiKey" type="password" autocomplete="off" spellcheck="false" placeholder="Cole a chave do provedor escolhido"></div><div class="field full hidden" id="customBaseWrap"><label for="customBase">URL base da API compatível</label><input id="customBase" placeholder="https://seu-provedor.example/v1"></div><div class="field full"><label for="geminiModel">Modelo para geração (selecione após testar a conexão)</label><select id="geminiModel" disabled><option value="">Teste a conexão para listar modelos</option></select></div></div><div class="footer-actions"><button class="btn" id="clearGemini" type="button">Limpar chave</button><button class="btn primary" id="testGemini" type="button">Testar e identificar modelos</button></div><p class="muted">O Régua consulta os modelos disponíveis quando a API oferece essa operação. A chave é enviada diretamente ao provedor nesta versão experimental. Uso institucional exige backend privado. Não envie dados pessoais ou sigilosos sem autorização.</p></article>
-<article class="card" style="margin-top:14px"><h3>Critérios de qualidade</h3><p class="muted">Os pesos atuais são provisórios. A IA pode propor parâmetros e justificar os pesos, mas a proposta não é aplicada automaticamente e precisa de aprovação humana. Consulte <a href="docs/modulo-ia-e-criterios.md" target="_blank" rel="noopener">a política do módulo de IA</a>.</p><div class="field"><label for="criteriaContext">Contexto para a proposta</label><textarea id="criteriaContext" placeholder="Descreva o tipo de suporte, padrões de atendimento, exigências de documentação e objetivos da auditoria. Não inclua dados reais de chamados."></textarea></div><div class="footer-actions"><button class="btn primary" id="proposeCriteria" type="button">Propor parâmetros com IA</button></div><div id="criteriaProposal" class="callout hidden" style="margin-top:12px"></div></article><article class="card author-card" id="authorCredit"><div class="author-mark" aria-hidden="true">R</div><div><div class="eyebrow">Sobre a aplicação</div><h3 style="margin:3px 0 0">Régua — Inteligência Operacional</h3><p class="muted">Concepção e desenvolvimento: <strong>Jamerson Rafael</strong>.</p><p class="muted">Projeto experimental independente para apoiar a qualidade dos atendimentos de TI.</p></div></article></section>
-<footer class="app-footer"><span>© 2026 <strong>Régua — Inteligência Operacional</strong></span><span>Concepção e desenvolvimento: <strong>Jamerson Rafael</strong></span></footer>
-</div></main></div><div id="toast" class="toast"></div>
-<script>
-const $=id=>document.getElementById(id);let db,items=[];
-function openDB(){return new Promise((resolve,reject)=>{const r=indexedDB.open('regua-preauditoria',2);r.onupgradeneeded=()=>{if(!r.result.objectStoreNames.contains('audits'))r.result.createObjectStore('audits',{keyPath:'id'});if(!r.result.objectStoreNames.contains('settings'))r.result.createObjectStore('settings')};r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error)})}
-function all(){return new Promise((resolve,reject)=>{const r=db.transaction('audits').objectStore('audits').getAll();r.onsuccess=()=>resolve(r.result||[]);r.onerror=()=>reject(r.error)})}
-function put(x){return new Promise((resolve,reject)=>{const r=db.transaction('audits','readwrite').objectStore('audits').put(x);r.onsuccess=resolve;r.onerror=()=>reject(r.error)})}
-function settingGet(k){return new Promise((resolve,reject)=>{const r=db.transaction('settings').objectStore('settings').get(k);r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error)})}
-function settingPut(k,v){return new Promise((resolve,reject)=>{const r=db.transaction('settings','readwrite').objectStore('settings').put(v,k);r.onsuccess=resolve;r.onerror=()=>reject(r.error)})}
-let localFolder=null;async function verifyFolderPermission(handle){if((await handle.queryPermission({mode:'readwrite'}))==='granted')return true;return (await handle.requestPermission({mode:'readwrite'}))==='granted'}async function persistFolderCopy(){if(!localFolder)return false;if(!(await verifyFolderPermission(localFolder))){$('folderStatus').textContent='Permissão da pasta não concedida. O histórico continua salvo no navegador.';return false}const reguaDir=await localFolder.getDirectoryHandle('Régua',{create:true}),callsDir=await reguaDir.getDirectoryHandle('Meus chamados',{create:true}),file=await callsDir.getFileHandle('chamados.json',{create:true}),w=await file.createWritable();await w.write(JSON.stringify({product:'Regua',version:1,updatedAt:new Date().toISOString(),items},null,2));await w.close();$('folderStatus').textContent='Cópia atualizada em '+localFolder.name+'/Régua/Meus chamados/chamados.json';return true}
-function go(id){document.querySelectorAll('.page').forEach(x=>x.classList.toggle('active',x.id===id));document.querySelectorAll('[data-page]').forEach(x=>x.classList.toggle('active',x.dataset.page===id));$('crumb').textContent=({home:'Visão geral',audit:'Pré-auditoria',manager:'Auditoria gerencial',reports:'Relatórios',history:'Histórico',settings:'Configurações'})[id]+' / Régua';if(id==='history')drawHistory();if(id==='reports')drawReports()}
-document.querySelectorAll('[data-page]').forEach(b=>b.onclick=()=>go(b.dataset.page));
-function esc(v){return String(v||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-function toast(s){$('toast').textContent=s;$('toast').classList.add('show');setTimeout(()=>$('toast').classList.remove('show'),2600)}
-let maptecLocations=[];let lastLocationMatch=null;
-async function loadMaptecLocations(){try{const r=await fetch('data/maptec-locations.json');if(r.ok){const j=await r.json();maptecLocations=j.locations||[]}}catch(e){console.warn('Catálogo MapTec indisponível',e)}}
-function norm(v){return String(v||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,' ').trim()}
-function getWhatsappField(raw,label){const re=new RegExp('(?:^|\\n)\\s*[*_]?'+label+'[*_]?\\s*:\\s*([^\\n]*)','i');const m=raw.match(re);return m?m[1].replace(/^\*+|\*+$/g,'').trim():''}
-function findMaptecLocation(sector,room,description){const sec=norm(sector),desc=norm(description),rm=String(room||'').trim();let candidates=maptecLocations.filter(x=>sec&&norm(x.sector)===sec);if(rm)candidates=candidates.filter(x=>String(x.room)===rm);if(!candidates.length&&sec)candidates=maptecLocations.filter(x=>norm(x.sector).includes(sec)||sec.includes(norm(x.sector)));if(!candidates.length&&rm&&desc.includes('sala '+norm(rm)))candidates=maptecLocations.filter(x=>String(x.room)===rm&&norm(x.sector).includes('concilia'));return candidates.length===1?candidates[0]:null}
-function parseWhatsapp(){const raw=$('whatsappText').value.trim();if(!raw){toast('Cole primeiro a mensagem do WhatsApp.');return}const fields={number:getWhatsappField(raw,'Chamado'),requester:getWhatsappField(raw,'Solicitante'),description:getWhatsappField(raw,'Descrição'),solutionTime:getWhatsappField(raw,'Tempo de solução'),sector:getWhatsappField(raw,'Setor'),room:getWhatsappField(raw,'Sala')};const assign=(id,v)=>{if($(id)&&v)$(id).value=v};assign('number',fields.number);assign('requester',fields.requester);assign('description',fields.description);assign('solutionTime',fields.solutionTime);if(fields.description&&!$('subject').value){const t=fields.description.toLowerCase();$('subject').value=/\bpc\b|computador/i.test(t)?'Manutenção de suporte em PC':fields.description.split(/[.!?]/)[0].slice(0,90)}if(/\bpc\b/i.test(fields.description))assign('assetType','PC');else if(/impressora/i.test(fields.description))assign('assetType','Impressora');else if(/monitor/i.test(fields.description))assign('assetType','Monitor');const match=findMaptecLocation(fields.sector,fields.room,fields.description);lastLocationMatch=match;if(match){assign('building',match.building);assign('location',[match.block,match.room?'Sala '+match.room:'',match.sector].filter(Boolean).join(' · '));$('maptecMatch').classList.remove('hidden');$('maptecMatch').innerHTML='<b>Local identificado no MapTec</b><br>'+esc(match.building)+' · '+esc(match.block)+' · Sala '+esc(match.room)+' · '+esc(match.sector)+'<br><span class="muted">Código da unidade: '+esc(match.unitCode||'não informado')+'. Confirme se corresponde ao local do chamado.</span><br><a href="https://rafajames.github.io/MapTec-TJRR/" target="_blank" rel="noopener">Abrir MapTec para conferir</a>';$('parseFeedback').textContent='Campos interpretados. Confira e complete as informações antes de avaliar.'}else{$('maptecMatch').classList.add('hidden');assign('location',[fields.sector,fields.room?'Sala '+fields.room:''].filter(Boolean).join(' · '));$('parseFeedback').textContent='Mensagem interpretada, mas não foi possível confirmar uma única unidade no MapTec. Confira prédio, bloco e sala manualmente.'}toast('Mensagem interpretada. Confira os campos.')}
-$('parseWhatsapp').onclick=parseWhatsapp;
-function check(d){
- const engine=window.reguaQuality?.evaluateQuality?window.reguaQuality.evaluateQuality(d):null;
- if(engine){const rules=engine.criteria.filter(r=>r.status!=='not_applicable').map(r=>[r.label,r.status==='met',r.recommendation]);const passed=rules.filter(r=>r[1]).length;return{rules,passed,total:rules.length,score:engine.score,dimensions:engine.dimensions,engine};}
- const rules=[['Local identificado',!!d.building.trim()&&!!d.location.trim(),'Informe prédio e localização.'],['Assunto específico',d.subject.trim().length>=8,'Use assunto objetivo.'],['Sintoma explicado',d.description.trim().length>=30,'Descreva sintoma e impacto.'],['Equipamento ou sistema identificado',!!d.assetType.trim()||!!d.asset.trim(),'Identifique equipamento ou sistema.'],['Comentários úteis',d.comments.trim().length>=15,'Registre atualizações relevantes.'],['Causa registrada',d.cause.trim().length>=10,'Registre a causa ou investigação.'],['Ação realizada descrita',d.action.trim().length>=20,'Detalhe a ação realizada.'],['Teste ou confirmação',d.test.trim().length>=10,'Registre validação.'],['Pendências contextualizadas',!/(aguardando|pendente|terceiro)/i.test(d.notes+' '+d.comments)||d.notes.trim().length>=10,'Explique a pendência e o próximo passo.']];
- const passed=rules.filter(x=>x[1]).length;return{rules,passed,total:rules.length,score:Math.round(passed/rules.length*100)};
-}
-function showResult(x){
- const color=x.result.score>=80?'#0b4fb0':x.result.score>=55?'#b7791f':'#b94a48';
- $('result').innerHTML='<article class="card"><div class="eyebrow">Verificação preliminar por critérios</div><div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap"><h2 style="margin:6px 0;color:var(--ink)">'+x.result.passed+' de '+x.result.total+' critérios atendidos</h2><strong class="score" style="color:'+color+'">'+x.result.score+'%</strong></div><p class="muted">Resultado orientativo, não é certificação institucional nem autorização para encerrar o chamado.</p>'+x.result.rules.map(r=>'<div class="check"><span class="'+(r[1]?'ok':'bad')+'">'+(r[1]?'✓':'!')+'</span><div><b>'+esc(r[0])+' — '+(r[1]?'Atendido':'A revisar')+'</b><span class="muted">'+esc(r[1]?'Evidência suficiente segundo a regra configurada.':r[2])+'</span></div></div>').join('')+'<p class="muted">Aplique as correções diretamente no sistema oficial. A Régua não modifica o chamado original.</p><div class="footer-actions"><button class="btn" id="aiReview" type="button" onclick="runAiReview()">Analisar com IA</button></div><div id="aiResult" class="callout hidden" style="margin-top:14px"></div></article>';
-}$('auditForm').onsubmit=async e=>{e.preventDefault();const d={};['number','requester','tech','building','location','solutionTime','subject','description','assetType','asset','comments','cause','action','test','notes'].forEach(k=>d[k]=$(k).value.trim());d.locationMatch=lastLocationMatch;lastAuditData={...d};const x={...d,id:crypto.randomUUID(),createdAt:new Date().toISOString(),result:check(d)};await put(x);items=await all();try{await persistFolderCopy()}catch(err){$('folderStatus').textContent='Falha ao atualizar a pasta: '+err.message+' · O registro permanece no navegador.'}showResult(x);drawHome();toast('Pré-auditoria concluída. Chamado original não alterado.')};
 
-function draftInputs(){return{request:$('description').value.trim()+'\nAssunto: '+$('subject').value.trim()+'\nEquipamento: '+$('assetType').value.trim()+'\nPatrimônio: '+$('asset').value.trim(),history:$('comments').value.trim(),technicianNotes:$('action').value.trim()+'\nCausa informada: '+$('cause').value.trim()+'\nTeste/validação: '+$('test').value.trim()+'\nPendências: '+$('notes').value.trim(),signature:$('draftSignature').value.trim()}}async function makeDraft(stage){if(!geminiApiKey){go('settings');toast('Configure e teste um provedor de IA primeiro.');return}if(!window.reguaAI){toast('Módulo de IA ainda está carregando.');return}const d=draftInputs();if(stage==='initial')d.technicianNotes='';if(!d.request.trim()&&!d.history&&!d.technicianNotes){toast('Preencha a solicitação ou os comentários do chamado.');return}if(!confirm('O conteúdo técnico da solicitação, comentários e anotações será enviado ao provedor de IA escolhido. Remova dados pessoais ou sigilosos e confirme que há autorização para esse uso. Continuar?'))return;$('draftStatus').textContent='Gerando rascunho…';$('initialDraft').disabled=$('finalDraft').disabled=true;try{const r=await window.reguaAI.generateResolutionDraft({provider:activeProvider,apiKey:geminiApiKey,model:$('geminiModel').value,customBase:customApiBase,...d,stage});$('draftOutput').value=r.draft||'';const warnings=[...(r.missing_information||[]).map(x=>'Informação ausente: '+x),...(r.contradictions||[]).map(x=>'Divergência: '+x),...(r.pending_items||[]).map(x=>'Pendência: '+x)];$('draftWarnings').classList.toggle('hidden',!warnings.length);$('draftWarnings').innerHTML='<b>Revise antes de utilizar</b><ul>'+warnings.map(x=>'<li>'+esc(x)+'</li>').join('')+'</ul><p class="muted">'+(r.requires_technician_confirmation?'A confirmação do técnico é necessária antes de afirmar conclusão ou encerramento.':'Revise todos os fatos e a redação antes de copiar.')+'</p>';$('draftStatus').textContent='Rascunho gerado. Nenhuma informação foi enviada ao Aranda.'}catch(err){$('draftStatus').textContent='Não foi possível gerar o rascunho: '+err.message}finally{$('initialDraft').disabled=$('finalDraft').disabled=false}}$('initialDraft').onclick=()=>makeDraft('initial');$('finalDraft').onclick=()=>makeDraft('completion');$('copyDraft').onclick=async()=>{if(!$('draftOutput').value.trim()){toast('Ainda não há texto para copiar.');return}try{await navigator.clipboard.writeText($('draftOutput').value);toast('Texto copiado. Revise antes de colar no Aranda.')}catch{toast('Não foi possível copiar automaticamente. Selecione o texto manualmente.')}};
-function drawHome(){const n=items.length,avg=n?Math.round(items.reduce((s,x)=>s+x.result.score,0)/n):null;$('total').textContent=n;$('average').textContent=avg===null?'—':avg+'%';$('review').textContent=items.filter(x=>x.result.score<80).length;$('recent').innerHTML=items.length?items.slice().sort((a,b)=>b.createdAt.localeCompare(a.createdAt)).slice(0,5).map(x=>'<div class="history-item"><span><b>'+esc(x.number||x.subject)+'</b><br><small>'+new Date(x.createdAt).toLocaleString('pt-BR')+'</small></span><span class="tag">'+x.result.score+'%</span></div>').join(''):'Nenhuma pré-auditoria realizada.'}
-function drawHistory(){$('historyList').innerHTML=items.length?items.slice().sort((a,b)=>b.createdAt.localeCompare(a.createdAt)).map(x=>'<div class="history-item"><span><b>'+esc(x.number||x.subject)+'</b><br><small>'+esc(x.building)+' · '+new Date(x.createdAt).toLocaleString('pt-BR')+'</small></span><span class="tag">'+x.result.score+'%</span></div>').join(''):'Nenhuma pré-auditoria realizada.'}
-$('backup').onclick=()=>{const blob=new Blob([JSON.stringify({product:'Regua',version:1,items},null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='regua-backup.json';a.click();URL.revokeObjectURL(a.href)};
-$('clear').onclick=async()=>{if(!confirm('Apagar o histórico deste navegador?'))return;await new Promise((resolve,reject)=>{const r=db.transaction('audits','readwrite').objectStore('audits').clear();r.onsuccess=resolve;r.onerror=()=>reject(r.error)});items=[];try{await persistFolderCopy()}catch(err){$('folderStatus').textContent='Falha ao atualizar a cópia da pasta: '+err.message}drawHistory();drawHome();toast('Histórico local apagado.')};
+<!-- ================= PRÉ-AUDITORIA ================= -->
+<section class="page" id="audit" aria-labelledby="auditTitle">
+  <div class="head">
+    <div><div class="eyebrow">Apoio ao técnico · antes do encerramento</div><h1 id="auditTitle">Pré-auditoria do chamado</h1><p>Informe os dados de um chamado que já existe. Nada é enviado ao Aranda.</p></div>
+    <div class="head-actions"><span class="badge hidden" id="editingBadge">Editando análise salva</span><button class="btn" type="button" id="newAudit"><svg class="ico"><use href="#i-plus"/></svg>Nova análise</button></div>
+  </div>
 
-let geminiApiKey='',managerRecords=[],lastAuditData=null,activeProvider='gemini',activeModel='',customApiBase='';
-function applyTheme(mode){const chosen=mode==='system'?(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'):mode;document.documentElement.dataset.theme=chosen;if($('themeMode'))$('themeMode').value=mode;if($('themeToggle'))$('themeToggle').textContent=chosen==='dark'?'☀ Tema claro':'☾ Tema escuro';document.querySelector('meta[name="theme-color"]')?.setAttribute('content',chosen==='dark'?'#0b1220':'#0a2c63')}
-applyTheme(localStorage.getItem('regua-theme')||'system');
-$('themeMode').onchange=()=>{localStorage.setItem('regua-theme',$('themeMode').value);applyTheme($('themeMode').value)};
-$('themeToggle').onclick=()=>{const mode=document.documentElement.dataset.theme==='dark'?'light':'dark';localStorage.setItem('regua-theme',mode);applyTheme(mode)};
-if(window.matchMedia)matchMedia('(prefers-color-scheme: dark)').addEventListener?.('change',()=>{if((localStorage.getItem('regua-theme')||'system')==='system')applyTheme('system')});
-$('geminiKey').oninput=e=>{geminiApiKey=e.target.value.trim();$('geminiStatus').value=geminiApiKey?'Chave informada · não testada':'Não testada'};$('aiProvider').onchange=()=>{activeProvider=$('aiProvider').value;activeModel='';$('geminiStatus').value='Não testada';$('geminiModel').disabled=true;$('geminiModel').innerHTML='<option value="">Teste a conexão para listar modelos</option>';$('customBaseWrap').classList.toggle('hidden',activeProvider!=='custom')};$('customBase').oninput=e=>customApiBase=e.target.value.trim();
-$('clearGemini').onclick=()=>{geminiApiKey='';activeModel='';$('geminiKey').value='';$('geminiModel').disabled=true;$('geminiModel').innerHTML='<option value="">Teste a conexão para listar modelos</option>';$('geminiStatus').value='Não testada';toast('Chave removida da memória desta aba.')};
-$('testGemini').onclick=async()=>{if(!geminiApiKey){toast('Informe a chave do provedor.');return}if(!window.reguaAI){toast('Módulo de IA ainda está carregando.');return}$('geminiStatus').value='Identificando modelos…';$('testGemini').disabled=true;try{const r=await window.reguaAI.testProviderConnection(activeProvider,geminiApiKey,customApiBase);$('geminiModel').innerHTML=r.models.map(m=>'<option value="'+esc(m)+'">'+esc(m)+'</option>').join('');$('geminiModel').disabled=false;$('geminiModel').value=r.selectedModel;activeModel=r.selectedModel;$('geminiStatus').value=r.models.length+' modelo(s) identificado(s)';toast('Conexão confirmada; modelos identificados.')}catch(err){$('geminiStatus').value='Falha no teste';toast('Falha: '+String(err.message||err).slice(0,150))}finally{$('testGemini').disabled=false}};$('geminiModel').onchange=()=>activeModel=$('geminiModel').value;
-$('chooseFolder').onclick=async()=>{if(!window.showDirectoryPicker){toast('Este navegador não permite escolher uma pasta. O histórico continuará no armazenamento local.');return}try{localFolder=await window.showDirectoryPicker({mode:'readwrite'});await settingPut('localFolder',localFolder);await persistFolderCopy();toast('Pasta autorizada e cópia criada.')}catch(err){if(err.name!=='AbortError')toast('Não foi possível acessar a pasta: '+err.message)}};
-function drawReports(){const n=items.length,avg=n?Math.round(items.reduce((s,x)=>s+(x.result?.score||0),0)/n):null;$('reportAudits').textContent=n;$('reportAverage').textContent=avg===null?'—':avg+'%';$('reportManager').textContent=managerRecords.length;const bands=[{label:'80% ou mais',count:items.filter(x=>x.result.score>=80).length},{label:'55% a 79%',count:items.filter(x=>x.result.score>=55&&x.result.score<80).length},{label:'Abaixo de 55%',count:items.filter(x=>x.result.score<55).length}];$('reportBars').innerHTML=n?bands.map(b=>'<div style="margin:12px 0"><div style="display:flex;justify-content:space-between;margin-bottom:6px"><b>'+b.label+'</b><span>'+b.count+'</span></div><div class="bar"><i style="width:'+Math.round(b.count/n*100)+'%"></i></div></div>').join(''):'Ainda não há dados suficientes.'}
-function renderManager(){const rows=managerRecords.map(r=>({record:r,quality:check(r)})),n=rows.length,avg=n?Math.round(rows.reduce((s,x)=>s+x.quality.score,0)/n):null;$('managerTotal').textContent=n;$('managerAverage').textContent=avg===null?'—':avg+'%';$('managerReview').textContent=rows.filter(x=>x.quality.score<80).length;$('managerList').innerHTML=n?rows.slice(0,100).map(x=>'<div class="history-item"><span><b>'+esc(x.record.number||x.record.subject||'Chamado sem identificador')+'</b><br><small>'+esc(x.record.building||'Unidade não informada')+' · '+esc(x.record.tech||'Técnico não informado')+'</small></span><span class="tag">'+x.quality.score+'%</span></div>').join(''):'Nenhum registro importado.';const summary=window.reguaReporting?.buildOperationalSummary?window.reguaReporting.buildOperationalSummary(managerRecords):null;$('opClosed').textContent=summary?summary.closedCount:'—';$('opBacklog').textContent=summary?summary.openBacklog:'—';$('opResolution').textContent=summary&&summary.resolutionMinutes.average!==null?summary.resolutionMinutes.average:'—';drawReports()}
-$('importManager').onclick=async()=>{const file=$('managerFile').files[0];if(!file){toast('Selecione um JSON.');return}try{const parsed=JSON.parse(await file.text()),records=Array.isArray(parsed)?parsed:(Array.isArray(parsed.data)?parsed.data:null);if(!records)throw new Error('O arquivo precisa conter um array ou um campo data com array.');if(records.some(x=>!x||typeof x!=='object'||Array.isArray(x)))throw new Error('Há registros inválidos.');managerRecords=records;renderManager();$('managerFeedback').textContent=records.length+' registros importados apenas nesta sessão; nenhum dado foi enviado ao GitHub.';toast('Conjunto importado e avaliado localmente.')}catch(err){$('managerFeedback').textContent='Falha: '+err.message;toast('Não foi possível importar o arquivo.')}};
-$('clearManager').onclick=()=>{managerRecords=[];$('managerFile').value='';$('managerFeedback').textContent='Conjunto removido da memória desta sessão.';renderManager()};
-$('proposeCriteria').onclick=async()=>{if(!geminiApiKey){toast('Informe e teste a chave do provedor escolhido primeiro.');return}if(!window.reguaAI){toast('Módulo de IA ainda está carregando.');return}const btn=$('proposeCriteria'),box=$('criteriaProposal');btn.disabled=true;btn.textContent='Preparando proposta…';try{const result=await window.reguaAI.proposeCriteriaConfiguration(geminiApiKey,$('geminiModel').value.trim(),$('criteriaContext').value.trim(),activeProvider,customApiBase),safe=JSON.stringify(result,null,2);box.classList.remove('hidden');box.innerHTML='<b>Proposta da IA — não aplicada</b><p class="muted">Revise com a gestão. Pesos, regras e critérios oficiais só mudam após aprovação e versionamento.</p><pre style="white-space:pre-wrap;overflow-wrap:anywhere;font-size:11px">'+esc(safe)+'</pre>';toast('Proposta de critérios gerada.')}catch(err){toast('Falha na proposta: '+String(err.message||err).slice(0,140))}finally{btn.disabled=false;btn.textContent='Propor parâmetros com IA'}};
-async function runAiReview(){if(!geminiApiKey){go('settings');toast('Configure a chave do provedor primeiro.');return}if(!lastAuditData){toast('Faça uma pré-auditoria primeiro.');return}if(!confirm('Serão enviados ao provedor escolhido campos técnicos do chamado, sem número, solicitante ou técnico. Remova nomes, contatos e dados sigilosos que possam existir dentro da descrição ou comentários. Deseja continuar?'))return;if(!window.reguaAI){toast('Módulo de IA ainda está carregando.');return}const btn=$('aiReview');btn.disabled=true;btn.textContent='Analisando…';try{const r=await window.reguaAI.reviewTicketWithProvider({provider:activeProvider,apiKey:geminiApiKey,model:$('geminiModel').value,customBase:customApiBase,data:lastAuditData}),node=$('aiResult');node.classList.remove('hidden');node.innerHTML='<h3>Análise assistida por IA</h3><p class="muted">Resultado consultivo, sujeito à revisão humana. Não altera a nota determinística.</p><p><b>Conclusão:</b> '+esc(r.overall||'Não informada')+'</p><p><b>Confiança:</b> '+esc(r.confidence||'Não informada')+'</p><p><b>Achados:</b></p><ul>'+((r.findings||[]).map(x=>'<li>'+esc(typeof x==='string'?x:(x.finding||x.explanation||JSON.stringify(x)))+'</li>').join('')||'<li>Nenhum achado.</li>')+'</ul><p><b>Recomendações:</b></p><ul>'+((r.recommendations||[]).map(x=>'<li>'+esc(typeof x==='string'?x:(x.recommendation||JSON.stringify(x)))+'</li>').join('')||'<li>Nenhuma recomendação.</li>')+'</ul>';toast('Análise concluída. Revise as evidências.')}catch(err){toast('Falha na análise: '+String(err.message||err).slice(0,140))}finally{btn.disabled=false;btn.textContent='Analisar com IA'}}
+  <div class="audit-layout">
+    <div class="audit-main">
+      <details class="card import-card" id="importCard">
+        <summary><svg class="ico"><use href="#i-message"/></svg><span><b>Importar mensagem do WhatsApp</b><small>Preenche os campos automaticamente e procura o local no catálogo do MapTec.</small></span></summary>
+        <div class="field"><label for="whatsappText">Mensagem recebida</label><textarea id="whatsappText" rows="6" placeholder="Cole aqui a mensagem completa, incluindo Chamado, Solicitante, Descrição, Setor e Sala…"></textarea></div>
+        <div class="footer-actions"><button class="btn primary" type="button" id="parseWhatsapp">Interpretar mensagem</button></div>
+        <p id="parseFeedback" class="muted" aria-live="polite"></p>
+      </details>
 
-(async()=>{try{db=await openDB();localFolder=await settingGet('localFolder');if(localFolder)$('folderStatus').textContent='Pasta configurada: '+localFolder.name+' · a permissão será verificada ao salvar.';await loadMaptecLocations();items=await all();drawHome();drawReports()}catch(e){console.error(e);toast('Não foi possível abrir o armazenamento local. Use HTTPS ou localhost.')}})();
-</script><script type="module">import { evaluateQuality } from "./src/quality-engine.js"; import { testProviderConnection, reviewTicketWithProvider, generateResolutionDraft, proposeCriteriaConfiguration } from "./src/ai-provider.js"; import { buildOperationalSummary, compareSummaries } from "./src/reporting.js"; window.reguaQuality={evaluateQuality}; window.reguaAI={testProviderConnection,reviewTicketWithProvider,generateResolutionDraft,proposeCriteriaConfiguration}; window.reguaReporting={buildOperationalSummary,compareSummaries};</script><script>if("serviceWorker" in navigator && location.protocol.startsWith("http")){window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(err=>console.warn("Cache offline indisponível:",err)));}</script></body></html>
+      <form id="auditForm" class="card form-card" novalidate>
+        <fieldset>
+          <legend><span class="step">1</span>Abertura do chamado</legend>
+          <div class="form">
+            <div class="field"><label for="number">Número do chamado</label><input id="number" autocomplete="off" placeholder="Ex.: 2026-00123"></div>
+            <div class="field"><label for="requester">Solicitante</label><input id="requester" autocomplete="off" placeholder="Nome do solicitante"></div>
+            <div class="field"><label for="building">Prédio / unidade <span class="req">*</span></label><input id="building" list="buildingList" required placeholder="Ex.: Fórum Cível"><datalist id="buildingList"></datalist></div>
+            <div class="field"><label for="location">Andar, bloco, setor e sala</label><input id="location" placeholder="Bloco 1 · Sala 106 · Setor de Conciliação"></div>
+            <div class="field full"><label for="subject">Assunto <span class="req">*</span></label><input id="subject" required placeholder="Resumo objetivo do problema"></div>
+            <div class="field full"><label for="description">Solicitação original <span class="req">*</span></label><textarea id="description" required rows="3" placeholder="Qual o sintoma? Quando ocorre? Qual o impacto?"></textarea></div>
+            <div class="field"><label for="assetType">Tipo de equipamento ou sistema</label><input id="assetType" placeholder="Ex.: PC, impressora, monitor"></div>
+            <div class="field"><label for="asset">Tombamento / patrimônio</label><input id="asset" placeholder="Somente se informado no chamado"></div>
+            <div class="field full hidden" id="maptecMatchWrap"><div id="maptecMatch" class="callout"></div></div>
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend><span class="step">2</span>Acompanhamento</legend>
+          <div class="form">
+            <div class="field"><label for="tech">Técnico responsável</label><input id="tech" autocomplete="off" placeholder="Nome do técnico"></div>
+            <div class="field"><label for="solutionTime">Data/hora de solução informada</label><input id="solutionTime" placeholder="DD/MM/AAAA HH:MM"></div>
+            <div class="field full"><label for="comments">Comentários anteriores e atualizações</label><textarea id="comments" rows="3" placeholder="Cole os comentários de outros técnicos e as atualizações, com datas quando houver"></textarea></div>
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend><span class="step">3</span>Solução registrada pelo técnico atual</legend>
+          <div class="form">
+            <div class="field full"><label for="action">Ação realizada <span class="req">*</span></label><textarea id="action" required rows="3" placeholder="Descreva somente o que foi efetivamente realizado"></textarea></div>
+            <div class="field"><label for="cause">Causa identificada</label><textarea id="cause" rows="2" placeholder="Causa encontrada ou “em investigação”"></textarea></div>
+            <div class="field"><label for="test">Teste ou confirmação</label><textarea id="test" rows="2" placeholder="Como a solução foi validada?"></textarea></div>
+            <div class="field full"><label for="notes">Pendências e observações</label><textarea id="notes" rows="2" placeholder="Esperas, dependências e próximos passos"></textarea></div>
+          </div>
+        </fieldset>
+        <div class="footer-actions">
+          <button class="btn ghost" type="button" id="resetForm">Limpar campos</button>
+          <button class="btn primary" type="submit" id="saveAudit">Salvar análise</button>
+        </div>
+      </form>
+
+      <article class="card" id="draftPanel">
+        <div class="card-head"><div><div class="eyebrow">Texto para o Aranda</div><h2>Rascunho da resposta</h2></div></div>
+        <p class="muted">O texto segue o padrão de referência e usa apenas o que foi registrado. Onde faltar informação aparece <code>[CONFIRMAR: …]</code>. A Régua nunca envia este texto: revise e copie manualmente.</p>
+        <label class="check-line"><input type="checkbox" id="closureConfirmed"> <span>Confirmo que o chamado está <b>apto para encerramento</b> (sem pendências).</span></label>
+        <div class="footer-actions left">
+          <button class="btn primary" id="standardDraft" type="button"><svg class="ico"><use href="#i-file"/></svg>Montar texto padrão</button>
+          <button class="btn" id="initialDraft" type="button"><svg class="ico"><use href="#i-spark"/></svg>Esboço inicial com IA</button>
+          <button class="btn" id="finalDraft" type="button"><svg class="ico"><use href="#i-spark"/></svg>Versão final com IA</button>
+        </div>
+        <div id="draftStatus" class="status-line" data-state="idle" aria-live="polite">O texto padrão funciona sem internet. A IA é opcional.</div>
+        <div id="draftWarnings" class="callout warn hidden"></div>
+        <div class="field"><label for="draftOutput">Texto sugerido — revise antes de copiar</label><textarea id="draftOutput" rows="9" placeholder="O texto aparecerá aqui."></textarea></div>
+        <div class="footer-actions"><button class="btn primary" id="copyDraft" type="button"><svg class="ico"><use href="#i-copy"/></svg>Copiar texto</button></div>
+      </article>
+    </div>
+
+    <aside class="audit-side" aria-label="Resultado da avaliação">
+      <article class="card result-card" id="result">
+        <div class="eyebrow">Avaliação por critérios</div>
+        <div class="score-row">
+          <div class="ring" id="scoreRing" data-band="none">
+            <svg viewBox="0 0 100 100" aria-hidden="true"><circle class="ring-bg" cx="50" cy="50" r="42"/><circle class="ring-fg" id="ringFg" cx="50" cy="50" r="42"/></svg>
+            <strong id="scoreValue">—</strong>
+          </div>
+          <div><p class="score-title" id="scoreTitle">Preencha os campos</p><p class="muted small" id="scoreSub">A avaliação é atualizada enquanto você digita.</p></div>
+        </div>
+        <div id="dimensionBars" class="dims"></div>
+        <ul id="criteriaList" class="criteria"></ul>
+        <p class="muted small">Pesos provisórios, em validação. Resultado orientativo: não é certificação nem autorização para encerrar.</p>
+        <div class="footer-actions">
+          <button class="btn" id="aiReview" type="button"><svg class="ico"><use href="#i-spark"/></svg>Analisar com IA</button>
+        </div>
+        <div id="aiResult" class="ai-result hidden" aria-live="polite"></div>
+      </article>
+    </aside>
+  </div>
+</section>
+
+<!-- ================= HISTÓRICO ================= -->
+<section class="page" id="history" aria-labelledby="historyTitle">
+  <div class="head">
+    <div><div class="eyebrow">Armazenamento local</div><h1 id="historyTitle">Histórico de análises</h1><p>Os registros ficam neste navegador e não são compartilhados com outros técnicos.</p></div>
+    <div class="head-actions">
+      <button class="btn" id="backup" type="button"><svg class="ico"><use href="#i-download"/></svg>Exportar backup</button>
+      <button class="btn" id="importBackupBtn" type="button"><svg class="ico"><use href="#i-upload"/></svg>Importar backup</button>
+      <input id="importBackupFile" type="file" accept=".json,application/json" class="hidden">
+    </div>
+  </div>
+  <div class="card">
+    <div class="toolbar">
+      <label class="search"><svg class="ico"><use href="#i-search"/></svg><span class="sr">Pesquisar</span><input id="historySearch" type="search" placeholder="Pesquisar por número, assunto, prédio, técnico…"></label>
+      <label class="sr" for="historyFilter">Filtrar por nota</label>
+      <select id="historyFilter"><option value="all">Todas as notas</option><option value="good">80% ou mais</option><option value="fair">55% a 79%</option><option value="low">Abaixo de 55%</option></select>
+      <label class="sr" for="historySort">Ordenar</label>
+      <select id="historySort"><option value="new">Mais recentes</option><option value="old">Mais antigas</option><option value="high">Maior nota</option><option value="low">Menor nota</option></select>
+    </div>
+    <p class="muted small" id="historyCount" aria-live="polite"></p>
+    <div id="historyList" class="list"></div>
+  </div>
+  <div class="grid two compact" style="margin-top:14px">
+    <article class="card">
+      <h2>Cópia em pasta do computador</h2>
+      <p class="muted" id="folderStatus">Opcional. Mantém uma cópia JSON em uma pasta escolhida por você (Chrome e Edge).</p>
+      <button class="btn" id="chooseFolder" type="button"><svg class="ico"><use href="#i-folder"/></svg>Escolher pasta no computador</button>
+    </article>
+    <article class="card danger-zone">
+      <h2>Limpar histórico</h2>
+      <p class="muted">Apaga todas as análises deste navegador. Exporte um backup antes.</p>
+      <button class="btn danger" id="clear" type="button"><svg class="ico"><use href="#i-trash"/></svg>Limpar histórico</button>
+    </article>
+  </div>
+</section>
+
+<!-- ================= RELATÓRIOS ================= -->
+<section class="page" id="reports" aria-labelledby="reportsTitle">
+  <div class="head"><div><div class="eyebrow">Indicadores locais</div><h1 id="reportsTitle">Relatórios</h1><p>Calculados somente com as análises salvas neste navegador. Não representam indicador institucional.</p></div></div>
+  <div class="grid stats three">
+    <article class="card stat"><small>Análises do técnico</small><strong id="reportAudits">0</strong></article>
+    <article class="card stat"><small>Média de qualidade</small><strong id="reportAverage">—</strong></article>
+    <article class="card stat"><small>Chamados do conjunto gerencial</small><strong id="reportManager">0</strong></article>
+  </div>
+  <div class="grid two">
+    <article class="card"><h2>Média por dimensão</h2><div id="reportDims"></div></article>
+    <article class="card"><h2>Critérios que mais faltam</h2><p class="muted small">Quantas análises não evidenciaram ou pediram revisão de cada critério.</p><div id="reportCriteria"></div></article>
+  </div>
+  <article class="card" style="margin-top:14px"><h2>Distribuição das notas</h2><div id="reportBars"></div></article>
+</section>
+
+<!-- ================= CONJUNTO GERENCIAL ================= -->
+<section class="page" id="manager" aria-labelledby="managerTitle">
+  <div class="head"><div><div class="eyebrow">Auditoria independente · experimental</div><h1 id="managerTitle">Conjunto gerencial</h1><p>Avalia um conjunto de chamados exportado de forma autorizada, sem depender do envio pelos técnicos.</p></div></div>
+  <div class="callout"><b>Estado desta versão:</b> não há integração direta com o Aranda. Esta área aceita um JSON normalizado e mantém os dados somente na memória desta aba (nada é salvo nem enviado).</div>
+  <article class="card">
+    <h2>Importar conjunto de chamados</h2>
+    <p class="muted">Formato: array na raiz ou no campo <code>data</code>. Consulte <a href="docs/contrato-importacao-aranda.md" target="_blank" rel="noopener">o contrato intermediário</a>.</p>
+    <div class="field"><label for="managerFile">Arquivo JSON normalizado</label><input id="managerFile" type="file" accept=".json,application/json"></div>
+    <div class="footer-actions"><button class="btn ghost" id="clearManager" type="button">Limpar conjunto</button><button class="btn primary" id="importManager" type="button">Importar e avaliar</button></div>
+    <p class="muted" id="managerFeedback" aria-live="polite">Nenhum conjunto importado nesta sessão.</p>
+  </article>
+  <div class="grid stats three" style="margin-top:14px">
+    <article class="card stat"><small>Chamados importados</small><strong id="managerTotal">0</strong></article>
+    <article class="card stat"><small>Média de qualidade</small><strong id="managerAverage">—</strong></article>
+    <article class="card stat"><small>Para revisão</small><strong id="managerReview">0</strong></article>
+  </div>
+  <div class="grid stats three">
+    <article class="card stat"><small>Encerrados</small><strong id="opClosed">—</strong></article>
+    <article class="card stat"><small>Em aberto</small><strong id="opBacklog">—</strong></article>
+    <article class="card stat"><small>Tempo médio (min)</small><strong id="opResolution">—</strong></article>
+  </div>
+  <article class="card"><h2>Resultado do conjunto</h2><div id="managerList" class="list"></div></article>
+</section>
+
+<!-- ================= CONFIGURAÇÕES ================= -->
+<section class="page" id="settings" aria-labelledby="settingsTitle">
+  <div class="head"><div><div class="eyebrow">Preferências</div><h1 id="settingsTitle">Configurações</h1><p>Inteligência artificial, texto padrão, aparência e dados locais.</p></div></div>
+  <div class="settings-grid">
+    <article class="card span-2" id="aiCard">
+      <div class="card-head"><div><div class="eyebrow">Opcional · requer internet</div><h2>Inteligência artificial</h2></div><span class="state-chip" id="aiStateChip" data-state="idle">Aguardando configuração</span></div>
+      <div class="form">
+        <div class="field"><label for="aiProvider">Provedor</label><select id="aiProvider"><option value="gemini">Google Gemini</option><option value="openai">OpenAI</option><option value="claude">Anthropic Claude</option><option value="grok">xAI Grok</option><option value="custom">API compatível com OpenAI</option></select></div>
+        <div class="field"><label for="geminiKey">Chave de API</label><div class="input-group"><input id="geminiKey" type="password" autocomplete="off" spellcheck="false" placeholder="Cole a chave do provedor escolhido"><button class="btn ghost small" type="button" id="toggleKey" aria-pressed="false">Mostrar</button></div></div>
+        <div class="field full hidden" id="customBaseWrap"><label for="customBase">URL base da API compatível</label><input id="customBase" inputmode="url" placeholder="https://seu-servidor/v1"></div>
+        <div class="field"><label for="geminiModel">Modelo</label><select id="geminiModel" disabled><option value="">Teste a conexão para listar modelos</option></select></div>
+        <div class="field"><label for="manualModel">Ou digite o modelo manualmente</label><input id="manualModel" autocomplete="off" spellcheck="false" placeholder="Identificador exato do provedor"></div>
+      </div>
+      <div class="footer-actions left">
+        <button class="btn primary" id="testGemini" type="button">Testar conexão e listar modelos</button>
+        <button class="btn ghost" id="clearGemini" type="button">Limpar chave</button>
+      </div>
+      <div class="status-line" id="aiStatus" data-state="idle" aria-live="polite">Escolha o provedor, cole a chave e teste a conexão.</div>
+      <p class="muted small" id="providerNote"></p>
+      <p class="muted small"><b>Privacidade:</b> a chave fica só na memória desta aba (não é salva). Os textos enviados à IA vão diretamente do seu navegador para o provedor escolhido. Use somente dados fictícios nesta fase experimental.</p>
+    </article>
+
+    <article class="card">
+      <h2>Texto padrão</h2>
+      <div class="field"><label for="draftSignature">Assinatura</label><textarea id="draftSignature" rows="3"></textarea></div>
+      <p class="muted small">Usada no texto padrão e nos rascunhos de IA. Salva neste navegador.</p>
+    </article>
+
+    <article class="card">
+      <h2>Aparência</h2>
+      <div class="field"><label for="themeMode">Tema</label><select id="themeMode"><option value="system">Automático (dispositivo)</option><option value="light">Claro</option><option value="dark">Escuro</option></select></div>
+    </article>
+
+    <article class="card">
+      <h2>Armazenamento local</h2>
+      <p class="muted" id="storageInfo">Calculando…</p>
+      <div class="footer-actions left"><button class="btn small" type="button" id="persistStorage">Proteger dados contra limpeza automática</button></div>
+    </article>
+
+    <article class="card">
+      <h2>Funcionamento offline</h2>
+      <p class="muted" id="offlineInfo">Verificando…</p>
+    </article>
+
+    <article class="card span-2">
+      <div class="card-head"><h2>Critérios de qualidade</h2><span class="badge">Pesos provisórios</span></div>
+      <div id="criteriaTable" class="table-wrap"></div>
+      <p class="muted small">A IA pode propor ajustes, mas nada é aplicado automaticamente. Consulte <a href="docs/modulo-ia-e-criterios.md" target="_blank" rel="noopener">a política do módulo de IA</a>.</p>
+      <details class="sub-details"><summary>Pedir proposta de critérios à IA</summary>
+        <div class="field"><label for="criteriaContext">Contexto</label><textarea id="criteriaContext" rows="3" placeholder="Tipo de suporte, padrões de atendimento e objetivos. Não inclua dados reais."></textarea></div>
+        <div class="footer-actions left"><button class="btn" id="proposeCriteria" type="button">Propor parâmetros com IA</button></div>
+        <div id="criteriaProposal" class="callout hidden"></div>
+      </details>
+    </article>
+
+    <article class="card span-2 author-card" id="authorCredit">
+      <img src="assets/regua-icone.svg" alt="" width="44" height="44">
+      <div><h2>Régua — Inteligência Operacional</h2><p class="muted">Concepção e desenvolvimento: <strong>Jamerson Rafael</strong> · versão <span id="appVersion"></span></p><p class="muted small">Projeto experimental independente para apoiar a qualidade dos registros de atendimento de TI. Não é um sistema de chamados.</p></div>
+    </article>
+  </div>
+</section>
+
+      <footer class="app-footer"><span>© 2026 <strong>Régua — Inteligência Operacional</strong></span><span>Concepção e desenvolvimento: <strong>Jamerson Rafael</strong> · <a href="https://github.com/Rafajames" target="_blank" rel="noopener">GitHub</a></span></footer>
+    </div>
+  </main>
+</div>
+
+<dialog id="detailDialog" class="dialog" aria-labelledby="detailTitle">
+  <div class="dialog-head"><h2 id="detailTitle">Análise</h2><button class="icon-btn" type="button" data-close aria-label="Fechar"><svg class="ico"><use href="#i-x"/></svg></button></div>
+  <div class="dialog-body" id="detailBody"></div>
+  <div class="dialog-foot">
+    <button class="btn danger ghost" type="button" id="detailDelete"><svg class="ico"><use href="#i-trash"/></svg>Excluir</button>
+    <span class="spacer"></span>
+    <button class="btn" type="button" data-close>Fechar</button>
+    <button class="btn primary" type="button" id="detailOpen">Abrir na pré-auditoria</button>
+  </div>
+</dialog>
+
+<dialog id="confirmDialog" class="dialog small" aria-labelledby="confirmTitle">
+  <div class="dialog-head"><h2 id="confirmTitle">Confirmar</h2></div>
+  <div class="dialog-body"><p id="confirmText"></p></div>
+  <div class="dialog-foot"><span class="spacer"></span><button class="btn" type="button" id="confirmCancel">Cancelar</button><button class="btn primary" type="button" id="confirmOk">Confirmar</button></div>
+</dialog>
+
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+</body>
+</html>

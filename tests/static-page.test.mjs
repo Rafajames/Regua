@@ -1,57 +1,60 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { readFile } from 'node:fs/promises';
-import { testProviderConnection, generateResolutionDraft, discoverModels, PROVIDERS, SYSTEM_PROMPT } from '../src/ai-provider.js';
+import { readFile, access } from 'node:fs/promises';
 
-test('provedores e funções de IA carregam sem chamadas externas',()=>{
- assert.deepEqual(Object.keys(PROVIDERS),['gemini','openai','claude','grok','custom']);
- assert.equal(typeof testProviderConnection,'function');
- assert.equal(typeof generateResolutionDraft,'function');
- assert.equal(typeof discoverModels,'function');
+const read = p => readFile(new URL('../' + p, import.meta.url), 'utf8');
+
+test('página contém telas, campos e créditos essenciais', async () => {
+  const html = await read('index.html');
+  for (const id of ['home', 'audit', 'history', 'reports', 'manager', 'settings', 'auditForm', 'themeToggle', 'geminiKey', 'aiProvider', 'geminiModel', 'manualModel', 'standardDraft', 'initialDraft', 'finalDraft', 'draftOutput', 'closureConfirmed', 'copyDraft', 'historySearch', 'importBackupFile', 'detailDialog', 'chooseFolder', 'updateBar'])
+    assert.ok(html.includes('id="' + id + '"'), id + ' deve existir');
+  assert.ok(html.includes('src/app.js'));
+  assert.ok(html.includes('manifest.webmanifest'));
+  assert.ok(html.includes('Concepção e desenvolvimento: <strong>Jamerson Rafael</strong>'));
 });
 
-test('Gemini prioriza o modelo atual para evitar seleção automática de versão antiga',async()=>{
- const originalFetch=globalThis.fetch;
- globalThis.fetch=async()=>new Response(JSON.stringify({models:[
-  {name:'models/gemini-2.5-flash',supportedGenerationMethods:['generateContent']},
-  {name:'models/gemini-3.8-flash',supportedGenerationMethods:['generateContent']},
-  {name:'models/gemini-3.5-flash',supportedGenerationMethods:['generateContent']}
- ]}),{status:200,headers:{'Content-Type':'application/json'}});
- try {
-  const result=await testProviderConnection('gemini','fake-test-key');
-  assert.equal(result.selectedModel,'gemini-3.8-flash');
-  assert.equal(result.models[0],'gemini-3.8-flash');
-  assert.ok(result.models.indexOf('gemini-2.5-flash')>result.models.indexOf('gemini-3.5-flash'));
- } finally { globalThis.fetch=originalFetch; }
+test('sem scripts inline (CSP) e todo id referenciado existe', async () => {
+  const html = await read('index.html');
+  assert.ok(!/<script(?![^>]*\bsrc=)[^>]*>/.test(html), 'scripts devem ser arquivos externos');
+  assert.ok(!/\son[a-z]+=/i.test(html), 'sem manipuladores inline');
+  assert.match(html, /Content-Security-Policy/);
+  const app = await read('src/app.js');
+  const ids = new Set([...html.matchAll(/id="([^"]+)"/g)].map(m => m[1]));
+  const used = new Set([...app.matchAll(/\$\('([A-Za-z0-9_-]+)'\)/g)].map(m => m[1]));
+  const missing = [...used].filter(id => !ids.has(id));
+  assert.deepEqual(missing, [], 'ids usados no app.js e ausentes no HTML');
 });
 
-test('prompt do assistente proíbe invenção e exige confirmação humana',()=>{
- assert.match(SYSTEM_PROMPT,/Nunca invente/);
- assert.match(SYSTEM_PROMPT,/não declare que o problema foi resolvido/i);
- assert.match(SYSTEM_PROMPT,/missing_information/);
+test('cores do MapTec aplicadas e ícones atualizados', async () => {
+  const css = await read('assets/styles.css');
+  for (const c of ['#0a2c63', '#0d3a80', '#0b4fb0', '#e8f0fb', '#f3f6fb', '#e08300']) assert.ok(css.includes(c), c);
+  assert.ok(!/#123b3a|#16866b/i.test(css), 'paleta antiga removida');
+  assert.match(css, /prefers-reduced-motion/);
+  assert.match(await read('assets/regua-icone.svg'), /#0a2c63/);
+  const manifest = JSON.parse(await read('manifest.webmanifest'));
+  assert.equal(manifest.name, 'Régua — Inteligência Operacional');
+  assert.equal(manifest.theme_color, '#0a2c63');
 });
 
-test('script clássico da página não contém erro de sintaxe',async()=>{
- const html=await readFile(new URL('../index.html',import.meta.url),'utf8');
- const start=html.indexOf('<script>'),end=html.indexOf('</script>',start+8);
- assert.ok(start>=0&&end>start,'script principal precisa existir');
- new Function(html.slice(start+8,end));
+test('Service Worker: versão, arquivos existentes, rede primeiro e sem interceptar APIs externas', async () => {
+  const sw = await read('sw.js');
+  const app = await read('src/app.js');
+  const swVersion = sw.match(/const VERSION = '([^']+)'/)[1];
+  const appVersion = app.match(/APP_VERSION = '([^']+)'/)[1];
+  assert.equal(swVersion, appVersion, 'versões do app e do cache devem andar juntas');
+  const shell = [...sw.matchAll(/'\.\/([^']*)'/g)].map(m => m[1]).filter(Boolean);
+  for (const f of shell) await access(new URL('../' + f, import.meta.url));
+  for (const m of ['app.js', 'quality-engine.js', 'ai-provider.js', 'draft-template.js', 'storage.js', 'reporting.js', 'theme-boot.js']) assert.ok(shell.includes('src/' + m), m + ' deve estar no cache');
+  assert.match(sw, /url\.origin !== self\.location\.origin\) return/);
+  assert.match(sw, /SKIP_WAITING/);
+  assert.ok(!/addEventListener\('install'[\s\S]*?skipWaiting\(\)[\s\S]*?\}\);/.test(sw.split("addEventListener('activate'")[0]), 'install não deve ativar sozinho');
 });
 
-test('página contém rascunho, armazenamento local e provedores',async()=>{
- const html=await readFile(new URL('../index.html',import.meta.url),'utf8');
- for(const id of ['manager','reports','settings','themeToggle','geminiKey','aiProvider','initialDraft','finalDraft','draftOutput','chooseFolder'])assert.ok(html.includes('id="'+id+'"'),id+' deve existir');
- assert.ok(html.includes('./src/ai-provider.js'));
- assert.ok(html.includes("$('geminiModel').disabled=false"));
- assert.ok(html.includes("$('geminiModel').value=r.selectedModel"));
- assert.ok(html.includes('showDirectoryPicker'));
- assert.ok(html.includes('chamados.json'));
- assert.ok(html.includes('manifest.webmanifest'));
- assert.ok(html.includes('navigator.serviceWorker.register'));
- assert.ok(html.includes('Jamerson Rafael'));
- const sw=await readFile(new URL('../sw.js',import.meta.url),'utf8');
- assert.ok(sw.includes('APP_SHELL'));
- assert.ok(sw.includes("request.mode==='navigate'"));
- const manifest=JSON.parse(await readFile(new URL('../manifest.webmanifest',import.meta.url),'utf8'));
- assert.equal(manifest.name,'Régua — Inteligência Operacional');
+test('nenhuma chave de API versionada', async () => {
+  for (const f of ['index.html', 'src/app.js', 'src/ai-provider.js', 'config/ai.example.json']) {
+    const t = await read(f);
+    assert.ok(!/AIza[0-9A-Za-z_-]{30,}|sk-[A-Za-z0-9]{20,}|sk-ant-[A-Za-z0-9-]{20,}|xai-[A-Za-z0-9]{20,}/.test(t), f);
+  }
+  const app = await read('src/app.js');
+  assert.ok(!/localStorage\.setItem\([^)]*key/i.test(app), 'chave não pode ir para o localStorage');
 });

@@ -6,14 +6,20 @@
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#f4f8f6",
-  "theme_color": "#123b3a",
+  "background_color": "#f3f6fb",
+  "theme_color": "#0a2c63",
   "icons": [
     {
       "src": "./assets/regua-icone.svg",
       "sizes": "any",
       "type": "image/svg+xml",
-      "purpose": "any maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "./assets/regua-icone.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
     }
   ]
 }
