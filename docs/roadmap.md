@@ -62,3 +62,12 @@ Atualizado em 23/11/2026. Este documento separa implementação confirmada, fund
 
 ## Dependências externas
 Não há URLs, credenciais, contratos ou permissões confirmados para Aranda, MapTec API ou plataforma patrimonial. Não inventar endpoints nem presumir acesso. A integração real só começa após esses dados e autorização.
+
+## Atualização de 23/11/2026
+Concluído nesta revisão (detalhes em docs/historico-de-melhorias.md): desbloqueio do deploy, módulo de IA revisado, modelo manual, texto padrão offline com trava de encerramento, histórico com pesquisa/filtros/detalhes/recuperação/exclusão, importação validada de backup, atualização controlada do Service Worker, CSP, cores do MapTec e testes em navegador.
+
+Próximos passos sugeridos:
+- [ ] Rodar o teste de navegador (tests/e2e) no GitHub Actions.
+- [ ] Validar uma chamada real com cada provedor usando chaves de teste do autor.
+- [ ] Decidir institucionalmente os pesos e se critérios de solução devem ser "não aplicáveis" em chamados ainda em andamento.
+- [ ] Backend privado antes de qualquer uso com dados reais.

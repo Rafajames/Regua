@@ -56,3 +56,28 @@ Os pesos do motor em `src/quality-engine.js` são provisórios e editáveis no c
 - [ ] Integração real com Aranda, MapTec API e plataforma patrimonial.
 - [ ] Catálogo de critérios configurável e versionado por perfil autorizado.
 - [ ] Testes de integração com contas reais de cada provedor e revisão de políticas institucionais.
+
+---
+
+## Atualização de 23/11/2026 (auditoria técnica)
+- **Gemini 3.8 Flash** confirmado na documentação oficial como modelo GA no mesmo endpoint `v1beta/models/{modelo}:generateContent`. Não houve migração para a Interactions API: não há necessidade concreta.
+- O Gemini passa a receber o prompt em `systemInstruction` (antes o prompt de sistema era enviado duas vezes). Para a família Gemini 3 a `temperature` não é enviada, seguindo a recomendação do Google de manter o padrão.
+- A lista de modelos é ordenada: `gemini-3.8-flash` primeiro, depois versões estáveis mais novas; modelos de voz, imagem e embeddings são removidos. O prefixo `models/` é removido uma única vez.
+- A escolha do usuário é preservada: ao testar novamente, o modelo escolhido antes é mantido se continuar disponível; se não existir mais, volta ao recomendado (o sistema não fica preso a um modelo antigo).
+- **Modelo manual**: campo para digitar o identificador quando o provedor não oferece catálogo (comum em APIs compatíveis). Tem prioridade sobre a lista e é validado na primeira geração.
+- OpenAI: a lista exclui modelos que não geram texto (whisper, dall-e, tts, embeddings, realtime, moderação). Quando o modelo recusa `temperature` ou `response_format`, o parâmetro é removido e a chamada repetida automaticamente.
+- Erros classificados em linguagem simples: autenticação, permissão, modelo indisponível, cota, rede/CORS, tempo esgotado, instabilidade do provedor, conteúdo bloqueado e resposta inválida. O detalhe técnico do provedor aparece em letra menor, com a chave ocultada.
+- **Texto padrão sem IA**: o modelo de referência (Prezado(a) Sr(a)… Atenciosamente, assinatura) é montado localmente, inclusive offline, apenas com o que foi registrado, com `[CONFIRMAR: …]` onde faltar informação.
+- **Trava de encerramento**: "Sendo assim, encerro o chamado." e a frase da pesquisa de satisfação só entram quando o técnico marca "apto para encerramento" e não há pendência registrada. Textos da IA que declarem encerramento sem confirmação recebem alerta antes da cópia.
+- **Estados dos critérios** passam a seguir a referência: Atendido, Não evidenciado (campo vazio), Requer revisão (há conteúdo, mas insuficiente/genérico) e Não aplicável. A fórmula da nota e os pesos não mudaram; ambos os estados negativos valem zero, como antes. Pesos continuam provisórios (`CRITERIA_VERSION = 0.2-experimental`).
+
+### Acesso direto pelo navegador (CORS)
+| Provedor | Situação |
+|---|---|
+| Gemini | Permite chamadas do navegador com a chave no cabeçalho `x-goog-api-key`. |
+| OpenAI | Permite; a própria OpenAI desaconselha chave no navegador em produção. |
+| Claude | Permite somente com o cabeçalho `anthropic-dangerous-direct-browser-access: true` (enviado). |
+| Grok (xAI) | Não confirmado. Se o navegador bloquear, a Régua mostra "conexão ou CORS". |
+| Personalizado | Depende de o servidor liberar CORS para `rafajames.github.io`. HTTP só é aceito para localhost. |
+
+Nenhuma integração real foi testada com chaves verdadeiras nesta auditoria; os testes usam respostas simuladas.

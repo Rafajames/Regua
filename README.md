@@ -13,13 +13,21 @@ Aranda é a fonte dos chamados. MapTec e a plataforma patrimonial são fontes de
 - Snapshot do catálogo MapTec para apoiar identificação de local.
 - Histórico individual no IndexedDB do navegador e exportação JSON.
 - Critérios determinísticos de qualidade por abertura, acompanhamento e encerramento.
-- Tema claro, escuro e automático, com identidade azul-petróleo, verde e branco, navegação responsiva e microinterações acessíveis.
+- Tema claro, escuro e automático, com as cores do MapTec · TJRR (navy, azul e âmbar), navegação responsiva e microinterações acessíveis.
 - Cache offline por Service Worker para abrir a aplicação após a primeira visita; formulários, avaliações e histórico continuam locais. Chamadas de IA exigem internet.
 - Importação gerencial de JSON normalizado apenas em memória/sessão local.
 - Relatórios locais, sem alegação de indicadores institucionais consolidados.
 - Assistente de resolução em duas etapas: esboço inicial e versão após atendimento, com revisão de fatos ausentes e contradições.
 - Provedores configuráveis (Gemini, OpenAI, Claude, Grok e endpoint compatível), com descoberta de modelos quando a API permite.
 - Histórico individual no IndexedDB e cópia JSON automática em pasta escolhida pelo técnico quando o navegador oferece File System Access API.
+
+- Texto padrão de resposta montado sem IA (funciona offline), com trava: só declara encerramento quando o técnico confirma.
+- Histórico com pesquisa, filtros, detalhes, recuperação para edição, exclusão e importação validada de backup.
+- Aviso de nova versão: a aplicação só recarrega quando o usuário escolhe.
+
+## Testes
+- `npm test` — testes unitários (motor, IA com mocks, texto padrão, backup, arquivos estáticos).
+- `tests/e2e/regua_e2e.py` — verificação em navegador real (Playwright). Ver docs/relatorio-de-testes.md.
 
 ## Limitações importantes
 - A importação gerencial não é integração direta com Aranda; depende de JSON no contrato intermediário em docs/contrato-importacao-aranda.md.
@@ -34,6 +42,9 @@ Aranda é a fonte dos chamados. MapTec e a plataforma patrimonial são fontes de
 Concepção e desenvolvimento: **Jamerson Rafael**.
 
 ## Documentação
+- Auditoria técnica: docs/auditoria-tecnica.md
+- Relatório de testes: docs/relatorio-de-testes.md
+- Histórico de melhorias: docs/historico-de-melhorias.md
 - Identidade visual e experiência: docs/identidade-visual-e-experiencia.md
 - Estado atual e roadmap: docs/roadmap.md
 - Especificação funcional: docs/especificacao-funcional.md
