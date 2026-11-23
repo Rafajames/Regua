@@ -56,7 +56,7 @@ Atualizado em 23/11/2026. Este documento separa implementação confirmada, fund
 - [ ] Fluxo de aprovação humana e monitoramento de qualidade/deriva.
 
 ### Prioridade 5 — Qualidade técnica
-- [ ] Testes automatizados de regras, importação e relatórios.
+- [ ] Ampliar testes automatizados de importação, contratos de dados e fluxos de IA.
 - [ ] Acessibilidade, revisão de contraste e testes em dispositivos.
 - [ ] Validar execução do GitHub Pages e dos workflows após cada release.
 
