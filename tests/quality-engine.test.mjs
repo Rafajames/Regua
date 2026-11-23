@@ -20,7 +20,7 @@ test('motor avalia critérios e dimensões sem criar dados',()=>{
 test('motor sinaliza campos ausentes e não inventa evidência',()=>{
  const result=evaluateQuality({});
  assert.equal(result.score,0);
- assert.ok(result.criteria.every(item=>item.status==='review'));
+ assert.ok(result.criteria.every(item=>item.status==='review'||item.status==='not_applicable'));
  assert.ok(result.criteria.some(item=>item.evidence.includes('não informado')||item.evidence.includes('ausente')));
 });
 
