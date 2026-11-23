@@ -1,0 +1,2747 @@
+{
+  "source": "Rafajames/MapTec-TJRR data/maptec.json",
+  "sourceUrl": "https://github.com/Rafajames/MapTec-TJRR/blob/main/data/maptec.json",
+  "note": "Snapshot de referência; a fonte oficial do MapTec é o Supabase.",
+  "locations": [
+    {
+      "building": "Sede Administrativa",
+      "buildingShort": "Sede Administrativa",
+      "buildingId": "adm",
+      "block": "Térreo",
+      "room": "01",
+      "sector": "SECRETARIA GERAL DA CORREGEDORIA",
+      "unitId": "01-secretaria-geral-da-corregedoria",
+      "unitCode": "245"
+    },
+    {
+      "building": "Sede Administrativa",
+      "buildingShort": "Sede Administrativa",
+      "buildingId": "adm",
+      "block": "Térreo",
+      "room": "02",
+      "sector": "SALA DE AUDIENCIAS CPS",
+      "unitId": "02-sala-de-audiencias-cps",
+      "unitCode": ""
+    },
+    {
+      "building": "Sede Administrativa",
+      "buildingShort": "Sede Administrativa",
+      "buildingId": "adm",
+      "block": "Térreo",
+      "room": "03",
+      "sector": "COMISSÃO PERMANENTE DE SINDICANCIA",
+      "unitId": "03-comissao-permanente-de-sindicancia",
+      "unitCode": "22"
+    },
+    {
+      "building": "Sede Administrativa",
+      "buildingShort": "Sede Administrativa",
+      "buildingId": "adm",
+      "block": "Térreo",
+      "room": "04",
+      "sector": "DIRETORIA DE GESTÃO EXTRAJUDICIAL",
+      "unitId": "04-diretoria-de-gestao-extrajudicial",
+      "unitCode": "1180"
+    },
+    {
+      "building": "Sede Administrativa",
+      "buildingShort": "Sede Administrativa",
+      "buildingId": "adm",
+      "block": "Térreo",
+      "room": "05",
+      "sector": "JUIZ AUXILIAR DA CORREGEDORIA",
+      "unitId": "05-juiz-auxiliar-da-corregedoria",
+      "unitCode": "719"
+    },
+    {
+      "building": "Sede Administrativa",
+      "buildingShort": "Sede Administrativa",
+      "buildingId": "adm",
+      "block": "Térreo",
+      "room": "06",
+      "sector": "GABINETE DA CORREGEDORIA",
+      "unitId": "06-gabinete-da-corregedoria",
+      "unitCode": "20"
+    },
+    {
+      "building": "Sede Administrativa",
+      "buildingShort": "Sede Administrativa",
+      "buildingId": "adm",
+      "block": "Térreo",
+      "room": "08",
+      "sector": "SALA DE REUNIÃO",
+      "unitId": "08-sala-de-reuniao",
+      "unitCode": ""
+    },
+    {
+      "building": "Sede Administrativa",
+      "buildingShort": "Sede Administrativa",
+      "buildingId": "adm",
+      "block": "Térreo",
+      "room": "09",
+      "sector": "ASSESSORIA JURIDICA",
+      "unitId": "09-assessoria-juridica",
+      "unitCode": "21"
+    },
+    {
+      "building": "Sede Administrativa",
+      "buildingShort": "Sede Administrativa",
+      "buildingId": "adm",
+      "block": "Térreo",
+      "room": "10",
+      "sector": "EQUIPE TECNICA_DG1G/DGEX/CEJAI/CRSF,/SEC/SAD",
+      "unitId": "10-equipe-tecnica-dg1g-dgex-cejai-crsf-sec-sad",
+      "unitCode": ""
+    },
+    {
+      "building": "Sede Administrativa",
+      "buildingShort": "Sede Administrativa",
+      "buildingId": "adm",
+      "block": "Térreo",
+      "room": "",
+      "sector": "OUVIDORIA",
+      "unitId": "sn-ouvidoria",
+      "unitCode": "1150"
+    },
+    {
+      "building": "Sede Administrativa",
+      "buildingShort": "Sede Administrativa",
+      "buildingId": "adm",
+      "block": "Térreo",
+      "room": "",
+      "sector": "COMISSÃO PERMANENTE DE SEGURANÇA INSTITUCIONAL",
+      "unitId": "sn-comissao-permanente-de-seguranca-institucional",
+      "unitCode": "688"
+    },
+    {
+      "building": "Sede Administrativa",
+      "buildingShort": "Sede Administrativa",
+      "buildingId": "adm",
+      "block": "Térreo",
+      "room": "",
+      "sector": "SALA DE ACOLHIMENTO",
+      "unitId": "sn-sala-de-acolhimento",
+      "unitCode": ""
+    },
+    {
+      "building": "Sede Administrativa",
+      "buildingShort": "Sede Administrativa",
+      "buildingId": "adm",
+      "block": "Térreo",
+      "room": "",
+      "sector": "SALA DE REUNIAO OUVIDORIA",
+      "unitId": "sn-sala-de-reuniao-ouvidoria",
+      "unitCode": ""
+    },
+    {
+      "building": "Sede Administrativa",
+      "buildingShort": "Sede Administrativa",
+      "buildingId": "adm",
+      "block": "Térreo",
+      "room": "",
+      "sector": "JUSTIÇA CIDADÃ",
+      "unitId": "sn-justica-cidada",
+      "unitCode": ""
+    },
+    {
+      "building": "Sede Administrativa",
+      "buildingShort": "Sede Administrativa",
+      "buildingId": "adm",
+      "block": "1º Piso",
+      "room": "102",
+      "sector": "SALA DE HACK",
+      "unitId": "102-sala-de-hack",
+      "unitCode": ""
+    },
+    {
+      "building": "Sede Administrativa",
+      "buildingShort": "Sede Administrativa",
+      "buildingId": "adm",
+      "block": "1º Piso",
+      "room": "103",
+      "sector": "SECRETARIA DE GESTÃO DE PESSOAS",
+      "unitId": "103-secretaria-de-gestao-de-pessoas",
+      "unitCode": "239"
+    },
+    {
+      "building": "Sede Administrativa",
+      "buildingShort": "Sede Administrativa",
+      "buildingId": "adm",
+      "block": "1º Piso",
+      "room": "104",
+      "sector": "GRUPO DE MONITORAMENTO E FISCALIZAÇÃO DO SISTEMA CARCERÁRIO E SOCIOEDUCATIVO",
+      "unitId": "104-grupo-de-monitoramento-e-fiscalizacao-do-sistema-carcerario-e-socioeducativo",
+      "unitCode": "676"
+    },
+    {
+      "building": "Sede Administrativa",
+      "buildingShort": "Sede Administrativa",
+      "buildingId": "adm",
+      "block": "1º Piso",
+      "room": "105",
+      "sector": "SECRETARIA DE GESTÃO DE PESSOAS - GABINETE",
+      "unitId": "105-secretaria-de-gestao-de-pessoas-gabinete",
+      "unitCode": ""
+    },
+    {
+      "building": "Sede Administrativa",
+      "buildingShort": "Sede Administrativa",
+      "buildingId": "adm",
+      "block": "1º Piso",
+      "room": "106",
+      "sector": "GRUPO DE MONITORAMENTO E FISCALIZAÇÃO DO SISTEMA CARCERÁRIO - GMF",
+      "unitId": "106-grupo-de-monitoramento-e-fiscalizacao-do-sistema-carcerario-gmf",
+      "unitCode": "980"
+    },
+    {
+      "building": "Sede Administrativa",
+      "buildingShort": "Sede Administrativa",
+      "buildingId": "adm",
+      "block": "1º Piso",
+      "room": "107",
+      "sector": "SUBSECRETARIA DE GESTÃO DE FORÇA DE TRABALHO / SECRETARIA DE GESTÃO DE PESSOAS ASSESSORIA",
+      "unitId": "107-subsecretaria-de-gestao-de-forca-de-trabalho-secretaria-de-gestao-de-pessoas",
+      "unitCode": "971"
+    },
+    {
+      "building": "Sede Administrativa",
+      "buildingShort": "Sede Administrativa",
+      "buildingId": "adm",
+      "block": "1º Piso",
+      "room": "109",
+      "sector": "SUBSECRETARIA DE ANÁLISE DE DESPESAS COM PESSOAL/SETOR DE FOLHA DE PAGAMENTO",
+      "unitId": "109-subsecretaria-de-analise-de-despesas-com-pessoal-setor-de-folha-de-pagamento",
+      "unitCode": "974"
+    },
+    {
+      "building": "Sede Administrativa",
+      "buildingShort": "Sede Administrativa",
+      "buildingId": "adm",
+      "block": "1º Piso",
+      "room": "110",
+      "sector": "SETOR DE LICENÇA E AFASTAMENTO",
+      "unitId": "110-setor-de-licenca-e-afastamento",
+      "unitCode": "650"
+    },
+    {
+      "building": "Sede Administrativa",
+      "buildingShort": "Sede Administrativa",
+      "buildingId": "adm",
+      "block": "1º Piso",
+      "room": "115",
+      "sector": "SETOR DE GESTÃO DA FORÇA DE TRABALHO AUXILIAR",
+      "unitId": "115-setor-de-gestao-da-forca-de-trabalho-auxiliar",
+      "unitCode": "970"
+    },
+    {
+      "building": "Sede Administrativa",
+      "buildingShort": "Sede Administrativa",
+      "buildingId": "adm",
+      "block": "1º Piso",
+      "room": "116",
+      "sector": "SUBSECRETARIA DE ACOMPANHAMENTO FUNCIONAL",
+      "unitId": "116-subsecretaria-de-acompanhamento-funcional",
+      "unitCode": "867"
+    },
+    {
+      "building": "Sede Administrativa",
+      "buildingShort": "Sede Administrativa",
+      "buildingId": "adm",
+      "block": "1º Piso",
+      "room": "118",
+      "sector": "SUBSECRETARIA DE GESTÃO ESTRATÉGICA DE PESSOAS/SETOR DE MONITORAMENTO DE DESEMPENHO",
+      "unitId": "118-subsecretaria-de-gestao-estrategica-de-pessoas-setor-de-monitoramento-de-des",
+      "unitCode": "973"
+    },
+    {
+      "building": "Sede Administrativa",
+      "buildingShort": "Sede Administrativa",
+      "buildingId": "adm",
+      "block": "1º Piso",
+      "room": "119",
+      "sector": "SECRETARIA DE GESTÃO DE PESSOAS GABINETE ADJUNTO",
+      "unitId": "119-secretaria-de-gestao-de-pessoas-gabinete-adjunto",
+      "unitCode": ""
+    },
+    {
+      "building": "Sede Administrativa",
+      "buildingShort": "Sede Administrativa",
+      "buildingId": "adm",
+      "block": "1º Piso",
+      "room": "121",
+      "sector": "SUBSECRETARIA DE DESENVOLVIMENTO DE PESSOAL",
+      "unitId": "121-subsecretaria-de-desenvolvimento-de-pessoal",
+      "unitCode": "645"
+    },
+    {
+      "building": "Sede Administrativa",
+      "buildingShort": "Sede Administrativa",
+      "buildingId": "adm",
+      "block": "1º Piso",
+      "room": "124",
+      "sector": "SUBSECRETARIA DE CIBERSEGURANÇA",
+      "unitId": "124-subsecretaria-de-ciberseguranca",
+      "unitCode": "1169"
+    },
+    {
+      "building": "Sede Administrativa",
+      "buildingShort": "Sede Administrativa",
+      "buildingId": "adm",
+      "block": "1º Piso",
+      "room": "125",
+      "sector": "SUBSECRETARIA DE APOIO A DECISÃO",
+      "unitId": "125-subsecretaria-de-apoio-a-decisao",
+      "unitCode": "893"
+    },
+    {
+      "building": "Sede Administrativa",
+      "buildingShort": "Sede Administrativa",
+      "buildingId": "adm",
+      "block": "1º Piso",
+      "room": "127",
+      "sector": "SECRETARIA DE TECNOLOGIA DA INFORMAÇÃO E COMUNICAÇÃO GABINETE",
+      "unitId": "127-secretaria-de-tecnologia-da-informacao-e-comunicacao-gabinete",
+      "unitCode": "892"
+    },
+    {
+      "building": "Sede Administrativa",
+      "buildingShort": "Sede Administrativa",
+      "buildingId": "adm",
+      "block": "1º Piso",
+      "room": "128",
+      "sector": "SECRETARIA DE TECNOLOGIA DA INFORMAÇÃO_SALA DE REUNIÃO",
+      "unitId": "128-secretaria-de-tecnologia-da-informacao-sala-de-reuniao",
+      "unitCode": ""
+    },
+    {
+      "building": "Sede Administrativa",
+      "buildingShort": "Sede Administrativa",
+      "buildingId": "adm",
+      "block": "1º Piso",
+      "room": "131",
+      "sector": "SUBSECRETARIA DE GESTÃO DE CONTRATOS DE TIC",
+      "unitId": "131-subsecretaria-de-gestao-de-contratos-de-tic",
+      "unitCode": "900"
+    },
+    {
+      "building": "Sede Administrativa",
+      "buildingShort": "Sede Administrativa",
+      "buildingId": "adm",
+      "block": "1º Piso",
+      "room": "132",
+      "sector": "SUBSECRETARIA DE INFRAESTRUTURA DE TIC",
+      "unitId": "132-subsecretaria-de-infraestrutura-de-tic",
+      "unitCode": "894"
+    },
+    {
+      "building": "Sede Administrativa",
+      "buildingShort": "Sede Administrativa",
+      "buildingId": "adm",
+      "block": "1º Piso",
+      "room": "135",
+      "sector": "CENTRAL DE ATENCIMENTO DE INFORMÁTICA",
+      "unitId": "135-central-de-atencimento-de-informatica",
+      "unitCode": ""
+    },
+    {
+      "building": "Sede Administrativa",
+      "buildingShort": "Sede Administrativa",
+      "buildingId": "adm",
+      "block": "1º Piso",
+      "room": "139",
+      "sector": "SUBSECRETARIA CENTRAL DE SERVIÇOS",
+      "unitId": "139-subsecretaria-central-de-servicos",
+      "unitCode": "898"
+    },
+    {
+      "building": "Sede Administrativa",
+      "buildingShort": "Sede Administrativa",
+      "buildingId": "adm",
+      "block": "2º Piso",
+      "room": "202",
+      "sector": "SALA DE HACK",
+      "unitId": "202-sala-de-hack",
+      "unitCode": ""
+    },
+    {
+      "building": "Sede Administrativa",
+      "buildingShort": "Sede Administrativa",
+      "buildingId": "adm",
+      "block": "2º Piso",
+      "room": "204",
+      "sector": "SUBCOORDENADORIA JURÍDICA DE PRECATORIOS",
+      "unitId": "204-subcoordenadoria-juridica-de-precatorios",
+      "unitCode": "1208"
+    },
+    {
+      "building": "Sede Administrativa",
+      "buildingShort": "Sede Administrativa",
+      "buildingId": "adm",
+      "block": "2º Piso",
+      "room": "206",
+      "sector": "COORDENAÇÃO NÚCLEO DE PRECATORIOS",
+      "unitId": "206-coordenacao-nucleo-de-precatorios",
+      "unitCode": "912"
+    },
+    {
+      "building": "Sede Administrativa",
+      "buildingShort": "Sede Administrativa",
+      "buildingId": "adm",
+      "block": "2º Piso",
+      "room": "207",
+      "sector": "SECRETARIA DE AUDITORIA INTERNA",
+      "unitId": "207-secretaria-de-auditoria-interna",
+      "unitCode": "909"
+    },
+    {
+      "building": "Sede Administrativa",
+      "buildingShort": "Sede Administrativa",
+      "buildingId": "adm",
+      "block": "2º Piso",
+      "room": "208",
+      "sector": "SUBCOORDENADORIA DE ANALISE CONTÁBIL DE PRECATORIOS",
+      "unitId": "208-subcoordenadoria-de-analise-contabil-de-precatorios",
+      "unitCode": "1205"
+    },
+    {
+      "building": "Sede Administrativa",
+      "buildingShort": "Sede Administrativa",
+      "buildingId": "adm",
+      "block": "2º Piso",
+      "room": "210",
+      "sector": "SUBCOORDENADORIA DE ANALISE CONTÁBIL DE PRECATORIOS",
+      "unitId": "210-subcoordenadoria-de-analise-contabil-de-precatorios",
+      "unitCode": "1205"
+    },
+    {
+      "building": "Sede Administrativa",
+      "buildingShort": "Sede Administrativa",
+      "buildingId": "adm",
+      "block": "2º Piso",
+      "room": "212",
+      "sector": "NÚCLEO DE PRECATORIOS ATENDIMENTO",
+      "unitId": "212-nucleo-de-precatorios-atendimento",
+      "unitCode": ""
+    },
+    {
+      "building": "Sede Administrativa",
+      "buildingShort": "Sede Administrativa",
+      "buildingId": "adm",
+      "block": "2º Piso",
+      "room": "213",
+      "sector": "SECRETARIA DE GESTÃO ESTRATÉGICA / SETOR DE SUSTENTABILIDADE E RESPONSABILIDADE SOCIAL",
+      "unitId": "213-secretaria-de-gestao-estrategica-setor-de-sustentabilidade-e-responsabilidad",
+      "unitCode": "888"
+    },
+    {
+      "building": "Sede Administrativa",
+      "buildingShort": "Sede Administrativa",
+      "buildingId": "adm",
+      "block": "2º Piso",
+      "room": "216",
+      "sector": "SUBSECRETARIA DE PROCESSOS E GESTÃO DE QUALIDADE",
+      "unitId": "216-subsecretaria-de-processos-e-gestao-de-qualidade",
+      "unitCode": "889"
+    },
+    {
+      "building": "Sede Administrativa",
+      "buildingShort": "Sede Administrativa",
+      "buildingId": "adm",
+      "block": "2º Piso",
+      "room": "220",
+      "sector": "VICE-PRESIDENCIA NUCLEO DE GERENCIAMENTO DE PRECENDENTES",
+      "unitId": "220-vice-presidencia-nucleo-de-gerenciamento-de-precendentes",
+      "unitCode": "1096"
+    },
+    {
+      "building": "Sede Administrativa",
+      "buildingShort": "Sede Administrativa",
+      "buildingId": "adm",
+      "block": "2º Piso",
+      "room": "223",
+      "sector": "COMISSÃO PERMANENTE DE LEGISLAÇÃO E JURISPRUDÊNCIA",
+      "unitId": "223-comissao-permanente-de-legislacao-e-jurisprudencia",
+      "unitCode": "946"
+    },
+    {
+      "building": "Sede Administrativa",
+      "buildingShort": "Sede Administrativa",
+      "buildingId": "adm",
+      "block": "2º Piso",
+      "room": "225",
+      "sector": "NATJUS",
+      "unitId": "225-natjus",
+      "unitCode": "1200"
+    },
+    {
+      "building": "Sede Administrativa",
+      "buildingShort": "Sede Administrativa",
+      "buildingId": "adm",
+      "block": "2º Piso",
+      "room": "226",
+      "sector": "NÚCLEO DE PROJETOS E INOVAÇÃO NPI",
+      "unitId": "226-nucleo-de-projetos-e-inovacao-npi",
+      "unitCode": "1111"
+    },
+    {
+      "building": "Sede Administrativa",
+      "buildingShort": "Sede Administrativa",
+      "buildingId": "adm",
+      "block": "2º Piso",
+      "room": "229",
+      "sector": "SECRETARIA DE INFRAESTRUTURA E LOGISTICA SIL",
+      "unitId": "229-secretaria-de-infraestrutura-e-logistica-sil",
+      "unitCode": "962"
+    },
+    {
+      "building": "Sede Administrativa",
+      "buildingShort": "Sede Administrativa",
+      "buildingId": "adm",
+      "block": "2º Piso",
+      "room": "230",
+      "sector": "SETOR DE MANUTENÇÃO PREDIAL",
+      "unitId": "230-setor-de-manutencao-predial",
+      "unitCode": "966"
+    },
+    {
+      "building": "Sede Administrativa",
+      "buildingShort": "Sede Administrativa",
+      "buildingId": "adm",
+      "block": "2º Piso",
+      "room": "231",
+      "sector": "SECRETARIA DE INFRAESTRUTURA E LOGISTICA SIL",
+      "unitId": "231-secretaria-de-infraestrutura-e-logistica-sil",
+      "unitCode": "962"
+    },
+    {
+      "building": "Sede Administrativa",
+      "buildingShort": "Sede Administrativa",
+      "buildingId": "adm",
+      "block": "2º Piso",
+      "room": "234",
+      "sector": "SUBSECRETARIA DE INFRAESTRUTURA SINFRA",
+      "unitId": "234-subsecretaria-de-infraestrutura-sinfra",
+      "unitCode": "965"
+    },
+    {
+      "building": "Sede Administrativa",
+      "buildingShort": "Sede Administrativa",
+      "buildingId": "adm",
+      "block": "2º Piso",
+      "room": "235",
+      "sector": "SETOR DE SERVIÇOS TERCEIRIZADOS",
+      "unitId": "235-setor-de-servicos-terceirizados",
+      "unitCode": "963"
+    },
+    {
+      "building": "Sede Administrativa",
+      "buildingShort": "Sede Administrativa",
+      "buildingId": "adm",
+      "block": "2º Piso",
+      "room": "239",
+      "sector": "SUBSECRETARIA DE PATRIMÔNIO",
+      "unitId": "239-subsecretaria-de-patrimonio",
+      "unitCode": "967"
+    },
+    {
+      "building": "Sede Administrativa",
+      "buildingShort": "Sede Administrativa",
+      "buildingId": "adm",
+      "block": "2º Piso",
+      "room": "240",
+      "sector": "SUBSECRETARIA DE SERVIÇOS GERAIS",
+      "unitId": "240-subsecretaria-de-servicos-gerais",
+      "unitCode": "863"
+    },
+    {
+      "building": "Sede Administrativa",
+      "buildingShort": "Sede Administrativa",
+      "buildingId": "adm",
+      "block": "3º Piso",
+      "room": "302",
+      "sector": "SALA DE HACK",
+      "unitId": "302-sala-de-hack",
+      "unitCode": ""
+    },
+    {
+      "building": "Sede Administrativa",
+      "buildingShort": "Sede Administrativa",
+      "buildingId": "adm",
+      "block": "3º Piso",
+      "room": "304",
+      "sector": "UNIDADE DE JUSTIÇA RESTAURATIVA SALA DE SESSÃO RESTAURATIVA",
+      "unitId": "304-unidade-de-justica-restaurativa-sala-de-sessao-restaurativa",
+      "unitCode": "944"
+    },
+    {
+      "building": "Sede Administrativa",
+      "buildingShort": "Sede Administrativa",
+      "buildingId": "adm",
+      "block": "3º Piso",
+      "room": "305",
+      "sector": "SECRETARIA DE ORÇAMENTO E FINANÇAS",
+      "unitId": "305-secretaria-de-orcamento-e-financas",
+      "unitCode": "954"
+    },
+    {
+      "building": "Sede Administrativa",
+      "buildingShort": "Sede Administrativa",
+      "buildingId": "adm",
+      "block": "3º Piso",
+      "room": "307",
+      "sector": "SECRETARIA DE ORÇAMENTO E FINANÇAS GABINETE",
+      "unitId": "307-secretaria-de-orcamento-e-financas-gabinete",
+      "unitCode": ""
+    },
+    {
+      "building": "Sede Administrativa",
+      "buildingShort": "Sede Administrativa",
+      "buildingId": "adm",
+      "block": "3º Piso",
+      "room": "309",
+      "sector": "SUBSECRETARIA DE ARRECADAÇÃO",
+      "unitId": "309-subsecretaria-de-arrecadacao",
+      "unitCode": "1236"
+    },
+    {
+      "building": "Sede Administrativa",
+      "buildingShort": "Sede Administrativa",
+      "buildingId": "adm",
+      "block": "3º Piso",
+      "room": "312",
+      "sector": "SUBSECRETARIA DE ORÇAMENTO",
+      "unitId": "312-subsecretaria-de-orcamento",
+      "unitCode": "956"
+    },
+    {
+      "building": "Sede Administrativa",
+      "buildingShort": "Sede Administrativa",
+      "buildingId": "adm",
+      "block": "3º Piso",
+      "room": "314",
+      "sector": "JUSTIÇA COMUNITÁRIA",
+      "unitId": "314-justica-comunitaria",
+      "unitCode": "1147"
+    },
+    {
+      "building": "Sede Administrativa",
+      "buildingShort": "Sede Administrativa",
+      "buildingId": "adm",
+      "block": "3º Piso",
+      "room": "315",
+      "sector": "SUBSECRETARIA DE CONTABILIDADE",
+      "unitId": "315-subsecretaria-de-contabilidade",
+      "unitCode": "958"
+    },
+    {
+      "building": "Sede Administrativa",
+      "buildingShort": "Sede Administrativa",
+      "buildingId": "adm",
+      "block": "3º Piso",
+      "room": "320",
+      "sector": "SUBSECRETÁRIA DE FINANÇAS",
+      "unitId": "320-subsecretaria-de-financas",
+      "unitCode": "960"
+    },
+    {
+      "building": "Sede Administrativa",
+      "buildingShort": "Sede Administrativa",
+      "buildingId": "adm",
+      "block": "3º Piso",
+      "room": "326",
+      "sector": "SECRETARIA DE GESTÃO ADMINISTRATIVA/GABINETE",
+      "unitId": "326-secretaria-de-gestao-administrativa-gabinete",
+      "unitCode": "950"
+    },
+    {
+      "building": "Sede Administrativa",
+      "buildingShort": "Sede Administrativa",
+      "buildingId": "adm",
+      "block": "3º Piso",
+      "room": "327",
+      "sector": "SECRETARIA GERAL GABINETE",
+      "unitId": "327-secretaria-geral-gabinete",
+      "unitCode": "947"
+    },
+    {
+      "building": "Sede Administrativa",
+      "buildingShort": "Sede Administrativa",
+      "buildingId": "adm",
+      "block": "3º Piso",
+      "room": "329",
+      "sector": "NÚCLEO JURÍDICO ADMINISTRATIVO",
+      "unitId": "329-nucleo-juridico-administrativo",
+      "unitCode": "949"
+    },
+    {
+      "building": "Sede Administrativa",
+      "buildingShort": "Sede Administrativa",
+      "buildingId": "adm",
+      "block": "3º Piso",
+      "room": "330",
+      "sector": "SETOR DE CONVÊNIOS E CONGÊNERES",
+      "unitId": "330-setor-de-convenios-e-congeneres",
+      "unitCode": "951"
+    },
+    {
+      "building": "Sede Administrativa",
+      "buildingShort": "Sede Administrativa",
+      "buildingId": "adm",
+      "block": "3º Piso",
+      "room": "332",
+      "sector": "SUBSECRETARIA DE CONTRATOS",
+      "unitId": "332-subsecretaria-de-contratos",
+      "unitCode": "866"
+    },
+    {
+      "building": "Sede Administrativa",
+      "buildingShort": "Sede Administrativa",
+      "buildingId": "adm",
+      "block": "3º Piso",
+      "room": "334",
+      "sector": "SUBSECRETARIA DE CONTRATOS TERCEIRIZADOS",
+      "unitId": "334-subsecretaria-de-contratos-terceirizados",
+      "unitCode": "952"
+    },
+    {
+      "building": "Sede Administrativa",
+      "buildingShort": "Sede Administrativa",
+      "buildingId": "adm",
+      "block": "3º Piso",
+      "room": "335",
+      "sector": "SUBSECRETARIA DE AQUISIÇÕES, LICITAÇÕES E CREDENCIAMENTOS SALC",
+      "unitId": "335-subsecretaria-de-aquisicoes-licitacoes-e-credenciamentos-salc",
+      "unitCode": "862"
+    },
+    {
+      "building": "Sede Administrativa",
+      "buildingShort": "Sede Administrativa",
+      "buildingId": "adm",
+      "block": "3º Piso",
+      "room": "336",
+      "sector": "SUBSECRETARIA DE REGISTRO E MOVIMENTAÇÃO DE MAGISTRADOS",
+      "unitId": "336-subsecretaria-de-registro-e-movimentacao-de-magistrados",
+      "unitCode": "1246"
+    },
+    {
+      "building": "Sede Administrativa",
+      "buildingShort": "Sede Administrativa",
+      "buildingId": "adm",
+      "block": "3º Piso",
+      "room": "338",
+      "sector": "SECRETARIA DE GESTÃO DE MAGISTRADOS",
+      "unitId": "338-secretaria-de-gestao-de-magistrados",
+      "unitCode": "1245"
+    },
+    {
+      "building": "Sede Administrativa",
+      "buildingShort": "Sede Administrativa",
+      "buildingId": "adm",
+      "block": "3º Piso",
+      "room": "339",
+      "sector": "DIRETORIA DE GESTÃO DOCUMENTAL",
+      "unitId": "339-diretoria-de-gestao-documental",
+      "unitCode": "1193"
+    },
+    {
+      "building": "Sede Administrativa",
+      "buildingShort": "Sede Administrativa",
+      "buildingId": "adm",
+      "block": "4º Piso",
+      "room": "412",
+      "sector": "SALA DE REUNIAO",
+      "unitId": "412-sala-de-reuniao",
+      "unitCode": ""
+    },
+    {
+      "building": "Sede Administrativa",
+      "buildingShort": "Sede Administrativa",
+      "buildingId": "adm",
+      "block": "4º Piso",
+      "room": "413",
+      "sector": "ESTÚDIO",
+      "unitId": "413-estudio",
+      "unitCode": ""
+    },
+    {
+      "building": "Sede Administrativa",
+      "buildingShort": "Sede Administrativa",
+      "buildingId": "adm",
+      "block": "4º Piso",
+      "room": "414",
+      "sector": "LABORATÓRIO DE INFORMATICA",
+      "unitId": "414-laboratorio-de-informatica",
+      "unitCode": ""
+    },
+    {
+      "building": "Sede Administrativa",
+      "buildingShort": "Sede Administrativa",
+      "buildingId": "adm",
+      "block": "4º Piso",
+      "room": "415",
+      "sector": "AUDITÓRIO",
+      "unitId": "415-auditorio",
+      "unitCode": ""
+    },
+    {
+      "building": "Sede Administrativa",
+      "buildingShort": "Sede Administrativa",
+      "buildingId": "adm",
+      "block": "4º Piso",
+      "room": "",
+      "sector": "COORDENADORIA ACADÊMICA",
+      "unitId": "sn-coordenadoria-academica",
+      "unitCode": "1174"
+    },
+    {
+      "building": "Sede Administrativa",
+      "buildingShort": "Sede Administrativa",
+      "buildingId": "adm",
+      "block": "4º Piso",
+      "room": "",
+      "sector": "SUBCOORDENADORIA DE APOIO ADMINISTRATIVO",
+      "unitId": "sn-subcoordenadoria-de-apoio-administrativo",
+      "unitCode": "1182"
+    },
+    {
+      "building": "Sede Administrativa",
+      "buildingShort": "Sede Administrativa",
+      "buildingId": "adm",
+      "block": "4º Piso",
+      "room": "",
+      "sector": "SETOR DE TECNOLOGIA, PRODUÇÃO E COMUNICAÇÃO",
+      "unitId": "sn-setor-de-tecnologia-producao-e-comunicacao",
+      "unitCode": "1171"
+    },
+    {
+      "building": "Sede Administrativa",
+      "buildingShort": "Sede Administrativa",
+      "buildingId": "adm",
+      "block": "4º Piso",
+      "room": "",
+      "sector": "SETOR DE FORMAÇÃO E APERFEIÇOAMENTO",
+      "unitId": "sn-setor-de-formacao-e-aperfeicoamento",
+      "unitCode": "1102"
+    },
+    {
+      "building": "Sede Administrativa",
+      "buildingShort": "Sede Administrativa",
+      "buildingId": "adm",
+      "block": "4º Piso",
+      "room": "",
+      "sector": "SETOR DE REGISTRO E INFORMACAO",
+      "unitId": "sn-setor-de-registro-e-informacao",
+      "unitCode": "1100"
+    },
+    {
+      "building": "Fórum Cidadania / Latife Salomão",
+      "buildingShort": "Fórum da Cidadania",
+      "buildingId": "cidadania",
+      "block": "Áreas Comuns",
+      "room": "011",
+      "sector": "LANCHONETE",
+      "unitId": "011-lanchonete",
+      "unitCode": ""
+    },
+    {
+      "building": "Fórum Cidadania / Latife Salomão",
+      "buildingShort": "Fórum da Cidadania",
+      "buildingId": "cidadania",
+      "block": "Áreas Comuns",
+      "room": "020",
+      "sector": "AUDITÓRIO",
+      "unitId": "020-auditorio",
+      "unitCode": ""
+    },
+    {
+      "building": "Fórum Cidadania / Latife Salomão",
+      "buildingShort": "Fórum da Cidadania",
+      "buildingId": "cidadania",
+      "block": "Áreas Comuns",
+      "room": "021",
+      "sector": "COPA",
+      "unitId": "021-copa",
+      "unitCode": ""
+    },
+    {
+      "building": "Fórum Cidadania / Latife Salomão",
+      "buildingShort": "Fórum da Cidadania",
+      "buildingId": "cidadania",
+      "block": "Áreas Comuns",
+      "room": "022",
+      "sector": "DML",
+      "unitId": "022-dml",
+      "unitCode": ""
+    },
+    {
+      "building": "Fórum Cidadania / Latife Salomão",
+      "buildingShort": "Fórum da Cidadania",
+      "buildingId": "cidadania",
+      "block": "Áreas Comuns",
+      "room": "029",
+      "sector": "GUARITA DOS FUNDOS LATIFE",
+      "unitId": "029-guarita-dos-fundos-latife",
+      "unitCode": ""
+    },
+    {
+      "building": "Fórum Cidadania / Latife Salomão",
+      "buildingShort": "Fórum da Cidadania",
+      "buildingId": "cidadania",
+      "block": "Áreas Comuns",
+      "room": "031",
+      "sector": "ACESSO PORTA DOS FUNDOS LATIFE",
+      "unitId": "031-acesso-porta-dos-fundos-latife",
+      "unitCode": ""
+    },
+    {
+      "building": "Fórum Cidadania / Latife Salomão",
+      "buildingShort": "Fórum da Cidadania",
+      "buildingId": "cidadania",
+      "block": "Bloco 1",
+      "room": "101",
+      "sector": "CENTRAL DE JUIZADOS",
+      "unitId": "101-central-de-juizados",
+      "unitCode": ""
+    },
+    {
+      "building": "Fórum Cidadania / Latife Salomão",
+      "buildingShort": "Fórum da Cidadania",
+      "buildingId": "cidadania",
+      "block": "Bloco 1",
+      "room": "102",
+      "sector": "CONCILIAÇÃO 1",
+      "unitId": "102-conciliacao-1",
+      "unitCode": ""
+    },
+    {
+      "building": "Fórum Cidadania / Latife Salomão",
+      "buildingShort": "Fórum da Cidadania",
+      "buildingId": "cidadania",
+      "block": "Bloco 1",
+      "room": "103",
+      "sector": "CONCILIAÇÃO 2",
+      "unitId": "103-conciliacao-2",
+      "unitCode": ""
+    },
+    {
+      "building": "Fórum Cidadania / Latife Salomão",
+      "buildingShort": "Fórum da Cidadania",
+      "buildingId": "cidadania",
+      "block": "Bloco 1",
+      "room": "104",
+      "sector": "CONCILIAÇÃO 3",
+      "unitId": "104-conciliacao-3",
+      "unitCode": ""
+    },
+    {
+      "building": "Fórum Cidadania / Latife Salomão",
+      "buildingShort": "Fórum da Cidadania",
+      "buildingId": "cidadania",
+      "block": "Bloco 1",
+      "room": "105",
+      "sector": "CONCILIAÇÃO 4",
+      "unitId": "105-conciliacao-4",
+      "unitCode": ""
+    },
+    {
+      "building": "Fórum Cidadania / Latife Salomão",
+      "buildingShort": "Fórum da Cidadania",
+      "buildingId": "cidadania",
+      "block": "Bloco 1",
+      "room": "106",
+      "sector": "SETOR DE CONCILIAÇÃO",
+      "unitId": "106-setor-de-conciliacao",
+      "unitCode": "692"
+    },
+    {
+      "building": "Fórum Cidadania / Latife Salomão",
+      "buildingShort": "Fórum da Cidadania",
+      "buildingId": "cidadania",
+      "block": "Bloco 1",
+      "room": "107",
+      "sector": "COPA",
+      "unitId": "107-copa",
+      "unitCode": ""
+    },
+    {
+      "building": "Fórum Cidadania / Latife Salomão",
+      "buildingShort": "Fórum da Cidadania",
+      "buildingId": "cidadania",
+      "block": "Bloco 1",
+      "room": "108",
+      "sector": "SETOR DE ATENDIMENTO, ATERMAÇÃO E DISTRIBUIÇÃO",
+      "unitId": "108-setor-de-atendimento-atermacao-e-distribuicao",
+      "unitCode": "940"
+    },
+    {
+      "building": "Fórum Cidadania / Latife Salomão",
+      "buildingShort": "Fórum da Cidadania",
+      "buildingId": "cidadania",
+      "block": "Bloco 1",
+      "room": "109",
+      "sector": "CONCILIAÇÃO 5",
+      "unitId": "109-conciliacao-5",
+      "unitCode": ""
+    },
+    {
+      "building": "Fórum Cidadania / Latife Salomão",
+      "buildingShort": "Fórum da Cidadania",
+      "buildingId": "cidadania",
+      "block": "Bloco 1",
+      "room": "110",
+      "sector": "DIRETORIA",
+      "unitId": "110-diretoria",
+      "unitCode": ""
+    },
+    {
+      "building": "Fórum Cidadania / Latife Salomão",
+      "buildingShort": "Fórum da Cidadania",
+      "buildingId": "cidadania",
+      "block": "Bloco 1",
+      "room": "111",
+      "sector": "CONCILIAÇÃO 6",
+      "unitId": "111-conciliacao-6",
+      "unitCode": ""
+    },
+    {
+      "building": "Fórum Cidadania / Latife Salomão",
+      "buildingShort": "Fórum da Cidadania",
+      "buildingId": "cidadania",
+      "block": "Bloco 1",
+      "room": "112",
+      "sector": "CONCILIAÇÃO 7",
+      "unitId": "112-conciliacao-7",
+      "unitCode": ""
+    },
+    {
+      "building": "Fórum Cidadania / Latife Salomão",
+      "buildingShort": "Fórum da Cidadania",
+      "buildingId": "cidadania",
+      "block": "Bloco 1",
+      "room": "113",
+      "sector": "CONCILIAÇÃO 8",
+      "unitId": "113-conciliacao-8",
+      "unitCode": ""
+    },
+    {
+      "building": "Fórum Cidadania / Latife Salomão",
+      "buildingShort": "Fórum da Cidadania",
+      "buildingId": "cidadania",
+      "block": "Bloco 1",
+      "room": "114",
+      "sector": "CONCILIAÇÃO 9",
+      "unitId": "114-conciliacao-9",
+      "unitCode": ""
+    },
+    {
+      "building": "Fórum Cidadania / Latife Salomão",
+      "buildingShort": "Fórum da Cidadania",
+      "buildingId": "cidadania",
+      "block": "Bloco 1",
+      "room": "115",
+      "sector": "SETOR DE MOVIMENTAÇÃO E EXECUÇÃO DOS JUIZADOS ESPECIAIS CÍVEIS",
+      "unitId": "115-setor-de-movimentacao-e-execucao-dos-juizados-especiais-civeis",
+      "unitCode": "939"
+    },
+    {
+      "building": "Fórum Cidadania / Latife Salomão",
+      "buildingShort": "Fórum da Cidadania",
+      "buildingId": "cidadania",
+      "block": "Bloco 1",
+      "room": "116",
+      "sector": "SALA DO HACK",
+      "unitId": "116-sala-do-hack",
+      "unitCode": ""
+    },
+    {
+      "building": "Fórum Cidadania / Latife Salomão",
+      "buildingShort": "Fórum da Cidadania",
+      "buildingId": "cidadania",
+      "block": "Bloco 1",
+      "room": "117",
+      "sector": "NUPEMEC / CEJUSC",
+      "unitId": "117-nupemec-cejusc",
+      "unitCode": "914"
+    },
+    {
+      "building": "Fórum Cidadania / Latife Salomão",
+      "buildingShort": "Fórum da Cidadania",
+      "buildingId": "cidadania",
+      "block": "Bloco 1",
+      "room": "118",
+      "sector": "SALA DE AUDIÊNCIAS 1",
+      "unitId": "118-sala-de-audiencias-1",
+      "unitCode": ""
+    },
+    {
+      "building": "Fórum Cidadania / Latife Salomão",
+      "buildingShort": "Fórum da Cidadania",
+      "buildingId": "cidadania",
+      "block": "Bloco 1",
+      "room": "119",
+      "sector": "SALA DE AUDIÊNCIAS 2",
+      "unitId": "119-sala-de-audiencias-2",
+      "unitCode": ""
+    },
+    {
+      "building": "Fórum Cidadania / Latife Salomão",
+      "buildingShort": "Fórum da Cidadania",
+      "buildingId": "cidadania",
+      "block": "Bloco 1",
+      "room": "120",
+      "sector": "SALA DE AUDIÊNCIAS 3",
+      "unitId": "120-sala-de-audiencias-3",
+      "unitCode": ""
+    },
+    {
+      "building": "Fórum Cidadania / Latife Salomão",
+      "buildingShort": "Fórum da Cidadania",
+      "buildingId": "cidadania",
+      "block": "Bloco 1",
+      "room": "121",
+      "sector": "SALA DE AUDIÊNCIAS 4",
+      "unitId": "121-sala-de-audiencias-4",
+      "unitCode": ""
+    },
+    {
+      "building": "Fórum Cidadania / Latife Salomão",
+      "buildingShort": "Fórum da Cidadania",
+      "buildingId": "cidadania",
+      "block": "Bloco 1",
+      "room": "122",
+      "sector": "SALA DO JUIZ COORDENADOR",
+      "unitId": "122-sala-do-juiz-coordenador",
+      "unitCode": ""
+    },
+    {
+      "building": "Fórum Cidadania / Latife Salomão",
+      "buildingShort": "Fórum da Cidadania",
+      "buildingId": "cidadania",
+      "block": "Bloco 1",
+      "room": "123",
+      "sector": "NUPEMEC",
+      "unitId": "123-nupemec",
+      "unitCode": ""
+    },
+    {
+      "building": "Fórum Cidadania / Latife Salomão",
+      "buildingShort": "Fórum da Cidadania",
+      "buildingId": "cidadania",
+      "block": "Bloco 1",
+      "room": "124",
+      "sector": "COPA",
+      "unitId": "124-copa",
+      "unitCode": ""
+    },
+    {
+      "building": "Fórum Cidadania / Latife Salomão",
+      "buildingShort": "Fórum da Cidadania",
+      "buildingId": "cidadania",
+      "block": "Bloco 1",
+      "room": "125",
+      "sector": "CEJUSC",
+      "unitId": "125-cejusc",
+      "unitCode": ""
+    },
+    {
+      "building": "Fórum Cidadania / Latife Salomão",
+      "buildingShort": "Fórum da Cidadania",
+      "buildingId": "cidadania",
+      "block": "Bloco 1",
+      "room": "126",
+      "sector": "SALA DE SUPERENDIVIDAMENTO",
+      "unitId": "126-sala-de-superendividamento",
+      "unitCode": "1214"
+    },
+    {
+      "building": "Fórum Cidadania / Latife Salomão",
+      "buildingShort": "Fórum da Cidadania",
+      "buildingId": "cidadania",
+      "block": "Bloco 1",
+      "room": "128",
+      "sector": "SALA DE AUDIÊNCIAS 5",
+      "unitId": "128-sala-de-audiencias-5",
+      "unitCode": ""
+    },
+    {
+      "building": "Fórum Cidadania / Latife Salomão",
+      "buildingShort": "Fórum da Cidadania",
+      "buildingId": "cidadania",
+      "block": "Bloco 1",
+      "room": "129",
+      "sector": "BRINQUEDOTECA",
+      "unitId": "129-brinquedoteca",
+      "unitCode": ""
+    },
+    {
+      "building": "Fórum Cidadania / Latife Salomão",
+      "buildingShort": "Fórum da Cidadania",
+      "buildingId": "cidadania",
+      "block": "Bloco 1",
+      "room": "130",
+      "sector": "ACESSO RESTRITO",
+      "unitId": "130-acesso-restrito",
+      "unitCode": ""
+    },
+    {
+      "building": "Fórum Cidadania / Latife Salomão",
+      "buildingShort": "Fórum da Cidadania",
+      "buildingId": "cidadania",
+      "block": "Bloco 1",
+      "room": "131",
+      "sector": "ESCRITÓRIO E DESCANSO TERCEIRIZADOS",
+      "unitId": "131-escritorio-e-descanso-terceirizados",
+      "unitCode": ""
+    },
+    {
+      "building": "Fórum Cidadania / Latife Salomão",
+      "buildingShort": "Fórum da Cidadania",
+      "buildingId": "cidadania",
+      "block": "Bloco 1",
+      "room": "132",
+      "sector": "Depósito",
+      "unitId": "132-deposito",
+      "unitCode": ""
+    },
+    {
+      "building": "Fórum Cidadania / Latife Salomão",
+      "buildingShort": "Fórum da Cidadania",
+      "buildingId": "cidadania",
+      "block": "Bloco 2",
+      "room": "201",
+      "sector": "1º, 2º E 3º JUIZADOS ESPECIAIS CÍVEIS",
+      "unitId": "201-1-2-e-3-juizados-especiais-civeis",
+      "unitCode": "1234"
+    },
+    {
+      "building": "Fórum Cidadania / Latife Salomão",
+      "buildingShort": "Fórum da Cidadania",
+      "buildingId": "cidadania",
+      "block": "Bloco 2",
+      "room": "202",
+      "sector": "1º JUIZADO ESPECIAL CÍVEL - AUDIÊNCIA",
+      "unitId": "202-1-juizado-especial-civel-audiencia",
+      "unitCode": ""
+    },
+    {
+      "building": "Fórum Cidadania / Latife Salomão",
+      "buildingShort": "Fórum da Cidadania",
+      "buildingId": "cidadania",
+      "block": "Bloco 2",
+      "room": "203",
+      "sector": "1° JUIZADO ESPECIAL CÍVEL - GABINETE",
+      "unitId": "203-1-juizado-especial-civel-gabinete",
+      "unitCode": "932"
+    },
+    {
+      "building": "Fórum Cidadania / Latife Salomão",
+      "buildingShort": "Fórum da Cidadania",
+      "buildingId": "cidadania",
+      "block": "Bloco 2",
+      "room": "204",
+      "sector": "3º JUIZADO ESPECIAL CÍVEL - GABINETE",
+      "unitId": "204-3-juizado-especial-civel-gabinete",
+      "unitCode": "936"
+    },
+    {
+      "building": "Fórum Cidadania / Latife Salomão",
+      "buildingShort": "Fórum da Cidadania",
+      "buildingId": "cidadania",
+      "block": "Bloco 2",
+      "room": "205",
+      "sector": "3º JUIZADO ESPECIAL CÍVEL - AUDIÊNCIA",
+      "unitId": "205-3-juizado-especial-civel-audiencia",
+      "unitCode": ""
+    },
+    {
+      "building": "Fórum Cidadania / Latife Salomão",
+      "buildingShort": "Fórum da Cidadania",
+      "buildingId": "cidadania",
+      "block": "Bloco 2",
+      "room": "206",
+      "sector": "2º JUIZADO ESPECIAL CÍVEL - GABINETE",
+      "unitId": "206-2-juizado-especial-civel-gabinete",
+      "unitCode": "934"
+    },
+    {
+      "building": "Fórum Cidadania / Latife Salomão",
+      "buildingShort": "Fórum da Cidadania",
+      "buildingId": "cidadania",
+      "block": "Bloco 2",
+      "room": "207",
+      "sector": "BANHEIRO FEMININO",
+      "unitId": "207-banheiro-feminino",
+      "unitCode": ""
+    },
+    {
+      "building": "Fórum Cidadania / Latife Salomão",
+      "buildingShort": "Fórum da Cidadania",
+      "buildingId": "cidadania",
+      "block": "Bloco 2",
+      "room": "208",
+      "sector": "BANHEIRO MASCULINO",
+      "unitId": "208-banheiro-masculino",
+      "unitCode": ""
+    },
+    {
+      "building": "Fórum Cidadania / Latife Salomão",
+      "buildingShort": "Fórum da Cidadania",
+      "buildingId": "cidadania",
+      "block": "Bloco 2",
+      "room": "209",
+      "sector": "COPA",
+      "unitId": "209-copa",
+      "unitCode": ""
+    },
+    {
+      "building": "Fórum Cidadania / Latife Salomão",
+      "buildingShort": "Fórum da Cidadania",
+      "buildingId": "cidadania",
+      "block": "Bloco 2",
+      "room": "210",
+      "sector": "2° JUIZADO ESPECIAL CÍVEL - AUDIÊNCIA",
+      "unitId": "210-2-juizado-especial-civel-audiencia",
+      "unitCode": ""
+    },
+    {
+      "building": "Fórum Cidadania / Latife Salomão",
+      "buildingShort": "Fórum da Cidadania",
+      "buildingId": "cidadania",
+      "block": "Bloco 2",
+      "room": "211",
+      "sector": "SETOR DE MOVIMENTAÇÃO E EXECUÇÃO",
+      "unitId": "211-setor-de-movimentacao-e-execucao",
+      "unitCode": "939"
+    },
+    {
+      "building": "Fórum Cidadania / Latife Salomão",
+      "buildingShort": "Fórum da Cidadania",
+      "buildingId": "cidadania",
+      "block": "Bloco 3",
+      "room": "301",
+      "sector": "SALA DE MONITORAMENTO",
+      "unitId": "301-sala-de-monitoramento",
+      "unitCode": "711"
+    },
+    {
+      "building": "Fórum Cidadania / Latife Salomão",
+      "buildingShort": "Fórum da Cidadania",
+      "buildingId": "cidadania",
+      "block": "Bloco 3",
+      "room": "302",
+      "sector": "TURMA RECURSAL",
+      "unitId": "302-turma-recursal",
+      "unitCode": "125"
+    },
+    {
+      "building": "Fórum Cidadania / Latife Salomão",
+      "buildingShort": "Fórum da Cidadania",
+      "buildingId": "cidadania",
+      "block": "Bloco 3",
+      "room": "303",
+      "sector": "OAB",
+      "unitId": "303-oab",
+      "unitCode": "523"
+    },
+    {
+      "building": "Fórum Cidadania / Latife Salomão",
+      "buildingShort": "Fórum da Cidadania",
+      "buildingId": "cidadania",
+      "block": "Bloco 3",
+      "room": "304",
+      "sector": "TRE",
+      "unitId": "304-tre",
+      "unitCode": ""
+    },
+    {
+      "building": "Fórum Cidadania / Latife Salomão",
+      "buildingShort": "Fórum da Cidadania",
+      "buildingId": "cidadania",
+      "block": "Bloco 3",
+      "room": "305",
+      "sector": "PREFEITURA MUNICIPAL DE BOA VISTA (PROCON BOA VISTA)",
+      "unitId": "305-prefeitura-municipal-de-boa-vista-procon-boa-vista",
+      "unitCode": ""
+    },
+    {
+      "building": "Fórum Cidadania / Latife Salomão",
+      "buildingShort": "Fórum da Cidadania",
+      "buildingId": "cidadania",
+      "block": "Bloco 3",
+      "room": "306",
+      "sector": "PROCON ASSEMBLEIA",
+      "unitId": "306-procon-assembleia",
+      "unitCode": ""
+    },
+    {
+      "building": "Fórum Cidadania / Latife Salomão",
+      "buildingShort": "Fórum da Cidadania",
+      "buildingId": "cidadania",
+      "block": "Bloco 3",
+      "room": "307",
+      "sector": "STI",
+      "unitId": "307-sti",
+      "unitCode": ""
+    },
+    {
+      "building": "Fórum Cidadania / Latife Salomão",
+      "buildingShort": "Fórum da Cidadania",
+      "buildingId": "cidadania",
+      "block": "Bloco 3",
+      "room": "309",
+      "sector": "ACESSO RESTRITO",
+      "unitId": "309-acesso-restrito",
+      "unitCode": ""
+    },
+    {
+      "building": "Fórum Cidadania / Latife Salomão",
+      "buildingShort": "Fórum da Cidadania",
+      "buildingId": "cidadania",
+      "block": "Bloco 3",
+      "room": "310",
+      "sector": "ACESSO RESTRITO",
+      "unitId": "310-acesso-restrito",
+      "unitCode": ""
+    },
+    {
+      "building": "Fórum Cidadania / Latife Salomão",
+      "buildingShort": "Fórum da Cidadania",
+      "buildingId": "cidadania",
+      "block": "Bloco 4",
+      "room": "401",
+      "sector": "DPE",
+      "unitId": "401-dpe",
+      "unitCode": ""
+    },
+    {
+      "building": "Fórum Cidadania / Latife Salomão",
+      "buildingShort": "Fórum da Cidadania",
+      "buildingId": "cidadania",
+      "block": "Bloco 4",
+      "room": "402",
+      "sector": "MPE",
+      "unitId": "402-mpe",
+      "unitCode": ""
+    },
+    {
+      "building": "Fórum Cidadania / Latife Salomão",
+      "buildingShort": "Fórum da Cidadania",
+      "buildingId": "cidadania",
+      "block": "Bloco 4",
+      "room": "403",
+      "sector": "SALA DO RACK / ELÉTRICA QGBT",
+      "unitId": "403-sala-do-rack-eletrica-qgbt",
+      "unitCode": ""
+    },
+    {
+      "building": "Fórum Cidadania / Latife Salomão",
+      "buildingShort": "Fórum da Cidadania",
+      "buildingId": "cidadania",
+      "block": "Bloco 4",
+      "room": "404",
+      "sector": "GOVERNO DO ESTADO DE RORAIMA",
+      "unitId": "404-governo-do-estado-de-roraima",
+      "unitCode": ""
+    },
+    {
+      "building": "Fórum Cidadania / Latife Salomão",
+      "buildingShort": "Fórum da Cidadania",
+      "buildingId": "cidadania",
+      "block": "Bloco 4",
+      "room": "405",
+      "sector": "GOVERNO DO ESTADO DE RORAIMA",
+      "unitId": "405-governo-do-estado-de-roraima",
+      "unitCode": ""
+    },
+    {
+      "building": "Fórum Cidadania / Latife Salomão",
+      "buildingShort": "Fórum da Cidadania",
+      "buildingId": "cidadania",
+      "block": "Bloco 4",
+      "room": "406",
+      "sector": "POLÍCIA FEDERAL",
+      "unitId": "406-policia-federal",
+      "unitCode": ""
+    },
+    {
+      "building": "Fórum Cidadania / Latife Salomão",
+      "buildingShort": "Fórum da Cidadania",
+      "buildingId": "cidadania",
+      "block": "Bloco 4",
+      "room": "407",
+      "sector": "RECEITA FEDERAL",
+      "unitId": "407-receita-federal",
+      "unitCode": ""
+    },
+    {
+      "building": "Fórum Cidadania / Latife Salomão",
+      "buildingShort": "Fórum da Cidadania",
+      "buildingId": "cidadania",
+      "block": "Bloco 4",
+      "room": "408",
+      "sector": "DIRETORIA DO FÓRUM DA CIDADANIA",
+      "unitId": "408-diretoria-do-forum-da-cidadania",
+      "unitCode": "1250"
+    },
+    {
+      "building": "Fórum Cidadania / Latife Salomão",
+      "buildingShort": "Fórum da Cidadania",
+      "buildingId": "cidadania",
+      "block": "Bloco 4",
+      "room": "409",
+      "sector": "1ª E 2ª VARAS DA INFÂNCIA E JUVENTUDE",
+      "unitId": "409-1-e-2-varas-da-infancia-e-juventude",
+      "unitCode": ""
+    },
+    {
+      "building": "Fórum Cidadania / Latife Salomão",
+      "buildingShort": "Fórum da Cidadania",
+      "buildingId": "cidadania",
+      "block": "Bloco 4",
+      "room": "410",
+      "sector": "BRINQUEDOTECA",
+      "unitId": "410-brinquedoteca",
+      "unitCode": ""
+    },
+    {
+      "building": "Fórum Cidadania / Latife Salomão",
+      "buildingShort": "Fórum da Cidadania",
+      "buildingId": "cidadania",
+      "block": "Bloco 4",
+      "room": "411",
+      "sector": "2ª VARA DA INFÂNCIA E JUVENTUDE - AUDIÊNCIA",
+      "unitId": "411-2-vara-da-infancia-e-juventude-audiencia",
+      "unitCode": ""
+    },
+    {
+      "building": "Fórum Cidadania / Latife Salomão",
+      "buildingShort": "Fórum da Cidadania",
+      "buildingId": "cidadania",
+      "block": "Bloco 4",
+      "room": "413",
+      "sector": "2ª VARA DA INFÂNCIA E JUVENTUDE - GABINETE",
+      "unitId": "413-2-vara-da-infancia-e-juventude-gabinete",
+      "unitCode": "1037"
+    },
+    {
+      "building": "Fórum Cidadania / Latife Salomão",
+      "buildingShort": "Fórum da Cidadania",
+      "buildingId": "cidadania",
+      "block": "Bloco 4",
+      "room": "414",
+      "sector": "1ª VARA DA INFÂNCIA E JUVENTUDE - GABINETE",
+      "unitId": "414-1-vara-da-infancia-e-juventude-gabinete",
+      "unitCode": "1026"
+    },
+    {
+      "building": "Fórum Cidadania / Latife Salomão",
+      "buildingShort": "Fórum da Cidadania",
+      "buildingId": "cidadania",
+      "block": "Bloco 4",
+      "room": "415",
+      "sector": "1ª VARA DA INFÂNCIA E JUVENTUDE - AUDIÊNCIA",
+      "unitId": "415-1-vara-da-infancia-e-juventude-audiencia",
+      "unitCode": ""
+    },
+    {
+      "building": "Fórum Cidadania / Latife Salomão",
+      "buildingShort": "Fórum da Cidadania",
+      "buildingId": "cidadania",
+      "block": "Bloco 4",
+      "room": "416",
+      "sector": "CARTÓRIO (ACESSO RESTRITO)",
+      "unitId": "416-cartorio-acesso-restrito",
+      "unitCode": "117"
+    },
+    {
+      "building": "Fórum Cidadania / Latife Salomão",
+      "buildingShort": "Fórum da Cidadania",
+      "buildingId": "cidadania",
+      "block": "Bloco 4",
+      "room": "417",
+      "sector": "CARTÓRIO ATENDIMENTO",
+      "unitId": "417-cartorio-atendimento",
+      "unitCode": ""
+    },
+    {
+      "building": "Fórum Cidadania / Latife Salomão",
+      "buildingShort": "Fórum da Cidadania",
+      "buildingId": "cidadania",
+      "block": "Bloco 4",
+      "room": "419",
+      "sector": "SALA DE ESPERA ADOLESCENTE",
+      "unitId": "419-sala-de-espera-adolescente",
+      "unitCode": ""
+    },
+    {
+      "building": "Fórum Cidadania / Latife Salomão",
+      "buildingShort": "Fórum da Cidadania",
+      "buildingId": "cidadania",
+      "block": "Bloco 4",
+      "room": "420",
+      "sector": "SECRETARIA DO SETOR INTERPROFISSIONAL",
+      "unitId": "420-secretaria-do-setor-interprofissional",
+      "unitCode": "119"
+    },
+    {
+      "building": "Fórum Cidadania / Latife Salomão",
+      "buildingShort": "Fórum da Cidadania",
+      "buildingId": "cidadania",
+      "block": "Bloco 4",
+      "room": "421",
+      "sector": "SALA DE DEPOIMENTO ESPECIAL",
+      "unitId": "421-sala-de-depoimento-especial",
+      "unitCode": "1160"
+    },
+    {
+      "building": "Fórum Cidadania / Latife Salomão",
+      "buildingShort": "Fórum da Cidadania",
+      "buildingId": "cidadania",
+      "block": "Bloco 4",
+      "room": "422",
+      "sector": "CIJ COORDENAÇÃO",
+      "unitId": "422-cij-coordenacao",
+      "unitCode": "305"
+    },
+    {
+      "building": "Fórum Cidadania / Latife Salomão",
+      "buildingShort": "Fórum da Cidadania",
+      "buildingId": "cidadania",
+      "block": "Bloco 4",
+      "room": "423",
+      "sector": "BANHEIRO MASCULINO",
+      "unitId": "423-banheiro-masculino",
+      "unitCode": ""
+    },
+    {
+      "building": "Fórum Cidadania / Latife Salomão",
+      "buildingShort": "Fórum da Cidadania",
+      "buildingId": "cidadania",
+      "block": "Bloco 4",
+      "room": "424",
+      "sector": "BANHEIRO FEMININO",
+      "unitId": "424-banheiro-feminino",
+      "unitCode": ""
+    },
+    {
+      "building": "Fórum Cidadania / Latife Salomão",
+      "buildingShort": "Fórum da Cidadania",
+      "buildingId": "cidadania",
+      "block": "Bloco 4",
+      "room": "425",
+      "sector": "ACESSO RESTRITO",
+      "unitId": "425-acesso-restrito",
+      "unitCode": ""
+    },
+    {
+      "building": "Fórum Cidadania / Latife Salomão",
+      "buildingShort": "Fórum da Cidadania",
+      "buildingId": "cidadania",
+      "block": "Bloco 4",
+      "room": "426",
+      "sector": "EQUIPE TÉCNICA CÍVEL 1",
+      "unitId": "426-equipe-tecnica-civel-1",
+      "unitCode": ""
+    },
+    {
+      "building": "Fórum Cidadania / Latife Salomão",
+      "buildingShort": "Fórum da Cidadania",
+      "buildingId": "cidadania",
+      "block": "Bloco 4",
+      "room": "427",
+      "sector": "EQUIPE TÉCNICA CÍVEL 2",
+      "unitId": "427-equipe-tecnica-civel-2",
+      "unitCode": ""
+    },
+    {
+      "building": "Fórum Cidadania / Latife Salomão",
+      "buildingShort": "Fórum da Cidadania",
+      "buildingId": "cidadania",
+      "block": "Bloco 4",
+      "room": "428",
+      "sector": "EQUIPE TÉCNICA INFRACIONAL",
+      "unitId": "428-equipe-tecnica-infracional",
+      "unitCode": "1159"
+    },
+    {
+      "building": "Fórum Cidadania / Latife Salomão",
+      "buildingShort": "Fórum da Cidadania",
+      "buildingId": "cidadania",
+      "block": "Bloco 4",
+      "room": "429",
+      "sector": "DIVISÃO DE PROTEÇÃO",
+      "unitId": "429-divisao-de-protecao",
+      "unitCode": "755"
+    },
+    {
+      "building": "Fórum Cidadania / Latife Salomão",
+      "buildingShort": "Fórum da Cidadania",
+      "buildingId": "cidadania",
+      "block": "Bloco 5 (Itinerante) - Térreo",
+      "room": "501",
+      "sector": "ATENDIMENTO COORDENAÇÃO",
+      "unitId": "501-atendimento-coordenacao",
+      "unitCode": ""
+    },
+    {
+      "building": "Fórum Cidadania / Latife Salomão",
+      "buildingShort": "Fórum da Cidadania",
+      "buildingId": "cidadania",
+      "block": "Bloco 5 (Itinerante) - Térreo",
+      "room": "509",
+      "sector": "SALA DE AUDIÊNCIA",
+      "unitId": "509-sala-de-audiencia",
+      "unitCode": ""
+    },
+    {
+      "building": "Fórum Cidadania / Latife Salomão",
+      "buildingShort": "Fórum da Cidadania",
+      "buildingId": "cidadania",
+      "block": "Bloco 5 (Itinerante) - Térreo",
+      "room": "S/N",
+      "sector": "BRINQUEDOTECA",
+      "unitId": "s-n-brinquedoteca",
+      "unitCode": ""
+    },
+    {
+      "building": "Fórum Cidadania / Latife Salomão",
+      "buildingShort": "Fórum da Cidadania",
+      "buildingId": "cidadania",
+      "block": "Bloco 5 (Itinerante) - 1º Piso",
+      "room": "513",
+      "sector": "ATENDIMENTO CARTÓRIO",
+      "unitId": "513-atendimento-cartorio",
+      "unitCode": ""
+    },
+    {
+      "building": "Fórum Cidadania / Latife Salomão",
+      "buildingShort": "Fórum da Cidadania",
+      "buildingId": "cidadania",
+      "block": "Bloco 5 (Itinerante) - 1º Piso",
+      "room": "514",
+      "sector": "SALA DE VÍDEO",
+      "unitId": "514-sala-de-video",
+      "unitCode": ""
+    },
+    {
+      "building": "Fórum Cidadania / Latife Salomão",
+      "buildingShort": "Fórum da Cidadania",
+      "buildingId": "cidadania",
+      "block": "Bloco 5 (Itinerante) - 1º Piso",
+      "room": "515",
+      "sector": "DEFENSORIA PÚBLICA",
+      "unitId": "515-defensoria-publica",
+      "unitCode": ""
+    },
+    {
+      "building": "Fórum Cidadania / Latife Salomão",
+      "buildingShort": "Fórum da Cidadania",
+      "buildingId": "cidadania",
+      "block": "Bloco 5 (Itinerante) - 1º Piso",
+      "room": "516",
+      "sector": "CARTÓRIO DA JUSTIÇA ITINERANTE",
+      "unitId": "516-cartorio-da-justica-itinerante",
+      "unitCode": "137"
+    },
+    {
+      "building": "Fórum Cidadania / Latife Salomão",
+      "buildingShort": "Fórum da Cidadania",
+      "buildingId": "cidadania",
+      "block": "Bloco 5 (Itinerante) - 1º Piso",
+      "room": "518",
+      "sector": "COORDENAÇÃO",
+      "unitId": "518-coordenacao",
+      "unitCode": "1024"
+    },
+    {
+      "building": "Fórum Cidadania / Latife Salomão",
+      "buildingShort": "Fórum da Cidadania",
+      "buildingId": "cidadania",
+      "block": "Bloco 5 (Itinerante) - 1º Piso",
+      "room": "519",
+      "sector": "COORDENADOR",
+      "unitId": "519-coordenador",
+      "unitCode": ""
+    },
+    {
+      "building": "Fórum Cidadania / Latife Salomão",
+      "buildingShort": "Fórum da Cidadania",
+      "buildingId": "cidadania",
+      "block": "Bloco 5 (Itinerante) - 1º Piso",
+      "room": "520",
+      "sector": "SALA DE REUNIÃO",
+      "unitId": "520-sala-de-reuniao",
+      "unitCode": ""
+    },
+    {
+      "building": "Fórum Cidadania / Latife Salomão",
+      "buildingShort": "Fórum da Cidadania",
+      "buildingId": "cidadania",
+      "block": "Bloco 5 (Itinerante) - 1º Piso",
+      "room": "521",
+      "sector": "COPA",
+      "unitId": "521-copa",
+      "unitCode": ""
+    },
+    {
+      "building": "Fórum Cidadania / Latife Salomão",
+      "buildingShort": "Fórum da Cidadania",
+      "buildingId": "cidadania",
+      "block": "Bloco 5 (Itinerante) - 1º Piso",
+      "room": "522",
+      "sector": "GABINETE VARA DA JUSTIÇA ITINERANTE",
+      "unitId": "522-gabinete-vara-da-justica-itinerante",
+      "unitCode": "873"
+    },
+    {
+      "building": "Fórum Criminal Min. Evandro Lins e Silva",
+      "buildingShort": "Fórum Criminal",
+      "buildingId": "criminal",
+      "block": "Térreo",
+      "room": "0",
+      "sector": "Limpeza",
+      "unitId": "0-limpeza",
+      "unitCode": ""
+    },
+    {
+      "building": "Fórum Criminal Min. Evandro Lins e Silva",
+      "buildingShort": "Fórum Criminal",
+      "buildingId": "criminal",
+      "block": "Térreo",
+      "room": "4",
+      "sector": "SETOR DE PRIMEIRO ATENDIMENTO, PESQUISA E ANDAMENTO PROCESSUAL",
+      "unitId": "4-setor-de-primeiro-atendimento-pesquisa-e-andamento-processual",
+      "unitCode": "628"
+    },
+    {
+      "building": "Fórum Criminal Min. Evandro Lins e Silva",
+      "buildingShort": "Fórum Criminal",
+      "buildingId": "criminal",
+      "block": "Térreo",
+      "room": "8",
+      "sector": "Protocolo",
+      "unitId": "8-protocolo",
+      "unitCode": "629"
+    },
+    {
+      "building": "Fórum Criminal Min. Evandro Lins e Silva",
+      "buildingShort": "Fórum Criminal",
+      "buildingId": "criminal",
+      "block": "Térreo",
+      "room": "9",
+      "sector": "Cartório Distribuidor",
+      "unitId": "9-cartorio-distribuidor",
+      "unitCode": "410"
+    },
+    {
+      "building": "Fórum Criminal Min. Evandro Lins e Silva",
+      "buildingShort": "Fórum Criminal",
+      "buildingId": "criminal",
+      "block": "Térreo",
+      "room": "11",
+      "sector": "2ª Vara criminal do Júri - Cartório",
+      "unitId": "11-2-vara-criminal-do-juri-cartorio",
+      "unitCode": "444"
+    },
+    {
+      "building": "Fórum Criminal Min. Evandro Lins e Silva",
+      "buildingShort": "Fórum Criminal",
+      "buildingId": "criminal",
+      "block": "Térreo",
+      "room": "12",
+      "sector": "2ª Vara criminal do Júri - Secretaria",
+      "unitId": "12-2-vara-criminal-do-juri-secretaria",
+      "unitCode": "449"
+    },
+    {
+      "building": "Fórum Criminal Min. Evandro Lins e Silva",
+      "buildingShort": "Fórum Criminal",
+      "buildingId": "criminal",
+      "block": "Térreo",
+      "room": "14",
+      "sector": "1ª Vara criminal do Júri - Cartório",
+      "unitId": "14-1-vara-criminal-do-juri-cartorio",
+      "unitCode": "421"
+    },
+    {
+      "building": "Fórum Criminal Min. Evandro Lins e Silva",
+      "buildingShort": "Fórum Criminal",
+      "buildingId": "criminal",
+      "block": "Térreo",
+      "room": "14",
+      "sector": "1ª Vara criminal do Júri - Secretaria",
+      "unitId": "14-1-vara-criminal-do-juri-secretaria",
+      "unitCode": "425"
+    },
+    {
+      "building": "Fórum Criminal Min. Evandro Lins e Silva",
+      "buildingShort": "Fórum Criminal",
+      "buildingId": "criminal",
+      "block": "Térreo",
+      "room": "16",
+      "sector": "Administração",
+      "unitId": "16-administracao",
+      "unitCode": "575"
+    },
+    {
+      "building": "Fórum Criminal Min. Evandro Lins e Silva",
+      "buildingShort": "Fórum Criminal",
+      "buildingId": "criminal",
+      "block": "Térreo",
+      "room": "17",
+      "sector": "1ª Vara criminal do Júri - Sala de Audiência",
+      "unitId": "17-1-vara-criminal-do-juri-sala-de-audiencia",
+      "unitCode": "422"
+    },
+    {
+      "building": "Fórum Criminal Min. Evandro Lins e Silva",
+      "buildingShort": "Fórum Criminal",
+      "buildingId": "criminal",
+      "block": "Térreo",
+      "room": "17",
+      "sector": "1ª Vara criminal do Júri - Gabinete",
+      "unitId": "17-1-vara-criminal-do-juri-gabinete",
+      "unitCode": "426"
+    },
+    {
+      "building": "Fórum Criminal Min. Evandro Lins e Silva",
+      "buildingShort": "Fórum Criminal",
+      "buildingId": "criminal",
+      "block": "Térreo",
+      "room": "20",
+      "sector": "2ª Vara criminal do Júri - Salão do Júri",
+      "unitId": "20-2-vara-criminal-do-juri-salao-do-juri",
+      "unitCode": "455"
+    },
+    {
+      "building": "Fórum Criminal Min. Evandro Lins e Silva",
+      "buildingShort": "Fórum Criminal",
+      "buildingId": "criminal",
+      "block": "Térreo",
+      "room": "39",
+      "sector": "2ª Vara criminal do Júri - Sala de Audiência",
+      "unitId": "39-2-vara-criminal-do-juri-sala-de-audiencia",
+      "unitCode": "447"
+    },
+    {
+      "building": "Fórum Criminal Min. Evandro Lins e Silva",
+      "buildingShort": "Fórum Criminal",
+      "buildingId": "criminal",
+      "block": "Térreo",
+      "room": "40",
+      "sector": "2ª Vara criminal do Júri - Gabinete",
+      "unitId": "40-2-vara-criminal-do-juri-gabinete",
+      "unitCode": "448"
+    },
+    {
+      "building": "Fórum Criminal Min. Evandro Lins e Silva",
+      "buildingShort": "Fórum Criminal",
+      "buildingId": "criminal",
+      "block": "1º Piso",
+      "room": "0",
+      "sector": "Unidade de Justiça Restaurativa",
+      "unitId": "0-unidade-de-justica-restaurativa",
+      "unitCode": "681"
+    },
+    {
+      "building": "Fórum Criminal Min. Evandro Lins e Silva",
+      "buildingShort": "Fórum Criminal",
+      "buildingId": "criminal",
+      "block": "1º Piso",
+      "room": "1",
+      "sector": "Video Conferência",
+      "unitId": "1-video-conferencia",
+      "unitCode": "1123"
+    },
+    {
+      "building": "Fórum Criminal Min. Evandro Lins e Silva",
+      "buildingShort": "Fórum Criminal",
+      "buildingId": "criminal",
+      "block": "1º Piso",
+      "room": "100",
+      "sector": "OAB",
+      "unitId": "100-oab",
+      "unitCode": "1115"
+    },
+    {
+      "building": "Fórum Criminal Min. Evandro Lins e Silva",
+      "buildingShort": "Fórum Criminal",
+      "buildingId": "criminal",
+      "block": "1º Piso",
+      "room": "101",
+      "sector": "Distribuidor Execução penal",
+      "unitId": "101-distribuidor-execucao-penal",
+      "unitCode": ""
+    },
+    {
+      "building": "Fórum Criminal Min. Evandro Lins e Silva",
+      "buildingShort": "Fórum Criminal",
+      "buildingId": "criminal",
+      "block": "1º Piso",
+      "room": "102",
+      "sector": "Divisão de acompanhamento",
+      "unitId": "102-divisao-de-acompanhamento",
+      "unitCode": "1054"
+    },
+    {
+      "building": "Fórum Criminal Min. Evandro Lins e Silva",
+      "buildingShort": "Fórum Criminal",
+      "buildingId": "criminal",
+      "block": "1º Piso",
+      "room": "108",
+      "sector": "Secretaria Da Vara De Entorpecentes E Organizações Criminosas - Cartório",
+      "unitId": "108-secretaria-da-vara-de-entorpecentes-e-organizacoes-criminosas-cartorio",
+      "unitCode": ""
+    },
+    {
+      "building": "Fórum Criminal Min. Evandro Lins e Silva",
+      "buildingShort": "Fórum Criminal",
+      "buildingId": "criminal",
+      "block": "1º Piso",
+      "room": "112",
+      "sector": "1ª Vara criminal - Secretaria Juiz",
+      "unitId": "112-1-vara-criminal-secretaria-juiz",
+      "unitCode": ""
+    },
+    {
+      "building": "Fórum Criminal Min. Evandro Lins e Silva",
+      "buildingShort": "Fórum Criminal",
+      "buildingId": "criminal",
+      "block": "1º Piso",
+      "room": "114",
+      "sector": "Vepema - Secretaria Juiz",
+      "unitId": "114-vepema-secretaria-juiz",
+      "unitCode": "474"
+    },
+    {
+      "building": "Fórum Criminal Min. Evandro Lins e Silva",
+      "buildingShort": "Fórum Criminal",
+      "buildingId": "criminal",
+      "block": "1º Piso",
+      "room": "114",
+      "sector": "Vepema - Cartório",
+      "unitId": "114-vepema-cartorio",
+      "unitCode": ""
+    },
+    {
+      "building": "Fórum Criminal Min. Evandro Lins e Silva",
+      "buildingShort": "Fórum Criminal",
+      "buildingId": "criminal",
+      "block": "1º Piso",
+      "room": "118",
+      "sector": "Central de Depoimento Especial",
+      "unitId": "118-central-de-depoimento-especial",
+      "unitCode": "1195"
+    },
+    {
+      "building": "Fórum Criminal Min. Evandro Lins e Silva",
+      "buildingShort": "Fórum Criminal",
+      "buildingId": "criminal",
+      "block": "1º Piso",
+      "room": "121",
+      "sector": "Cartório Unificado das Varas Criminais",
+      "unitId": "121-cartorio-unificado-das-varas-criminais",
+      "unitCode": ""
+    },
+    {
+      "building": "Fórum Criminal Min. Evandro Lins e Silva",
+      "buildingShort": "Fórum Criminal",
+      "buildingId": "criminal",
+      "block": "1º Piso",
+      "room": "126",
+      "sector": "3ª Vara criminal - Secretaria Juiz",
+      "unitId": "126-3-vara-criminal-secretaria-juiz",
+      "unitCode": ""
+    },
+    {
+      "building": "Fórum Criminal Min. Evandro Lins e Silva",
+      "buildingShort": "Fórum Criminal",
+      "buildingId": "criminal",
+      "block": "1º Piso",
+      "room": "140",
+      "sector": "Vepema - Gestão de Ações e Projetos Sociais",
+      "unitId": "140-vepema-gestao-de-acoes-e-projetos-sociais",
+      "unitCode": "1188"
+    },
+    {
+      "building": "Fórum Criminal Min. Evandro Lins e Silva",
+      "buildingShort": "Fórum Criminal",
+      "buildingId": "criminal",
+      "block": "1º Piso",
+      "room": "145",
+      "sector": "Vepema - Gabinete",
+      "unitId": "145-vepema-gabinete",
+      "unitCode": "473"
+    },
+    {
+      "building": "Fórum Criminal Min. Evandro Lins e Silva",
+      "buildingShort": "Fórum Criminal",
+      "buildingId": "criminal",
+      "block": "1º Piso",
+      "room": "145",
+      "sector": "Vepema - Sala de Audiência",
+      "unitId": "145-vepema-sala-de-audiencia",
+      "unitCode": "472"
+    },
+    {
+      "building": "Fórum Criminal Min. Evandro Lins e Silva",
+      "buildingShort": "Fórum Criminal",
+      "buildingId": "criminal",
+      "block": "2º Piso",
+      "room": "0",
+      "sector": "1º Juizado de Violência Doméstica - Secretaria Juiz",
+      "unitId": "0-1-juizado-de-violencia-domestica-secretaria-juiz",
+      "unitCode": "531"
+    },
+    {
+      "building": "Fórum Criminal Min. Evandro Lins e Silva",
+      "buildingShort": "Fórum Criminal",
+      "buildingId": "criminal",
+      "block": "2º Piso",
+      "room": "200",
+      "sector": "Vara de Execução Penal - Secretaria Juiz",
+      "unitId": "200-vara-de-execucao-penal-secretaria-juiz",
+      "unitCode": "553"
+    },
+    {
+      "building": "Fórum Criminal Min. Evandro Lins e Silva",
+      "buildingShort": "Fórum Criminal",
+      "buildingId": "criminal",
+      "block": "2º Piso",
+      "room": "204",
+      "sector": "Vara de Execução Penal - Sala de Audiência",
+      "unitId": "204-vara-de-execucao-penal-sala-de-audiencia",
+      "unitCode": "551"
+    },
+    {
+      "building": "Fórum Criminal Min. Evandro Lins e Silva",
+      "buildingShort": "Fórum Criminal",
+      "buildingId": "criminal",
+      "block": "2º Piso",
+      "room": "205",
+      "sector": "Vara de Execução Penal - Gabinete",
+      "unitId": "205-vara-de-execucao-penal-gabinete",
+      "unitCode": "554"
+    },
+    {
+      "building": "Fórum Criminal Min. Evandro Lins e Silva",
+      "buildingShort": "Fórum Criminal",
+      "buildingId": "criminal",
+      "block": "2º Piso",
+      "room": "211",
+      "sector": "2ª vara criminal - Sala de Audiência",
+      "unitId": "211-2-vara-criminal-sala-de-audiencia",
+      "unitCode": ""
+    },
+    {
+      "building": "Fórum Criminal Min. Evandro Lins e Silva",
+      "buildingShort": "Fórum Criminal",
+      "buildingId": "criminal",
+      "block": "2º Piso",
+      "room": "213",
+      "sector": "Entorpecentes - Secretaria Juiz",
+      "unitId": "213-entorpecentes-secretaria-juiz",
+      "unitCode": "1060"
+    },
+    {
+      "building": "Fórum Criminal Min. Evandro Lins e Silva",
+      "buildingShort": "Fórum Criminal",
+      "buildingId": "criminal",
+      "block": "2º Piso",
+      "room": "215",
+      "sector": "2º Juizado de Violência Doméstica - Secretaria Juiz",
+      "unitId": "215-2-juizado-de-violencia-domestica-secretaria-juiz",
+      "unitCode": ""
+    },
+    {
+      "building": "Fórum Criminal Min. Evandro Lins e Silva",
+      "buildingShort": "Fórum Criminal",
+      "buildingId": "criminal",
+      "block": "2º Piso",
+      "room": "215",
+      "sector": "2º Juizado de Violência Doméstica - Gabinete",
+      "unitId": "215-2-juizado-de-violencia-domestica-gabinete",
+      "unitCode": "1035"
+    },
+    {
+      "building": "Fórum Criminal Min. Evandro Lins e Silva",
+      "buildingShort": "Fórum Criminal",
+      "buildingId": "criminal",
+      "block": "2º Piso",
+      "room": "216",
+      "sector": "Secretaria Unificada dos Juizados de Violência Doméstica",
+      "unitId": "216-secretaria-unificada-dos-juizados-de-violencia-domestica",
+      "unitCode": "1190"
+    },
+    {
+      "building": "Fórum Criminal Min. Evandro Lins e Silva",
+      "buildingShort": "Fórum Criminal",
+      "buildingId": "criminal",
+      "block": "2º Piso",
+      "room": "217",
+      "sector": "2º Juizado de Violência Doméstica - Sala de Audiência",
+      "unitId": "217-2-juizado-de-violencia-domestica-sala-de-audiencia",
+      "unitCode": ""
+    },
+    {
+      "building": "Fórum Criminal Min. Evandro Lins e Silva",
+      "buildingShort": "Fórum Criminal",
+      "buildingId": "criminal",
+      "block": "2º Piso",
+      "room": "220",
+      "sector": "Central Eletrônica de Mandados",
+      "unitId": "220-central-eletronica-de-mandados",
+      "unitCode": "920"
+    },
+    {
+      "building": "Fórum Criminal Min. Evandro Lins e Silva",
+      "buildingShort": "Fórum Criminal",
+      "buildingId": "criminal",
+      "block": "2º Piso",
+      "room": "221",
+      "sector": "Juiz Substituto",
+      "unitId": "221-juiz-substituto",
+      "unitCode": "1121"
+    },
+    {
+      "building": "Fórum Criminal Min. Evandro Lins e Silva",
+      "buildingShort": "Fórum Criminal",
+      "buildingId": "criminal",
+      "block": "2º Piso",
+      "room": "224",
+      "sector": "Coordenadoria do Juizado de Violência Doméstica",
+      "unitId": "224-coordenadoria-do-juizado-de-violencia-domestica",
+      "unitCode": "1061"
+    },
+    {
+      "building": "Fórum Criminal Min. Evandro Lins e Silva",
+      "buildingShort": "Fórum Criminal",
+      "buildingId": "criminal",
+      "block": "2º Piso",
+      "room": "226",
+      "sector": "Central de mandados",
+      "unitId": "226-central-de-mandados",
+      "unitCode": ""
+    },
+    {
+      "building": "Fórum Criminal Min. Evandro Lins e Silva",
+      "buildingShort": "Fórum Criminal",
+      "buildingId": "criminal",
+      "block": "2º Piso",
+      "room": "227",
+      "sector": "Vara Criminal do Idoso/Criança - Analistas",
+      "unitId": "227-vara-criminal-do-idoso-crianca-analistas",
+      "unitCode": "545"
+    },
+    {
+      "building": "Fórum Criminal Min. Evandro Lins e Silva",
+      "buildingShort": "Fórum Criminal",
+      "buildingId": "criminal",
+      "block": "2º Piso",
+      "room": "229",
+      "sector": "Vara Criminal do Idoso/Criança - Cartório",
+      "unitId": "229-vara-criminal-do-idoso-crianca-cartorio",
+      "unitCode": "542"
+    },
+    {
+      "building": "Fórum Criminal Min. Evandro Lins e Silva",
+      "buildingShort": "Fórum Criminal",
+      "buildingId": "criminal",
+      "block": "2º Piso",
+      "room": "231",
+      "sector": "Juizado Especial criminal - Sala de Audiência",
+      "unitId": "231-juizado-especial-criminal-sala-de-audiencia",
+      "unitCode": ""
+    },
+    {
+      "building": "Fórum Criminal Min. Evandro Lins e Silva",
+      "buildingShort": "Fórum Criminal",
+      "buildingId": "criminal",
+      "block": "2º Piso",
+      "room": "241",
+      "sector": "Sala de Saúde",
+      "unitId": "241-sala-de-saude",
+      "unitCode": "195"
+    },
+    {
+      "building": "Fórum Criminal Min. Evandro Lins e Silva",
+      "buildingShort": "Fórum Criminal",
+      "buildingId": "criminal",
+      "block": "2º Piso",
+      "room": "242",
+      "sector": "sala do CEAVCAI",
+      "unitId": "242-sala-do-ceavcai",
+      "unitCode": "1196"
+    },
+    {
+      "building": "Fórum Criminal Min. Evandro Lins e Silva",
+      "buildingShort": "Fórum Criminal",
+      "buildingId": "criminal",
+      "block": "2º Piso",
+      "room": "243",
+      "sector": "1º Juizado de Violência Doméstica - Sala de Audiência",
+      "unitId": "243-1-juizado-de-violencia-domestica-sala-de-audiencia",
+      "unitCode": "529"
+    },
+    {
+      "building": "Fórum Criminal Min. Evandro Lins e Silva",
+      "buildingShort": "Fórum Criminal",
+      "buildingId": "criminal",
+      "block": "2º Piso",
+      "room": "249",
+      "sector": "1º Juizado de Violência Doméstica - Gabinete",
+      "unitId": "249-1-juizado-de-violencia-domestica-gabinete",
+      "unitCode": "1032"
+    },
+    {
+      "building": "Fórum Criminal Min. Evandro Lins e Silva",
+      "buildingShort": "Fórum Criminal",
+      "buildingId": "criminal",
+      "block": "2º Piso",
+      "room": "250",
+      "sector": "Diretoria",
+      "unitId": "250-diretoria",
+      "unitCode": "916"
+    },
+    {
+      "building": "Fórum Criminal Min. Evandro Lins e Silva",
+      "buildingShort": "Fórum Criminal",
+      "buildingId": "criminal",
+      "block": "2º Piso",
+      "room": "252",
+      "sector": "1º Juizado de Violência Doméstica - Equipe Multidisciplinar",
+      "unitId": "252-1-juizado-de-violencia-domestica-equipe-multidisciplinar",
+      "unitCode": "533"
+    },
+    {
+      "building": "Palácio da Justiça",
+      "buildingShort": "Palácio da Justiça",
+      "buildingId": "palacio",
+      "block": "Térreo",
+      "room": "",
+      "sector": "Tribunal do Pleno",
+      "unitId": "sn-tribunal-do-pleno",
+      "unitCode": "684"
+    },
+    {
+      "building": "Palácio da Justiça",
+      "buildingShort": "Palácio da Justiça",
+      "buildingId": "palacio",
+      "block": "Térreo",
+      "room": "",
+      "sector": "Secretaria Tribunal Pleno",
+      "unitId": "sn-secretaria-tribunal-pleno",
+      "unitCode": "10"
+    },
+    {
+      "building": "Palácio da Justiça",
+      "buildingShort": "Palácio da Justiça",
+      "buildingId": "palacio",
+      "block": "Térreo",
+      "room": "",
+      "sector": "Secretaria das Câmaras Reunidas",
+      "unitId": "sn-secretaria-das-camaras-reunidas",
+      "unitCode": "670"
+    },
+    {
+      "building": "Palácio da Justiça",
+      "buildingShort": "Palácio da Justiça",
+      "buildingId": "palacio",
+      "block": "Térreo",
+      "room": "",
+      "sector": "Cartório Distribuidor do 2º Grau",
+      "unitId": "sn-cartorio-distribuidor-do-2-grau",
+      "unitCode": "882"
+    },
+    {
+      "building": "Palácio da Justiça",
+      "buildingShort": "Palácio da Justiça",
+      "buildingId": "palacio",
+      "block": "Térreo",
+      "room": "",
+      "sector": "Corregedoria Geral da Justiça",
+      "unitId": "sn-corregedoria-geral-da-justica",
+      "unitCode": "976"
+    },
+    {
+      "building": "Palácio da Justiça",
+      "buildingShort": "Palácio da Justiça",
+      "buildingId": "palacio",
+      "block": "Térreo",
+      "room": "",
+      "sector": "Ouvidoria",
+      "unitId": "sn-ouvidoria",
+      "unitCode": "987"
+    },
+    {
+      "building": "Palácio da Justiça",
+      "buildingShort": "Palácio da Justiça",
+      "buildingId": "palacio",
+      "block": "Térreo",
+      "room": "",
+      "sector": "Assessoria Militar",
+      "unitId": "sn-assessoria-militar",
+      "unitCode": "709"
+    },
+    {
+      "building": "Palácio da Justiça",
+      "buildingShort": "Palácio da Justiça",
+      "buildingId": "palacio",
+      "block": "1º Piso",
+      "room": "",
+      "sector": "Vice-Presidência",
+      "unitId": "sn-vice-presidencia",
+      "unitCode": "1091"
+    },
+    {
+      "building": "Palácio da Justiça",
+      "buildingShort": "Palácio da Justiça",
+      "buildingId": "palacio",
+      "block": "1º Piso",
+      "room": "",
+      "sector": "Gabinete Des. Jésus Nascimento",
+      "unitId": "sn-gabinete-des-jesus-nascimento",
+      "unitCode": "855"
+    },
+    {
+      "building": "Palácio da Justiça",
+      "buildingShort": "Palácio da Justiça",
+      "buildingId": "palacio",
+      "block": "1º Piso",
+      "room": "",
+      "sector": "Gabinete Des. Mozarildo Cavalcanti",
+      "unitId": "sn-gabinete-des-mozarildo-cavalcanti",
+      "unitCode": "854"
+    },
+    {
+      "building": "Palácio da Justiça",
+      "buildingShort": "Palácio da Justiça",
+      "buildingId": "palacio",
+      "block": "1º Piso",
+      "room": "",
+      "sector": "Gabinete Des. Leonardo Cupello",
+      "unitId": "sn-gabinete-des-leonardo-cupello",
+      "unitCode": "851"
+    },
+    {
+      "building": "Palácio da Justiça",
+      "buildingShort": "Palácio da Justiça",
+      "buildingId": "palacio",
+      "block": "1º Piso",
+      "room": "",
+      "sector": "Gabinete Des. Ricardo Oliveira",
+      "unitId": "sn-gabinete-des-ricardo-oliveira",
+      "unitCode": "1104"
+    },
+    {
+      "building": "Palácio da Justiça",
+      "buildingShort": "Palácio da Justiça",
+      "buildingId": "palacio",
+      "block": "2º Piso",
+      "room": "",
+      "sector": "Presidência",
+      "unitId": "sn-presidencia",
+      "unitCode": "883"
+    },
+    {
+      "building": "Palácio da Justiça",
+      "buildingShort": "Palácio da Justiça",
+      "buildingId": "palacio",
+      "block": "2º Piso",
+      "room": "",
+      "sector": "Gabinete Desª. Elaine Bianchi",
+      "unitId": "sn-gabinete-des-elaine-bianchi",
+      "unitCode": "1108"
+    },
+    {
+      "building": "Palácio da Justiça",
+      "buildingShort": "Palácio da Justiça",
+      "buildingId": "palacio",
+      "block": "2º Piso",
+      "room": "",
+      "sector": "Gabinete Desª. Tânia Vasconcelos",
+      "unitId": "sn-gabinete-des-tania-vasconcelos",
+      "unitCode": "1107"
+    },
+    {
+      "building": "Palácio da Justiça",
+      "buildingShort": "Palácio da Justiça",
+      "buildingId": "palacio",
+      "block": "2º Piso",
+      "room": "",
+      "sector": "Gabinete Des. Cristóvão Suter",
+      "unitId": "sn-gabinete-des-cristovao-suter",
+      "unitCode": "852"
+    },
+    {
+      "building": "Palácio da Justiça",
+      "buildingShort": "Palácio da Justiça",
+      "buildingId": "palacio",
+      "block": "2º Piso",
+      "room": "",
+      "sector": "Gabinete Des. Mauro Campello",
+      "unitId": "sn-gabinete-des-mauro-campello",
+      "unitCode": "1105"
+    },
+    {
+      "building": "Palácio da Justiça",
+      "buildingShort": "Palácio da Justiça",
+      "buildingId": "palacio",
+      "block": "2º Piso",
+      "room": "",
+      "sector": "Gabinete Des. Almiro Padilha",
+      "unitId": "sn-gabinete-des-almiro-padilha",
+      "unitCode": "1106"
+    },
+    {
+      "building": "Palácio da Justiça",
+      "buildingShort": "Palácio da Justiça",
+      "buildingId": "palacio",
+      "block": "2º Piso",
+      "room": "",
+      "sector": "Gabinete Des. Erick Linhares",
+      "unitId": "sn-gabinete-des-erick-linhares",
+      "unitCode": "853"
+    },
+    {
+      "building": "Fórum Cível Advogado Sobral Pinto",
+      "buildingShort": "Fórum Cível",
+      "buildingId": "sobral",
+      "block": "Térreo",
+      "room": "",
+      "sector": "Auditório",
+      "unitId": "sn-auditorio",
+      "unitCode": "371"
+    },
+    {
+      "building": "Fórum Cível Advogado Sobral Pinto",
+      "buildingShort": "Fórum Cível",
+      "buildingId": "sobral",
+      "block": "Térreo",
+      "room": "",
+      "sector": "Lanchonete",
+      "unitId": "sn-lanchonete",
+      "unitCode": ""
+    },
+    {
+      "building": "Fórum Cível Advogado Sobral Pinto",
+      "buildingShort": "Fórum Cível",
+      "buildingId": "sobral",
+      "block": "Térreo",
+      "room": "",
+      "sector": "Consulta de Processos",
+      "unitId": "sn-consulta-de-processos",
+      "unitCode": "413"
+    },
+    {
+      "building": "Fórum Cível Advogado Sobral Pinto",
+      "buildingShort": "Fórum Cível",
+      "buildingId": "sobral",
+      "block": "Térreo",
+      "room": "",
+      "sector": "Cartório Distribuidor",
+      "unitId": "sn-cartorio-distribuidor",
+      "unitCode": "626"
+    },
+    {
+      "building": "Fórum Cível Advogado Sobral Pinto",
+      "buildingShort": "Fórum Cível",
+      "buildingId": "sobral",
+      "block": "Térreo",
+      "room": "",
+      "sector": "Protocolo Adm.",
+      "unitId": "sn-protocolo-adm",
+      "unitCode": "624"
+    },
+    {
+      "building": "Fórum Cível Advogado Sobral Pinto",
+      "buildingShort": "Fórum Cível",
+      "buildingId": "sobral",
+      "block": "Térreo",
+      "room": "",
+      "sector": "Contadoria",
+      "unitId": "sn-contadoria",
+      "unitCode": "625"
+    },
+    {
+      "building": "Fórum Cível Advogado Sobral Pinto",
+      "buildingShort": "Fórum Cível",
+      "buildingId": "sobral",
+      "block": "Térreo",
+      "room": "",
+      "sector": "1ª Vara da Família",
+      "unitId": "sn-1-vara-da-familia",
+      "unitCode": "871"
+    },
+    {
+      "building": "Fórum Cível Advogado Sobral Pinto",
+      "buildingShort": "Fórum Cível",
+      "buildingId": "sobral",
+      "block": "Térreo",
+      "room": "",
+      "sector": "2ª Vara da Família",
+      "unitId": "sn-2-vara-da-familia",
+      "unitCode": "994"
+    },
+    {
+      "building": "Fórum Cível Advogado Sobral Pinto",
+      "buildingShort": "Fórum Cível",
+      "buildingId": "sobral",
+      "block": "Térreo",
+      "room": "",
+      "sector": "Defensoria Pública",
+      "unitId": "sn-defensoria-publica",
+      "unitCode": "380"
+    },
+    {
+      "building": "Fórum Cível Advogado Sobral Pinto",
+      "buildingShort": "Fórum Cível",
+      "buildingId": "sobral",
+      "block": "Térreo",
+      "room": "",
+      "sector": "Ouvidoria",
+      "unitId": "sn-ouvidoria",
+      "unitCode": "383"
+    },
+    {
+      "building": "Fórum Cível Advogado Sobral Pinto",
+      "buildingShort": "Fórum Cível",
+      "buildingId": "sobral",
+      "block": "Térreo",
+      "room": "",
+      "sector": "NAT-JUS",
+      "unitId": "sn-nat-jus",
+      "unitCode": "1200"
+    },
+    {
+      "building": "Fórum Cível Advogado Sobral Pinto",
+      "buildingShort": "Fórum Cível",
+      "buildingId": "sobral",
+      "block": "1º Piso",
+      "room": "",
+      "sector": "Juizado Fazendário",
+      "unitId": "sn-juizado-fazendario",
+      "unitCode": "1069"
+    },
+    {
+      "building": "Fórum Cível Advogado Sobral Pinto",
+      "buildingShort": "Fórum Cível",
+      "buildingId": "sobral",
+      "block": "1º Piso",
+      "room": "",
+      "sector": "1ª Vara Fazenda Pública",
+      "unitId": "sn-1-vara-fazenda-publica",
+      "unitCode": "1014"
+    },
+    {
+      "building": "Fórum Cível Advogado Sobral Pinto",
+      "buildingShort": "Fórum Cível",
+      "buildingId": "sobral",
+      "block": "1º Piso",
+      "room": "",
+      "sector": "2ª Vara Fazenda Pública",
+      "unitId": "sn-2-vara-fazenda-publica",
+      "unitCode": "1017"
+    },
+    {
+      "building": "Fórum Cível Advogado Sobral Pinto",
+      "buildingShort": "Fórum Cível",
+      "buildingId": "sobral",
+      "block": "2º Piso",
+      "room": "",
+      "sector": "1ª Vara Cível",
+      "unitId": "sn-1-vara-civel",
+      "unitCode": "77"
+    },
+    {
+      "building": "Fórum Cível Advogado Sobral Pinto",
+      "buildingShort": "Fórum Cível",
+      "buildingId": "sobral",
+      "block": "2º Piso",
+      "room": "",
+      "sector": "2ª Vara Cível",
+      "unitId": "sn-2-vara-civel",
+      "unitCode": "78"
+    },
+    {
+      "building": "Fórum Cível Advogado Sobral Pinto",
+      "buildingShort": "Fórum Cível",
+      "buildingId": "sobral",
+      "block": "2º Piso",
+      "room": "",
+      "sector": "3ª Vara Cível",
+      "unitId": "sn-3-vara-civel",
+      "unitCode": "79"
+    },
+    {
+      "building": "Fórum Cível Advogado Sobral Pinto",
+      "buildingShort": "Fórum Cível",
+      "buildingId": "sobral",
+      "block": "2º Piso",
+      "room": "",
+      "sector": "4ª Vara Cível",
+      "unitId": "sn-4-vara-civel",
+      "unitCode": "80"
+    },
+    {
+      "building": "Fórum Cível Advogado Sobral Pinto",
+      "buildingShort": "Fórum Cível",
+      "buildingId": "sobral",
+      "block": "2º Piso",
+      "room": "",
+      "sector": "5ª Vara Cível",
+      "unitId": "sn-5-vara-civel",
+      "unitCode": "677"
+    },
+    {
+      "building": "Fórum Cível Advogado Sobral Pinto",
+      "buildingShort": "Fórum Cível",
+      "buildingId": "sobral",
+      "block": "2º Piso",
+      "room": "",
+      "sector": "6ª Vara Cível",
+      "unitId": "sn-6-vara-civel",
+      "unitCode": "678"
+    },
+    {
+      "building": "Fórum Cível Advogado Sobral Pinto",
+      "buildingShort": "Fórum Cível",
+      "buildingId": "sobral",
+      "block": "2º Piso",
+      "room": "",
+      "sector": "Vara de Execução Fiscal",
+      "unitId": "sn-vara-de-execucao-fiscal",
+      "unitCode": "1172"
+    },
+    {
+      "building": "Fórum Cível Advogado Sobral Pinto",
+      "buildingShort": "Fórum Cível",
+      "buildingId": "sobral",
+      "block": "2º Piso",
+      "room": "",
+      "sector": "Gab. Juízes Substitutos",
+      "unitId": "sn-gab-juizes-substitutos",
+      "unitCode": "1093"
+    },
+    {
+      "building": "Fórum Cível Advogado Sobral Pinto",
+      "buildingShort": "Fórum Cível",
+      "buildingId": "sobral",
+      "block": "2º Piso",
+      "room": "",
+      "sector": "OAB",
+      "unitId": "sn-oab",
+      "unitCode": "376"
+    },
+    {
+      "building": "Fórum Cível Advogado Sobral Pinto",
+      "buildingShort": "Fórum Cível",
+      "buildingId": "sobral",
+      "block": "2º Piso",
+      "room": "",
+      "sector": "Administração",
+      "unitId": "sn-administracao",
+      "unitCode": ""
+    }
+  ]
+}
